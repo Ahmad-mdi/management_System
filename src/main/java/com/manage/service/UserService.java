@@ -1,7 +1,7 @@
-package com.manage.services;
+package com.manage.service;
 
-import com.manage.models.User;
-import com.manage.repositories.UserRepository;
+import com.manage.model.User;
+import com.manage.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

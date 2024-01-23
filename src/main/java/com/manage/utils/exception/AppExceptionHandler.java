@@ -1,4 +1,4 @@
-package com.manage.utils.exceptionHandlar;
+package com.manage.utils.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

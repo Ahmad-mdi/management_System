@@ -3,9 +3,9 @@ package com.manage.utils.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class NumericValidator implements ConstraintValidator<NationalCode, Object> {
+public class NationalCodeNumericValidator implements ConstraintValidator<NationalCodeNumeric, Object> {
     @Override
-    public void initialize(NationalCode numeric) {
+    public void initialize(NationalCodeNumeric numeric) {
         ConstraintValidator.super.initialize(numeric);
     }
 
@@ -16,7 +16,6 @@ public class NumericValidator implements ConstraintValidator<NationalCode, Objec
         }
         if (input instanceof String) {
             return StringUtil.isNumeric((String) input);
-
         }
         return input instanceof Number;
     }

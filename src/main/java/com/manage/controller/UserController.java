@@ -1,11 +1,10 @@
-package com.manage.controllers;
+package com.manage.controller;
 
-import com.manage.models.User;
+import com.manage.model.User;
 import com.manage.response.ApiResponse;
 import com.manage.response.ResponseStatus;
-import com.manage.services.UserService;
+import com.manage.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -13,7 +12,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user")
 @AllArgsConstructor
-@Validated
 public class UserController {
     private UserService service;
 
