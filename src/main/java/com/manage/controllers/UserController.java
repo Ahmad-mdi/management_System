@@ -5,14 +5,15 @@ import com.manage.response.ApiResponse;
 import com.manage.response.ResponseStatus;
 import com.manage.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/user")
 @AllArgsConstructor
+@Validated
 public class UserController {
     private UserService service;
 
