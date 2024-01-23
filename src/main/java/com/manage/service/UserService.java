@@ -15,9 +15,7 @@ public class UserService {
     public List<User> getAll(){
         return repository.findAll();
     }
-    public User add(User user) throws Exception {
-        if (user.getFirstname().isEmpty())
-             throw new Exception("not null");
+    public User add(User user) {
         return repository.save(user);
     }
 }

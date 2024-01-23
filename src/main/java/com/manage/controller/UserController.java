@@ -4,7 +4,9 @@ import com.manage.model.User;
 import com.manage.response.ApiResponse;
 import com.manage.response.ResponseStatus;
 import com.manage.service.UserService;
+import com.manage.utils.exception.GlobalExceptionHandler;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -29,8 +31,9 @@ public class UserController {
        try {
            User result = service.add(user);
            return new ApiResponse<>(result, ResponseStatus.SUCCESS);
-       }catch (Exception ex){
-           return new ApiResponse<>(ex);
+       }catch (DataIntegrityViolationException ex){
+           String errorMessage = "the national code has already been taken!";
+           return new ApiResponse<>(errorMessage,ResponseStatus.EXCEPTION);
        }
     }
 }
