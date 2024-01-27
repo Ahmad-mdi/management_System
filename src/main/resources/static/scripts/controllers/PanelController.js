@@ -1,10 +1,10 @@
-app.controller("panelCtrl", function ($scope) {
+app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) {
 
     $scope.template = "views/dashboard.html";//dashboard
     $scope.templateName = "dashboard";
     $scope.templateGroup = "dashboard";
 
-    /*$scope.checkAccess = () => {
+    $scope.checkAccess = () => {
         let token = $cookies.get("userToken");
         debugger;
         if (token === undefined || token == null || token === "") {
@@ -22,7 +22,7 @@ app.controller("panelCtrl", function ($scope) {
         }, (error) => {
 
         }, true);
-    }*/
+    }
 //activation and selected menu:
     $scope.changeMenu = (templateName) => {
         $scope.templateName = templateName;
@@ -42,7 +42,7 @@ app.controller("panelCtrl", function ($scope) {
         } else if (templateName === 'blog-list' || templateName === 'blog-add' || templateName === 'blog-edit') {
             return 'views/site/blog/' + templateName + '.html';
         }else if (templateName === 'user-list' || templateName === 'user-add' || templateName === 'user-edit') {
-            return 'views/user/' + templateName + '.html';
+            return 'views/users/' + templateName + '.html';
         }else if (templateName === 'category-list' || templateName === 'category-add' || templateName === 'category-edit') {
             return 'views/products/category' + templateName + '.html';
         } else if (templateName === 'uploader') {
@@ -73,6 +73,6 @@ app.controller("panelCtrl", function ($scope) {
             return 'dashboard';
         }
     }
-    // $scope.checkAccess();
+    $scope.checkAccess();
 });
 

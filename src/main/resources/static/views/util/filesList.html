@@ -1,0 +1,31 @@
+<div ng-controller="GetFilesController">
+    <button type="button" class="btn btn-primary" ng-click="getAllFiles()">Get All Files</button>
+    <br/>
+    <br/>
+    <table class="table table-striped" ng-show="showTable">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="file in allFiles">
+            <th scope="row">{{$index+1}}</th>
+            <td>
+                <img src="/api/utils/upload/files/{{file}}" width="60"/>
+            </td>
+            </td>
+            </td>
+            <td>
+                <a href='/api/utils/upload/files/{{file}}'>{{file}}</a>
+            </td>
+            <td>
+                <a ng-click="deleteItem(file)"><i class="fa fa-times color-red cursor-pointer"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

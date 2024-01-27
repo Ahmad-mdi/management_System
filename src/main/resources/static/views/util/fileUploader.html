@@ -1,0 +1,19 @@
+<div ng-controller="UploadFileController">
+    <form class="row" style="border:1px solid #ccc;padding: 25px; margin: 20px 0;border-radius:5px;">
+        <div class="col-5" ng-hide="true">
+            <span>Description : </span><input type="text" style="width: 260px" name="description"
+                                              ng-model="myForm.description"/>
+        </div>
+        <div class="col">
+            <span>File to upload :</span>
+            <input  type="file" file-model="myForm.file"/>
+            <button type="button" class="btn btn-success" ng-click="doUploadFile()">Upload</button>
+        </div>
+    </form>
+    <div ng-show="showResult">
+        <h2>Upload Results:</h2>
+        <div style="border:1px solid #ccc;padding: 5px;">
+            <span ng-bind="uploadResult"></span>
+        </div>
+    </div>
+</div>

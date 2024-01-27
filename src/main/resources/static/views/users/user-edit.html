@@ -1,0 +1,53 @@
+<div ng-controller="userEditCtrl">
+    <div class="container p-3">
+        <br>
+        <div class="card">
+            <div class="card-header">
+                Edit User
+                <a ng-click="changeMenu('user-list')" class="btn btn-sm btn-primary float-right"> <-Back </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col login-box-holder">d
+                                <div class="form-group">
+                                    <label for="firstname">FirstName</label>
+                                    <input type="text" class="form-control" id="firstname" ng-model="data.firstname">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastname">LastName</label>
+                                    <input type="text" class="form-control" id="lastname" ng-model="data.lastname">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">UserName</label>
+                                    <span style="background-color: #6c757d;color: white" disabled id="username" class="form-control">{{data.username}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" ng-model="data.email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password"  ng-model="data.password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <span style="background-color: #6c757d;color: white" disabled id="role" class="form-control">{{data.role}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="enable">Enable</label>
+                                    <select class="form-control" id="enable" ng-model="data.enable">
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-outline-success" ng-click="editData()">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

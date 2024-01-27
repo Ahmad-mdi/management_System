@@ -1,1 +1,1 @@
-let app = angular.module("myapp",['ngCookies','textAngular']);
+let app = angular.module("onlineShopApp", ['ngSanitize', 'ngCookies']);

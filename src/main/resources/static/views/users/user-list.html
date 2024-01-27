@@ -1,0 +1,64 @@
+<div ng-controller="userListCtrl">
+    <div class="container p-3">
+        <div class="row">
+            <div class="col">
+                <h1>user List</h1>
+                <a class="btn btn-sm btn-success float-right" ng-click="changeMenu('user-add')">Add New+</a>
+                <br>
+                <br>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">FullName</th>
+                        <th scope="col">UserName</th>
+                        <th scope="col">NationalCode</th>
+<!--                        <th scope="col">Role</th>-->
+                        <th scope="col">Enable</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="data in dataList"> <!--foreach in angular-->
+                        <th scope="row">{{$index + 1}}</th>
+<!--                        <td>{{data.firstname+' '+data.lastname}}</td>-->
+                        <td>{{data.fullName}}</td> <!--get by UserVM-->
+                        <td>{{data.username}}</td>
+                        <td>{{data.nationalCode}}</td>
+                        <!--<td>
+                            <span class="badge badge-success" ng-show="data.role === 'ADMIN'">{{data.role}}</span>
+                            <span class="badge badge-primary" ng-show="data.role === 'USER'">{{data.role}}</span>
+                        </td>-->
+                        <td>
+                            <i class="fa fa-check" ng-show="data.enable"></i>
+                            <i class="fa fa-times" ng-show="!data.enable"></i>
+                        </td>
+                        <td>
+                            <a ng-click="editItem(data.id)">
+                                <i title="edit" class="fa fa-edit color-green cursor-pointer"></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                            <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)">
+                                <i title="delete" class="fa fa-times color-red cursor-pointer"></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div>
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li ng-repeat="i in range(pageCount) track by $index" class="page-item">
+                                <span class="page-link" ng-click="changePage($index)">
+                                    {{($index + 1)}}
+                                </span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

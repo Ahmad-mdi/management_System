@@ -1,1 +1,1 @@
-let app = angular.module("myapp",[]);
+let app = angular.module("onlineShopApp",['ngCookies','textAngular']);
