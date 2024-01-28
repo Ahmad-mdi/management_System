@@ -9,7 +9,7 @@ import com.manage.service.user.UserService;
 import com.manage.utils.dto.UserDto;
 import com.manage.utils.exception.JwtTokenException;
 import com.manage.utils.hashing.SecurityUtils;
-import com.manage.utils.jwt.JwtTokenUtil;
+import com.manage.config.JwtTokenUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,10 +54,10 @@ public class UserController {
             @RequestParam Integer pageNumber) {
         try {
             List<User> result = userService.getAll(pageSize, pageNumber);
-            List<UserDto> resultVM = new ArrayList<>();
-            result.forEach(data->resultVM.add(new UserDto(data)));
+            List<UserDto> userDtoList = new ArrayList<>();
+            result.forEach(data->userDtoList.add(new UserDto(data)));
             long totalCount = userService.getAllCount();
-            return new ApiResponse<>(resultVM,totalCount, ResponseStatus.SUCCESS);
+            return new ApiResponse<>(userDtoList,totalCount, ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
         }

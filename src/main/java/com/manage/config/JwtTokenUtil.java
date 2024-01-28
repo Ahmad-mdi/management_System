@@ -1,4 +1,4 @@
-package com.manage.utils.jwt;
+package com.manage.config;
 
 import com.manage.utils.dto.UserDto;
 import io.jsonwebtoken.Claims;

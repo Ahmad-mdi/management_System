@@ -38,7 +38,6 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
                 icon: "success"
             });
         },(error) => {
-
         },true)
     }
 });
