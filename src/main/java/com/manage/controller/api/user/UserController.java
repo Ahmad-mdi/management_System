@@ -43,7 +43,7 @@ public class UserController {
         try {
             List<User> result = service.getByUsernameLike(usernameLike);
             List<UserDto> userDtoList = new ArrayList<>();
-            result.forEach(data->userDtoList.add(new UserDto(data)));
+            result.forEach(search->userDtoList.add(new UserDto(search)));
             return new ApiResponse<>(userDtoList, ResponseStatus.SUCCESS);
         }catch (Exception e){
             return new ApiResponse<>(e);
