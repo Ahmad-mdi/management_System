@@ -3,6 +3,8 @@ package com.manage.service.user;
 import com.manage.model.User;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.hashing.SecurityUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,16 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
     private final SecurityUtils securityUtils;
-
-    //construct method:
-    public UserService(UserRepository userRepository, SecurityUtils securityUtils) {
-        this.userRepository = userRepository;
-        this.securityUtils = securityUtils;
-    }
 
     public User auth(String username,String password){
         try {
@@ -30,34 +27,32 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return userRepository.findFirstByUsernameAndPassword(username,password);
+        return repository.findFirstByUsernameAndPassword(username,password);
     }
 
-    public User getByUsername(String username){
-        return userRepository.findFirstByUsername(username);
+    public User getFirstByUsername(String username){
+        return repository.findFirstByUsername(username);
+    }
+    
+    public List<User> getByUsernameLike(String usernameLike){
+        return repository.findByUsernameLike(usernameLike);
     }
 
     public List<User> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
-        Page<User> all = userRepository.findAll(pagination);
+        Page<User> all = repository.findAll(pagination);
         return all.toList();
     }
 
     //totalCount pagination:
     public long getAllCount() {
-        return userRepository.count();
+        return repository.count();
     }
 
-    public User getById(long id) {
-        Optional<User> data = userRepository.findById(id);
-        if (data.isPresent()) return data.get();
-        return null;
-
-    }
     public User add(User data) throws Exception {
         if (data.getUsername()==null || data.getPassword()==null)
             throw new Exception("username password notNull!");
-        return userRepository.save(data);
+        return repository.save(data);
     }
 
     /*public User update(User data) throws DataNotFoundException, NoSuchAlgorithmException {
@@ -71,7 +66,7 @@ public class UserService {
         oldData.setEnable(data.isEnable());
         if (data.getPassword() != null && !data.getPassword().isEmpty())
             oldData.setPassword(securityUtils.encryptSHA1(data.getPassword()));
-        return userRepository.save(oldData);
+        return repository.save(oldData);
     }
 
     public boolean deleteById(long id) throws DataNotFoundException {
@@ -79,7 +74,7 @@ public class UserService {
         if (oldData == null){
             throw new DataNotFoundException("data with id"+id+"not found");
         }
-        userRepository.deleteById(id);
+        repository.deleteById(id);
         return true;
     }
 
@@ -96,6 +91,6 @@ public class UserService {
         if (!userChanePass.getPassword().equals(oldPassword))
             throw new Exception("Invalid old password");
         userChanePass.setPassword(newPassword);
-        return userRepository.save(userChanePass);
+        return repository.save(userChanePass);
     }*/
 }

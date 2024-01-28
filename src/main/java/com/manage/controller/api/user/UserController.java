@@ -25,11 +25,11 @@ public class UserController {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final SecurityUtils securityUtils;
-    private final UserService userService;
+    private final UserService service;
 
     @PostMapping("/login")
     public ApiResponse<UserDto> login(@RequestBody User user) {
-        User userData = userService.auth(user.getUsername(), user.getPassword());
+        User userData = service.auth(user.getUsername(), user.getPassword());
         if (userData == null)
             return new ApiResponse<>(ConstantsMessage.MSG2, ResponseStatus.FAILED);
         UserDto UserDto = new UserDto(userData);
@@ -38,25 +38,27 @@ public class UserController {
         return new ApiResponse<>(UserDto, ResponseStatus.SUCCESS);
     }
 
-    /*@GetMapping("/{id}")
-    public ApiResponse<UserDto> getById(@PathVariable long id) {
+    @GetMapping("/{usernameLike}")
+    public ApiResponse<UserDto> searchUsersByUsername(@PathVariable String usernameLike) {
         try {
-            User result = userService.getById(id);
-            return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
-        } catch (Exception e) {
+            List<User> result = service.getByUsernameLike(usernameLike);
+            List<UserDto> userDtoList = new ArrayList<>();
+            result.forEach(data->userDtoList.add(new UserDto(data)));
+            return new ApiResponse<>(userDtoList, ResponseStatus.SUCCESS);
+        }catch (Exception e){
             return new ApiResponse<>(e);
         }
-    }*/
+    }
 
     @GetMapping("/getAll")
     public ApiResponse<UserDto> getAll(
             @RequestParam Integer pageSize,
             @RequestParam Integer pageNumber) {
         try {
-            List<User> result = userService.getAll(pageSize, pageNumber);
+            List<User> result = service.getAll(pageSize, pageNumber);
             List<UserDto> userDtoList = new ArrayList<>();
             result.forEach(data->userDtoList.add(new UserDto(data)));
-            long totalCount = userService.getAllCount();
+            long totalCount = service.getAllCount();
             return new ApiResponse<>(userDtoList,totalCount, ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
@@ -77,7 +79,7 @@ public class UserController {
             if (username == null)
                 throw new JwtTokenException("username can not resolve");
 
-            User result = userService.getByUsername(username);
+            User result = service.getFirstByUsername(username);
             return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
@@ -88,7 +90,7 @@ public class UserController {
     public ApiResponse<UserDto> add(@RequestBody @Valid User data) {
         try {
             data.setPassword(securityUtils.encryptSHA1(data.getPassword()));
-            User result = userService.add(data);
+            User result = service.add(data);
             return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
@@ -98,7 +100,7 @@ public class UserController {
     /*@PutMapping("/update")
     public ApiResponse<UserDto> update(@RequestBody User data) {
         try {
-            User result = userService.update(data);
+            User result = service.update(data);
             return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
@@ -108,7 +110,7 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public ApiResponse<Boolean> delete(@PathVariable long id) {
         try {
-            boolean result = userService.deleteById(id);
+            boolean result = service.deleteById(id);
             return new ApiResponse<>(result, ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
@@ -118,7 +120,7 @@ public class UserController {
     @PutMapping("/changePass")
     public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) {
         try {
-            User result = userService.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
+            User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
             return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
