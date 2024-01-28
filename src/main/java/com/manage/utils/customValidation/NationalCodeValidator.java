@@ -1,12 +1,12 @@
-package com.manage.utils.validation;
+package com.manage.utils.customValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
-public class NationalCodeValidator implements ConstraintValidator<NationalCodeValid, String> {
+public class NationalCodeValidator implements ConstraintValidator<NationalCode, String> {
     @Override
-    public void initialize(NationalCodeValid valid) {
+    public void initialize(NationalCode valid) {
         ConstraintValidator.super.initialize(valid);
     }
 
@@ -16,8 +16,11 @@ public class NationalCodeValidator implements ConstraintValidator<NationalCodeVa
             return false;
         } else {
             //Check for equal numbers
-            String[] allDigitEqual = {"0000000000", "1111111111", "2222222222", "3333333333",
-                    "4444444444", "5555555555", "6666666666", "7777777777", "8888888888", "9999999999"};
+            String[] allDigitEqual = {
+                    "0000000000", "1111111111", "2222222222", "3333333333",
+                    "4444444444", "5555555555", "6666666666", "7777777777",
+                    "8888888888", "9999999999", "          "
+            };
             if (Arrays.asList(allDigitEqual).contains(nationalCode)) {
                 return false;
             } else {

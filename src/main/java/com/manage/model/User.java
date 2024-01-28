@@ -1,8 +1,6 @@
 package com.manage.model;
-import com.manage.utils.validation.NationalCodeNumeric;
-import com.manage.utils.validation.NationalCodeValid;
+import com.manage.utils.customValidation.NationalCode;
 import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -23,9 +21,7 @@ public class User {
     private String firstname;
     @NotBlank(message = "the lastname failed is required")
     private String lastname;
-    @NationalCodeValid(message = "The national code is not valid")
-    @NationalCodeNumeric(message = "national code must be numeric!")
-    @NotBlank(message = "the national code failed is required")
+    @NationalCode(message = "The national code is not valid")
     @Column(unique = true)
     private String nationalCode;
     private boolean enable;
