@@ -1,10 +1,14 @@
 package com.manage.service.user;
 
+import com.manage.config.ConstantsMessage;
+import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
+import com.manage.model.dto.UserDto;
+import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,29 +16,38 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Data
 public class UserService {
 
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final ConstantsMessage messageError;
 
-    public User auth(String username,String password){
-        try {
-            password = securityUtils.encryptSHA1(password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return repository.findFirstByUsernameAndPassword(username,password);
+    public UserDto login(String username, String password) throws NoSuchAlgorithmException {
+        password = securityUtils.encryptSHA1(password);
+        User user = repository.findFirstByUsernameAndPassword(username, password);
+        UserDto dto = UserMapper.mapToDTO(user);
+        String token = jwtTokenUtil.generateToken(dto);
+        dto.setToken(token);
+        return dto;
     }
 
-    public User getFirstByUsername(String username){
+    public UserDto addUser(UserDto userDto) throws NoSuchAlgorithmException {
+        userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
+        User user = UserMapper.mapToEntity(userDto);
+        User savedUser = repository.save(user);
+        return UserMapper.mapToDTO(savedUser);
+    }
+
+    public User getFirstByUsername(String username) {
         return repository.findFirstByUsername(username);
     }
-    
-    public List<User> getByUsernameLike(String usernameLike){
+
+    public List<User> getByUsernameLike(String usernameLike) {
         return repository.findByUsernameLike(usernameLike);
     }
 
@@ -47,12 +60,6 @@ public class UserService {
     //totalCount pagination:
     public long getAllCount() {
         return repository.count();
-    }
-
-    public User add(User data) throws Exception {
-        if (data.getUsername()==null || data.getPassword()==null)
-            throw new Exception("username password notNull!");
-        return repository.save(data);
     }
 
     /*public User update(User data) throws DataNotFoundException, NoSuchAlgorithmException {
@@ -93,4 +100,5 @@ public class UserService {
         userChanePass.setPassword(newPassword);
         return repository.save(userChanePass);
     }*/
+
 }

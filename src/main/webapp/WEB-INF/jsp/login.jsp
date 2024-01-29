@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <title>Online Shop App | Login</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link href="libs/bootstrap-4.5.2-dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="libs/jquery-3.5.1.min.js"></script>
@@ -27,7 +27,7 @@
         <div class="col login-box-holder">
             <h3>Login to panel</h3>
             <div class="form-group">
-                <label for="username">Email address</label>
+                <label for="username">UserName</label>
                 <input type="text" class="form-control" id="username" ng-model="user.username">
             </div>
             <div class="form-group">

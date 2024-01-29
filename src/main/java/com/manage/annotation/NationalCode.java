@@ -1,4 +1,4 @@
-package com.manage.utils.customValidation;
+package com.manage.annotation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

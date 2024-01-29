@@ -1,44 +1,44 @@
 package com.manage.controller.api.user;
 
-
-import com.manage.ConstantsMessage;
-import com.manage.model.User;
+import com.manage.config.ConstantsMessage;
+import com.manage.model.dto.UserDto;
 import com.manage.response.ApiResponse;
 import com.manage.response.ResponseStatus;
 import com.manage.service.user.UserService;
-import com.manage.utils.dto.UserDto;
-import com.manage.utils.exception.JwtTokenException;
-import com.manage.utils.hashing.SecurityUtils;
-import com.manage.config.JwtTokenUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
-    private final JwtTokenUtil jwtTokenUtil;
-    private final SecurityUtils securityUtils;
     private final UserService service;
+    private final ConstantsMessage messageError;
 
     @PostMapping("/login")
-    public ApiResponse<UserDto> login(@RequestBody User user) {
-        User userData = service.auth(user.getUsername(), user.getPassword());
-        if (userData == null)
-            return new ApiResponse<>(ConstantsMessage.MSG2, ResponseStatus.FAILED);
-        UserDto UserDto = new UserDto(userData);
-        String token = jwtTokenUtil.generateToken(UserDto);
-        UserDto.setToken(token);
-        return new ApiResponse<>(UserDto, ResponseStatus.SUCCESS);
+    public ApiResponse<UserDto> login(@RequestBody UserDto user) {
+        try {
+            UserDto loggedIn = service.login(user.getUsername(), user.getPassword());
+            return new ApiResponse<>(loggedIn, ResponseStatus.SUCCESS);
+        } catch (Exception e) {
+            return new ApiResponse<>(messageError.validUsernameAndPassword, ResponseStatus.FAILED);
+        }
+    }
+    @PostMapping("/add")
+    public ApiResponse<UserDto> add(@RequestBody @Valid UserDto data) {
+        try {
+            UserDto result = service.addUser(data);
+            return new ApiResponse<>(result, ResponseStatus.SUCCESS);
+        } catch (Exception e) {
+            return new ApiResponse<>(e);
+        }
     }
 
-    @GetMapping("/{usernameLike}")
+    /*@GetMapping("/{usernameLike}")
     public ApiResponse<UserDto> searchUsersByUsername(@PathVariable String usernameLike) {
         try {
             List<User> result = service.getByUsernameLike(usernameLike);
@@ -48,9 +48,9 @@ public class UserController {
         }catch (Exception e){
             return new ApiResponse<>(e);
         }
-    }
+    }*/
 
-    @GetMapping("/getAll")
+    /*@GetMapping("/getAll")
     public ApiResponse<UserDto> getAll(
             @RequestParam Integer pageSize,
             @RequestParam Integer pageNumber) {
@@ -63,9 +63,9 @@ public class UserController {
         } catch (Exception e) {
             return new ApiResponse<>(e);
         }
-    }
+    }*/
 
-    @GetMapping("/getUserInfo")
+    /*@GetMapping("/getUserInfo")
     public ApiResponse<UserDto> getUserInfo(HttpServletRequest servletRequest) {
         try {
             //read token header and if==ok set token:
@@ -84,18 +84,15 @@ public class UserController {
         } catch (Exception e) {
             return new ApiResponse<>(e);
         }
-    }
+    }*/
 
-    @PostMapping("/add")
-    public ApiResponse<UserDto> add(@RequestBody @Valid User data) {
-        try {
-            data.setPassword(securityUtils.encryptSHA1(data.getPassword()));
-            User result = service.add(data);
-            return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
-    }
+
+    /*@PostMapping
+    public ResponseEntity<?> addUser(@RequestBody UserDto userDTO) {
+        UserDto createdUserDTO = service.addUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDTO);
+    }*/
+
 
     /*@PutMapping("/update")
     public ApiResponse<UserDto> update(@RequestBody User data) {
