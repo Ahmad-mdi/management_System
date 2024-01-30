@@ -1,6 +1,6 @@
 package com.manage.utils.exception;
 
-import com.manage.config.ConstantsMessage;
+import com.manage.constance.UserConstants;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import lombok.AllArgsConstructor;
@@ -30,9 +30,9 @@ public class GlobalExceptionHandler{
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         if (Objects.requireNonNull(ex.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
-            return new ApiResponse<>(ConstantsMessage.INVALID_NATIONAL_CODE, ApiResponseStatus.EXCEPTION);
+            return new ApiResponse<>(UserConstants.INVALID_NATIONAL_CODE, ApiResponseStatus.EXCEPTION);
          else
-            return new ApiResponse<>(ConstantsMessage.DATA_INTEGRITY, ApiResponseStatus.EXCEPTION);
+            return new ApiResponse<>(UserConstants.DATA_INTEGRITY, ApiResponseStatus.EXCEPTION);
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {

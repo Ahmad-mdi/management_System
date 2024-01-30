@@ -1,6 +1,6 @@
 package com.manage.service.user;
 
-import com.manage.config.ConstantsMessage;
+import com.manage.constance.UserConstants;
 import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
@@ -26,18 +26,18 @@ public class UserService {
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
-    private final ConstantsMessage messageError;
+    private final UserConstants messageError;
 
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
         User user = repository.findFirstByUsernameAndPassword(username, password);
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null) {
             UserDto dto = UserMapper.mapToDTO(user);
             String token = jwtTokenUtil.generateToken(dto);
             dto.setToken(token);
             return dto;
         }
-        throw new UserNotFoundException(ConstantsMessage.INVALID_USERNAME_OR_PASSWORD);
+        throw new UserNotFoundException(UserConstants.INVALID_USERNAME_OR_PASSWORD);
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {

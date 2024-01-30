@@ -1,6 +1,5 @@
 package com.manage.controller.api.user;
 
-import com.manage.config.ConstantsMessage;
 import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
@@ -9,7 +8,6 @@ import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
 import com.manage.utils.exception.JwtTokenException;
-import com.manage.utils.exception.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
