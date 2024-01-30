@@ -9,12 +9,15 @@ import com.manage.repository.user.UserRepository;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,19 +39,25 @@ public class UserService {
         return dto;
     }
 
-    public UserDto addUser(UserDto userDto) throws NoSuchAlgorithmException {
-        userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
-        User user = UserMapper.mapToEntity(userDto);
-        User savedUser = repository.save(user);
-        return UserMapper.mapToDTO(savedUser);
+    public UserDto addUser(UserDto userDto) throws Exception {
+        try {
+            userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
+            User user = UserMapper.mapToEntity(userDto);
+            User savedUser = repository.save(user);
+            return UserMapper.mapToDTO(savedUser);
+        } catch (DataIntegrityViolationException ex) {
+            throw new Exception("the national code already been taken",ex);
+        }
     }
 
-    public User getFirstByUsername(String username) {
-        return repository.findFirstByUsername(username);
+    public UserDto getFirstByUsername(String username) {
+        User find = repository.findFirstByUsername(username);
+        return UserMapper.mapToDTO(find);
     }
 
-    public List<User> getByUsernameLike(String usernameLike) {
-        return repository.findByUsernameLike(usernameLike);
+    public List<UserDto> getByUsernameLike(String usernameLike) {
+        List<User> searchedList =  repository.findByUsernameLike(usernameLike);
+        return UserMapper.mapToDTOList(searchedList);
     }
 
     public List<User> getAll(Integer pageSize, Integer pageNumber) {

@@ -37,4 +37,12 @@ public class UserMapper {
         }
         return UserDtoList;
     }
+    public static List<User> mapToEntityList(List<UserDto> userList) {
+        List<User> userEntityList = new ArrayList<>();
+        for (UserDto userDto : userList) {
+            User user = mapToEntity(userDto);
+            userEntityList.add(user);
+        }
+        return userEntityList;
+    }
 }

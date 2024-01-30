@@ -1,16 +1,19 @@
 package com.manage.controller.api.user;
 
 import com.manage.config.ConstantsMessage;
+import com.manage.model.User;
 import com.manage.model.dto.UserDto;
+import com.manage.model.mapper.UserMapper;
 import com.manage.response.ApiResponse;
 import com.manage.response.ResponseStatus;
 import com.manage.service.user.UserService;
+import com.manage.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -28,6 +31,7 @@ public class UserController {
             return new ApiResponse<>(messageError.validUsernameAndPassword, ResponseStatus.FAILED);
         }
     }
+
     @PostMapping("/add")
     public ApiResponse<UserDto> add(@RequestBody @Valid UserDto data) {
         try {
@@ -38,32 +42,27 @@ public class UserController {
         }
     }
 
-    /*@GetMapping("/{usernameLike}")
-    public ApiResponse<UserDto> searchUsersByUsername(@PathVariable String usernameLike) {
+    @GetMapping("/search")
+    public ApiResponse<UserDto> searchUsersByUsername(@RequestParam String username_like) {
         try {
-            List<User> result = service.getByUsernameLike(usernameLike);
-            List<UserDto> userDtoList = new ArrayList<>();
-            result.forEach(search->userDtoList.add(new UserDto(search)));
-            return new ApiResponse<>(userDtoList, ResponseStatus.SUCCESS);
-        }catch (Exception e){
-            return new ApiResponse<>(e);
-        }
-    }*/
-
-    /*@GetMapping("/getAll")
-    public ApiResponse<UserDto> getAll(
-            @RequestParam Integer pageSize,
-            @RequestParam Integer pageNumber) {
-        try {
-            List<User> result = service.getAll(pageSize, pageNumber);
-            List<UserDto> userDtoList = new ArrayList<>();
-            result.forEach(data->userDtoList.add(new UserDto(data)));
-            long totalCount = service.getAllCount();
-            return new ApiResponse<>(userDtoList,totalCount, ResponseStatus.SUCCESS);
+            List<UserDto> result = service.getByUsernameLike(username_like);
+            return new ApiResponse<>(result, ResponseStatus.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e);
         }
-    }*/
+    }
+
+    @GetMapping("/get_all")
+    public ApiResponse<UserDto> getAll(@RequestParam Integer pageSize,@RequestParam Integer pageNumber) {
+        try {
+            List<User> result = service.getAll(pageSize, pageNumber);
+            List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
+            long totalCount = service.getAllCount();
+            return new ApiResponse<>(userDtoList, totalCount, ResponseStatus.SUCCESS);
+        } catch (Exception e) {
+            return new ApiResponse<>(e);
+        }
+    }
 
     /*@GetMapping("/getUserInfo")
     public ApiResponse<UserDto> getUserInfo(HttpServletRequest servletRequest) {
