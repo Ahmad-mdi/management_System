@@ -6,11 +6,10 @@ import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
-import com.manage.utils.exception.DataNotFoundException;
+import com.manage.utils.exception.UserNotFoundException;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +31,13 @@ public class UserService {
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
         User user = repository.findFirstByUsernameAndPassword(username, password);
-        UserDto dto = UserMapper.mapToDTO(user);
-        String token = jwtTokenUtil.generateToken(dto);
-        dto.setToken(token);
-        return dto;
+        if (user != null && user.getPassword().equals(password)) {
+            UserDto dto = UserMapper.mapToDTO(user);
+            String token = jwtTokenUtil.generateToken(dto);
+            dto.setToken(token);
+            return dto;
+        }
+        throw new UserNotFoundException(ConstantsMessage.INVALID_USERNAME_OR_PASSWORD);
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -43,14 +45,6 @@ public class UserService {
         User user = UserMapper.mapToEntity(userDto);
         User savedUser = repository.save(user);
         return UserMapper.mapToDTO(savedUser);
-        /*try {
-            userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
-            User user = UserMapper.mapToEntity(userDto);
-            User savedUser = repository.save(user);
-            return UserMapper.mapToDTO(savedUser);
-        } catch (DataIntegrityViolationException ex) {
-            throw new Exception("the national code already been taken",ex);
-        }*/
     }
 
     public UserDto getFirstByUsername(String username) {
@@ -59,7 +53,7 @@ public class UserService {
     }
 
     public List<UserDto> getByUsernameLike(String usernameLike) {
-        List<User> searchedList =  repository.findByUsernameLike(usernameLike);
+        List<User> searchedList = repository.findByUsernameLike(usernameLike);
         return UserMapper.mapToDTOList(searchedList);
     }
 
@@ -68,6 +62,7 @@ public class UserService {
         Page<User> all = repository.findAll(pagination);
         return all.toList();
     }
+
     //totalCount pagination:
     public long getAllCount() {
         return repository.count();

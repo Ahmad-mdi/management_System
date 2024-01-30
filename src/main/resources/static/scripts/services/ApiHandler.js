@@ -17,7 +17,7 @@ app.service("apiHandler", function ($http, $cookies) {
                     Swal.fire({
                         icon: "error",
                         title: "Error",
-                        text: result.message
+                        text: result.message /*result.statusText*/
                     });
                 } else {
                     Swal.fire({

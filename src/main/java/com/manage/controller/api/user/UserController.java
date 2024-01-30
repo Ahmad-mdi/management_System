@@ -9,11 +9,13 @@ import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
 import com.manage.utils.exception.JwtTokenException;
+import com.manage.utils.exception.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,29 +23,17 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService service;
-    private final ConstantsMessage messageError;
     private final JwtTokenUtil jwtTokenUtil;
-
     @PostMapping("/login")
-    public ApiResponse<UserDto> login(@RequestBody UserDto user) {
-        try {
-            UserDto loggedIn = service.login(user.getUsername(), user.getPassword());
-            return new ApiResponse<>(loggedIn, ApiResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(messageError.validUsernameAndPassword, ApiResponseStatus.FAILED);
-        }
+    public ApiResponse<UserDto> login(@RequestBody UserDto user) throws NoSuchAlgorithmException {
+        UserDto loggedIn = service.login(user.getUsername(), user.getPassword());
+        return new ApiResponse<>(loggedIn, ApiResponseStatus.SUCCESS);
     }
 
     @PostMapping("/add")
     public ApiResponse<UserDto> add(@RequestBody @Valid UserDto data) throws Exception {
         UserDto result = service.addUser(data);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
-        /*try {
-            UserDto result = service.addUser(data);
-            return new ApiResponse<>(result, ResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }*/
     }
 
     @GetMapping("/search")
