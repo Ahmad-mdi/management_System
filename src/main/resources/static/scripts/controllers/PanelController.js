@@ -14,7 +14,7 @@ app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) 
         $scope.getUserInfo();
     }
     $scope.getUserInfo = () => {
-        apiHandler.callGet('user/getUserInfo', (response) => {
+        apiHandler.callGet('user/get_user_info', (response) => {
             debugger;
             $rootScope.userInfo = response.dataList[0];
             $scope.user = $rootScope.userInfo;

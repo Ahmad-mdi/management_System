@@ -14,17 +14,17 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserDto {
     private String fullName;
+    @NotBlank(message = "the username failed is required")
+    private String username;
+    @NationalCode(message = "The national code is not valid")
+    private String nationalCode;
+    private boolean enable;
     @NotBlank(message = "the firstname failed is required")
     private String firstname;
     @NotBlank(message = "the lastname failed is required")
     private String lastname;
-    @NotBlank(message = "the username failed is required")
-    private String username;
     @NotBlank(message = "the password failed is required")
     private String password;
-    @NationalCode(message = "The national code is not valid")
-    private String nationalCode;
-    private boolean enable;
     private String token;
 
 }

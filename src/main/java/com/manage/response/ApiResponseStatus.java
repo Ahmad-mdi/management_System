@@ -1,5 +1,5 @@
 package com.manage.response;
 
-public enum ResponseStatus {
+public enum ApiResponseStatus {
     SUCCESS,FAILED,EXCEPTION
 }

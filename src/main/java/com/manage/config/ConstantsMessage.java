@@ -4,9 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConstantsMessage {
-    public static String MSG="data with id %s not found";
-    public  String notFoundSearch="data with username not found";
+    public  String nationalCodeUnique="National code already exists!";
     public  String validUsernameAndPassword="Incorrect username or password";
-    public static String m_title="please enter your title";
-    public static String m_link="please enter your link";
+    public  String dataIntegrity="Data integrity violation occurred";
 }

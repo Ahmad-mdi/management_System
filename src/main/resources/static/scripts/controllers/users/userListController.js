@@ -10,7 +10,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     $scope.userInfo = $rootScope.userInfo;
 
     $scope.getDataList = () => {
-        let url = 'user/getAll?pageSize=' + $scope.query.pageSize + '&pageNumber=' + $scope.query.pageNumber;
+        let url = 'user/get_all?pageSize=' + $scope.query.pageSize + '&pageNumber=' + $scope.query.pageNumber;
         apiHandler.callGet(url, (response) => {
             $scope.dataList = response.dataList;
             $scope.totalCount = response.totalCount;

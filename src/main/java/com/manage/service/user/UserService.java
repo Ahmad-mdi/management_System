@@ -6,6 +6,7 @@ import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
+import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,14 +39,18 @@ public class UserService {
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
-        try {
+        userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
+        User user = UserMapper.mapToEntity(userDto);
+        User savedUser = repository.save(user);
+        return UserMapper.mapToDTO(savedUser);
+        /*try {
             userDto.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
             User user = UserMapper.mapToEntity(userDto);
             User savedUser = repository.save(user);
             return UserMapper.mapToDTO(savedUser);
         } catch (DataIntegrityViolationException ex) {
             throw new Exception("the national code already been taken",ex);
-        }
+        }*/
     }
 
     public UserDto getFirstByUsername(String username) {
@@ -65,14 +68,13 @@ public class UserService {
         Page<User> all = repository.findAll(pagination);
         return all.toList();
     }
-
     //totalCount pagination:
     public long getAllCount() {
         return repository.count();
     }
 
     /*public User update(User data) throws DataNotFoundException, NoSuchAlgorithmException {
-        User oldData = getById(data.getId());//getId with db
+        User oldData = data;//getId with db
         if (oldData == null){
             throw new DataNotFoundException("data with id"+data.getId()+"not found");
         }
@@ -83,9 +85,9 @@ public class UserService {
         if (data.getPassword() != null && !data.getPassword().isEmpty())
             oldData.setPassword(securityUtils.encryptSHA1(data.getPassword()));
         return repository.save(oldData);
-    }
+    }*/
 
-    public boolean deleteById(long id) throws DataNotFoundException {
+    /*public boolean deleteById(long id) throws DataNotFoundException {
         User oldData = getById(id);//getId with db
         if (oldData == null){
             throw new DataNotFoundException("data with id"+id+"not found");
