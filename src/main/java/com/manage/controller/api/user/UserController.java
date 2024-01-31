@@ -7,6 +7,7 @@ import com.manage.model.mapper.UserMapper;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
+import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -36,24 +37,16 @@ public class UserController {
 
     @GetMapping("/search")
     public ApiResponse<UserDto> searchUsersByUsername(@RequestParam String username_like) {
-        try {
-            List<UserDto> result = service.getByUsernameLike(username_like);
-            return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
+        List<UserDto> result = service.getByUsernameLike(username_like);
+        return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
     @GetMapping("/get_all")
     public ApiResponse<UserDto> getAll(@RequestParam Integer pageSize, @RequestParam Integer pageNumber) {
-        try {
-            List<User> result = service.getAll(pageSize, pageNumber);
-            List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
-            long totalCount = service.getAllCount();
-            return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
+        List<User> result = service.getAll(pageSize, pageNumber);
+        List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
+        long totalCount = service.getAllCount();
+        return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
     }
 
     @GetMapping("/get_user_info")
@@ -76,18 +69,20 @@ public class UserController {
             return new ApiResponse<>(e);
         }
     }
-
-    /*@PutMapping("/update")
-    public ApiResponse<UserDto> update(@RequestBody User data) {
-        try {
-            User result = service.update(data);
-            return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
+    @GetMapping("/{id}")
+    public ApiResponse<UserDto> getById(@PathVariable long id) {
+        User user = service.getById(id);
+        UserDto dto = UserMapper.mapToDTO(user);
+        return new ApiResponse<>(dto,ApiResponseStatus.SUCCESS);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/update")
+    public ApiResponse<UserDto> update(@RequestBody UserDto data) throws NoSuchAlgorithmException {
+        UserDto result = service.update(data);
+        return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
+    }
+
+    /*@DeleteMapping("/delete/{id}")
     public ApiResponse<Boolean> delete(@PathVariable long id) {
         try {
             boolean result = service.deleteById(id);

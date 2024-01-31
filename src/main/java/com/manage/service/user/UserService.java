@@ -1,11 +1,11 @@
 package com.manage.service.user;
 
-import com.manage.constance.UserConstants;
 import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
+import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.exception.UserNotFoundException;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
+import static com.manage.constance.UserConstants.DATA_NOT_FOUND;
+import static com.manage.constance.UserConstants.INVALID_USERNAME_OR_PASSWORD;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +29,6 @@ public class UserService {
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserConstants messageError;
 
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
@@ -37,7 +39,7 @@ public class UserService {
             dto.setToken(token);
             return dto;
         }
-        throw new UserNotFoundException(UserConstants.INVALID_USERNAME_OR_PASSWORD);
+        throw new UserNotFoundException(INVALID_USERNAME_OR_PASSWORD);
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -67,20 +69,27 @@ public class UserService {
     public long getAllCount() {
         return repository.count();
     }
+    public User getById(long id) {
+        Optional<User> data = repository.findById(id);
+        if (data.isEmpty())
+            throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
+        return data.orElse(null);
+    }
 
-    /*public User update(User data) throws DataNotFoundException, NoSuchAlgorithmException {
-        User oldData = data;//getId with db
+    public UserDto update(UserDto data) throws NoSuchAlgorithmException {
+        User oldData = getById(data.getId());
         if (oldData == null){
-            throw new DataNotFoundException("data with id"+data.getId()+"not found");
+            throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(data.getId())));
         }
-        oldData.setEmail(data.getEmail());
+        oldData.setUsername(data.getUsername());
         oldData.setFirstname(data.getFirstname());
         oldData.setLastname(data.getLastname());
         oldData.setEnable(data.isEnable());
         if (data.getPassword() != null && !data.getPassword().isEmpty())
             oldData.setPassword(securityUtils.encryptSHA1(data.getPassword()));
-        return repository.save(oldData);
-    }*/
+        User savedUser = repository.save(oldData);
+        return UserMapper.mapToDTO(savedUser);
+    }
 
     /*public boolean deleteById(long id) throws DataNotFoundException {
         User oldData = getById(id);//getId with db
