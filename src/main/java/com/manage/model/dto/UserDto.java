@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+//    @JsonIgnore
+    private long id;
     private String fullName;
     @NotBlank(message = "the username failed is required")
     private String username;
