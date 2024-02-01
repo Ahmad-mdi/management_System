@@ -7,11 +7,9 @@ import com.manage.model.mapper.UserMapper;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
-import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
