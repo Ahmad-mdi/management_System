@@ -15,11 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
-import static com.manage.constance.UserConstants.DATA_NOT_FOUND;
-import static com.manage.constance.UserConstants.INVALID_USERNAME_OR_PASSWORD;
+
+import static com.manage.constance.UserConstants.*;
 
 @Service
 @AllArgsConstructor
@@ -50,8 +52,10 @@ public class UserService {
     }
 
     public UserDto getFirstByUsername(String username) {
-        User find = repository.findFirstByUsername(username);
-        return UserMapper.mapToDTO(find);
+        User findUsername = repository.findFirstByUsername(username);
+        if (findUsername != null)
+            return UserMapper.mapToDTO(findUsername);
+        throw new UserNotFoundException(USER_NOT_FOUND.replace("%username%", username));
     }
 
     public List<UserDto> getByUsernameLike(String usernameLike) {
@@ -62,46 +66,46 @@ public class UserService {
     public List<User> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<User> all = repository.findAll(pagination);
-        return all.toList();
+        return all.getContent();
     }
-
-    //totalCount pagination:
     public long getAllCount() {
         return repository.count();
     }
-    public User getById(long id) {
+    public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
             throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
-        return data.orElse(null);
+        return UserMapper.mapToDTO(data.get());
     }
 
-    public UserDto update(UserDto data) throws NoSuchAlgorithmException {
-        User oldData = getById(data.getId());
-        if (oldData == null){
-            throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(data.getId())));
+    public UserDto update(UserDto userDto) throws NoSuchAlgorithmException {
+        Optional<User> userData = repository.findById(userDto.getId());
+        if (userData.isPresent()) {
+            User user = userData.get();
+            user.setUsername(userDto.getUsername());
+            user.setFirstname(userDto.getFirstname());
+            user.setLastname(userDto.getLastname());
+            user.setEnable(userDto.isEnable());
+            if (!StringUtils.isEmpty(userDto.getPassword()))
+                user.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
+            User dataUpdated = repository.save(user);
+            return UserMapper.mapToDTO(dataUpdated);
         }
-        oldData.setUsername(data.getUsername());
-        oldData.setFirstname(data.getFirstname());
-        oldData.setLastname(data.getLastname());
-        oldData.setEnable(data.isEnable());
-        if (data.getPassword() != null && !data.getPassword().isEmpty())
-            oldData.setPassword(securityUtils.encryptSHA1(data.getPassword()));
-        User savedUser = repository.save(oldData);
-        return UserMapper.mapToDTO(savedUser);
+        throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(userDto.getId())));
     }
 
-    /*public boolean deleteById(long id) throws DataNotFoundException {
-        User oldData = getById(id);//getId with db
-        if (oldData == null){
-            throw new DataNotFoundException("data with id"+id+"not found");
+    public boolean deleteById(long id) {
+        UserDto user = getById(id);
+        if (user != null) {
+            repository.deleteById(id);
+            return true;
         }
-        repository.deleteById(id);
-        return true;
+        throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
     }
+
 
     //for updatePass:
-    public User changePassword(long id,String oldPassword,String newPassword) throws Exception {
+    /*public User changePassword(long id,String oldPassword,String newPassword) throws Exception {
         try {
             oldPassword = securityUtils.encryptSHA1(oldPassword);
             newPassword = securityUtils.encryptSHA1(newPassword);

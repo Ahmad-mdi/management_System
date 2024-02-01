@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<UserDto> searchUsersByUsername(@RequestParam String username_like) {
-        List<UserDto> result = service.getByUsernameLike(username_like);
+    public ApiResponse<UserDto> searchUsersByUsername(@RequestParam String usernameLike) {
+        List<UserDto> result = service.getByUsernameLike(usernameLike);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
@@ -71,9 +71,9 @@ public class UserController {
     }
     @GetMapping("/{id}")
     public ApiResponse<UserDto> getById(@PathVariable long id) {
-        User user = service.getById(id);
-        UserDto dto = UserMapper.mapToDTO(user);
-        return new ApiResponse<>(dto,ApiResponseStatus.SUCCESS);
+        UserDto user = service.getById(id);
+//        UserDto dto = UserMapper.mapToDTO(user);
+        return new ApiResponse<>(user,ApiResponseStatus.SUCCESS);
     }
 
     @PutMapping("/update")
@@ -82,17 +82,13 @@ public class UserController {
         return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
     }
 
-    /*@DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Boolean> delete(@PathVariable long id) {
-        try {
-            boolean result = service.deleteById(id);
-            return new ApiResponse<>(result, ResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
+        boolean result = service.deleteById(id);
+        return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
-    @PutMapping("/changePass")
+    /*@PutMapping("/changePass")
     public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) {
         try {
             User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
