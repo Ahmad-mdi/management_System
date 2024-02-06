@@ -46,6 +46,10 @@ public class GlobalExceptionHandler{
     public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid id format");
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 
     /*@ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
