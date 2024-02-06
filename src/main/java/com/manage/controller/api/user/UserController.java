@@ -39,7 +39,7 @@ public class UserController {
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
-    @GetMapping("/get_all")
+    @GetMapping("/get-all")
     public ApiResponse<UserDto> getAll(@RequestParam Integer pageSize, @RequestParam Integer pageNumber) {
         List<User> result = service.getAll(pageSize, pageNumber);
         List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
@@ -47,7 +47,7 @@ public class UserController {
         return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
     }
 
-    @GetMapping("/get_user_info")
+    @GetMapping("/get-user-info")
     public ApiResponse<UserDto> getUserInfo(HttpServletRequest servletRequest) {
         try {
             //read token header and if==ok set token:
@@ -67,10 +67,10 @@ public class UserController {
             return new ApiResponse<>(e);
         }
     }
+
     @GetMapping("/{id}")
     public ApiResponse<UserDto> getById(@PathVariable long id) {
         UserDto user = service.getById(id);
-//        UserDto dto = UserMapper.mapToDTO(user);
         return new ApiResponse<>(user,ApiResponseStatus.SUCCESS);
     }
 
