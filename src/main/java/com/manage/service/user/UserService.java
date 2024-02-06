@@ -10,6 +10,9 @@ import com.manage.utils.exception.UserNotFoundException;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +28,10 @@ import static com.manage.constance.UserConstants.*;
 @AllArgsConstructor
 @Data
 public class UserService {
-
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
         User user = repository.findFirstByUsernameAndPassword(username, password);
@@ -39,6 +41,7 @@ public class UserService {
             dto.setToken(token);
             return dto;
         }
+        logger.error("invalid username or password");
         throw new UserNotFoundException(INVALID_USERNAME_OR_PASSWORD);
     }
 
@@ -53,7 +56,10 @@ public class UserService {
         User findUsername = repository.findFirstByUsername(username);
         if (findUsername != null)
             return UserMapper.mapToDTO(findUsername);
+        logger.error("user:"+username+"notFound");
         throw new UserNotFoundException(USER_NOT_FOUND.replace("%username%", username));
+
+
     }
 
     public List<UserDto> getByUsernameLike(String usernameLike) {
@@ -64,6 +70,10 @@ public class UserService {
     public List<User> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<User> all = repository.findAll(pagination);
+        if (all.isEmpty()){
+            logger.warn("pageNumber: " +pageNumber + " " +"pageSize: "+ +pageSize+ " not found");
+            throw new DataNotFoundException(PAGE_NUMBER_NOT_FOUND.replace("%page%",String.valueOf(pageNumber)));
+        }
         return all.getContent();
     }
     public long getAllCount() {
@@ -100,8 +110,6 @@ public class UserService {
         }
         throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
     }
-
-
     //for updatePass:
     /*public User changePassword(long id,String oldPassword,String newPassword) throws Exception {
         try {
