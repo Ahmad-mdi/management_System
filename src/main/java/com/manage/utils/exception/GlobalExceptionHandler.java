@@ -4,6 +4,7 @@ import com.manage.constance.UserConstants;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.*;
 @RestControllerAdvice
 @AllArgsConstructor
 public class GlobalExceptionHandler{
+    private final MessageSource messageSource;
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String,String> HandleInvalidArguments(MethodArgumentNotValidException ex)
@@ -30,9 +32,9 @@ public class GlobalExceptionHandler{
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         if (Objects.requireNonNull(ex.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
-            return new ApiResponse<>(UserConstants.INVALID_NATIONAL_CODE, ApiResponseStatus.EXCEPTION);
+            return new ApiResponse<>(getMessage("already.nationalCode"), ApiResponseStatus.EXCEPTION);
          else
-            return new ApiResponse<>(UserConstants.DATA_INTEGRITY, ApiResponseStatus.EXCEPTION);
+            return new ApiResponse<>(getMessage("data.integrity"), ApiResponseStatus.EXCEPTION);
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
@@ -56,7 +58,10 @@ public class GlobalExceptionHandler{
     public ApiResponse<Object> handleNullPointerException(NullPointerException ex) {
         return new ApiResponse<>(messageError.validUsernameAndPassword,ApiResponseStatus.EXCEPTION);
     }*/
-
+    public String getMessage(String key) {
+        Locale locale = Locale.getDefault();
+        return messageSource.getMessage(key, null, locale);
+    }
 }
 
 

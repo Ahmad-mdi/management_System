@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import static com.manage.constance.UserConstants.*;
-
 @Service
 @AllArgsConstructor
 @Data
 public class UserService {
+    private final MessageSource messageSource;
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
@@ -42,7 +42,7 @@ public class UserService {
             return dto;
         }
         logger.error("invalid username or password");
-        throw new UserNotFoundException(INVALID_USERNAME_OR_PASSWORD);
+        throw new UserNotFoundException(getMessage("invalid.username.password"));
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -57,7 +57,7 @@ public class UserService {
         if (findUsername != null)
             return UserMapper.mapToDTO(findUsername);
         logger.error("user:"+username+"notFound");
-        throw new UserNotFoundException(USER_NOT_FOUND.replace("%username%", username));
+        throw new UserNotFoundException(getMessage("user.not.found").replace("%username%", username));
 
 
     }
@@ -71,8 +71,8 @@ public class UserService {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<User> all = repository.findAll(pagination);
         if (all.isEmpty()){
-            logger.warn("pageNumber: " +pageNumber + " " +"pageSize: "+ +pageSize+ " not found");
-            throw new DataNotFoundException(PAGE_NUMBER_NOT_FOUND.replace("%page%",String.valueOf(pageNumber)));
+            logger.warn("pageNumber: " +pageNumber + " " +"pageSize: "+ pageSize+ " not found");
+            throw new DataNotFoundException(getMessage("page.number.not.found").replace("%page%",String.valueOf(pageNumber)));
         }
         return all.getContent();
     }
@@ -82,7 +82,7 @@ public class UserService {
     public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
-            throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
+            throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(id)));
         return UserMapper.mapToDTO(data.get());
     }
 
@@ -99,7 +99,7 @@ public class UserService {
             User dataUpdated = repository.save(user);
             return UserMapper.mapToDTO(dataUpdated);
         }
-        throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(userDto.getId())));
+        throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(userDto.getId())));
     }
 
     public boolean deleteById(long id) {
@@ -108,7 +108,7 @@ public class UserService {
             repository.deleteById(id);
             return true;
         }
-        throw new DataNotFoundException(DATA_NOT_FOUND.replace("%id%", String.valueOf(id)));
+        throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(id)));
     }
     //for updatePass:
     /*public User changePassword(long id,String oldPassword,String newPassword) throws Exception {
@@ -125,5 +125,10 @@ public class UserService {
         userChanePass.setPassword(newPassword);
         return repository.save(userChanePass);
     }*/
+
+    public String getMessage(String key) {
+        Locale locale = Locale.getDefault();
+        return messageSource.getMessage(key, null, locale);
+    }
 
 }
