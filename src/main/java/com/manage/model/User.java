@@ -2,6 +2,7 @@ package com.manage.model;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -17,4 +18,6 @@ public class User {
     @Column(unique = true)
     private String nationalCode;
     private boolean enable;
+    private int tryCount;
+    private LocalDateTime lockTime;
 }
