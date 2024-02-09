@@ -6,6 +6,8 @@ import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.DataNotFoundException;
+import com.manage.utils.exception.LoginException;
+import com.manage.utils.exception.OldPasswordNotFoundException;
 import com.manage.utils.exception.UserNotFoundException;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,7 @@ public class UserService {
             return dto;
         }
         logger.error("invalid username or password");
-        throw new UserNotFoundException(getMessage("invalid.username.password"));
+        throw new LoginException("");
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -57,7 +59,7 @@ public class UserService {
         if (findUsername != null)
             return UserMapper.mapToDTO(findUsername);
         logger.error("user:"+username+"notFound");
-        throw new UserNotFoundException(getMessage("user.not.found").replace("%username%", username));
+        throw new UserNotFoundException("");
 
 
     }
@@ -72,7 +74,7 @@ public class UserService {
         Page<User> all = repository.findAll(pagination);
         if (all.isEmpty()){
             logger.warn("pageNumber: " +pageNumber + " " +"pageSize: "+ pageSize+ " not found");
-            throw new DataNotFoundException(getMessage("page.number.not.found").replace("%page%",String.valueOf(pageNumber)));
+            throw new DataNotFoundException("");
         }
         return all.getContent();
     }
@@ -82,7 +84,7 @@ public class UserService {
     public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
-            throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(id)));
+            throw new DataNotFoundException("");
         return UserMapper.mapToDTO(data.get());
     }
 
@@ -99,7 +101,7 @@ public class UserService {
             User dataUpdated = repository.save(user);
             return UserMapper.mapToDTO(dataUpdated);
         }
-        throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(userDto.getId())));
+        throw new DataNotFoundException("");
     }
 
     public boolean deleteById(long id) {
@@ -108,27 +110,17 @@ public class UserService {
             repository.deleteById(id);
             return true;
         }
-        throw new DataNotFoundException(getMessage("data.not.found").replace("%id%", String.valueOf(id)));
+        throw new DataNotFoundException("");
     }
     //for updatePass:
-    /*public User changePassword(long id,String oldPassword,String newPassword) throws Exception {
-        try {
-            oldPassword = securityUtils.encryptSHA1(oldPassword);
-            newPassword = securityUtils.encryptSHA1(newPassword);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }        User userChanePass = getById(id);
-        if (userChanePass == null)
-            throw new DataNotFoundException("user not found!");
-        if (!userChanePass.getPassword().equals(oldPassword))
-            throw new Exception("Invalid old password");
-        userChanePass.setPassword(newPassword);
-        return repository.save(userChanePass);
-    }*/
-
-    public String getMessage(String key) {
-        Locale locale = Locale.getDefault();
-        return messageSource.getMessage(key, null, locale);
+    public User changePassword(long id,String oldPassword, String newPassword) throws NoSuchAlgorithmException {
+        oldPassword = securityUtils.encryptSHA1(oldPassword);
+        newPassword = securityUtils.encryptSHA1(newPassword);
+        Optional<User> find = repository.findById(id);
+        User user = find.orElseThrow(() -> new DataNotFoundException(""));
+        if (!user.getPassword().equals(oldPassword))
+            throw new OldPasswordNotFoundException("");
+        user.setPassword(newPassword);
+        return repository.save(user);
     }
-
 }

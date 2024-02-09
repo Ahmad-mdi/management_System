@@ -1,6 +1,5 @@
 package com.manage.utils.exception;
 
-import com.manage.constance.UserConstants;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestControllerAdvice
@@ -38,11 +38,20 @@ public class GlobalExceptionHandler{
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("user.not.found"));
+    }
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<String> handleUserNotFoundException(LoginException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("invalid.username.password"));
+    }
+    @ExceptionHandler(OldPasswordNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(OldPasswordNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("invalid.old.password"));
     }
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(DataNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(getMessage("data.not.found"));
     }
     @ExceptionHandler(NumberFormatException.class)
     public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {

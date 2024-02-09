@@ -86,14 +86,11 @@ public class UserController {
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
-    /*@PutMapping("/changePass")
-    public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) {
-        try {
-            User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
-            return new ApiResponse<>(new UserDto(result), ResponseStatus.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e);
-        }
-    }*/
+    @PutMapping("/change-password")
+    public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws NoSuchAlgorithmException {
+        User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
+        UserDto userDto = UserMapper.mapToDTO(result);
+        return new ApiResponse<>(userDto,ApiResponseStatus.SUCCESS);
+    }
 
 }

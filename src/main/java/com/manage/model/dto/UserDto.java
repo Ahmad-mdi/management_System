@@ -27,6 +27,7 @@ public class UserDto {
     private String lastname;
     @NotBlank(message = "the password failed is required")
     private String password;
+    private String newPassword;
     private String token;
 
 }
