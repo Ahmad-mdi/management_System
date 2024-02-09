@@ -61,6 +61,10 @@ public class GlobalExceptionHandler{
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(LockedUserException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(LockedUserException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage("user.locked"));
+    }
 
     /*@ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -9,9 +9,11 @@ import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.Validation;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ApiResponse<UserDto> update(@RequestBody UserDto data) throws NoSuchAlgorithmException {
+    public ApiResponse<UserDto> update(@RequestBody @Valid UserDto data) throws NoSuchAlgorithmException {
         UserDto result = service.update(data);
         return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
     }
@@ -87,7 +89,7 @@ public class UserController {
     }
 
     @PutMapping("/change-password")
-    public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws NoSuchAlgorithmException {
+    public ApiResponse<UserDto> changePassword(@RequestBody @Validated UserDto data) throws Exception {
         User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
         UserDto userDto = UserMapper.mapToDTO(result);
         return new ApiResponse<>(userDto,ApiResponseStatus.SUCCESS);

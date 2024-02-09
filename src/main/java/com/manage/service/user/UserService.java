@@ -5,46 +5,69 @@ import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
-import com.manage.utils.exception.DataNotFoundException;
-import com.manage.utils.exception.LoginException;
-import com.manage.utils.exception.OldPasswordNotFoundException;
-import com.manage.utils.exception.UserNotFoundException;
+import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 @Data
 public class UserService {
-    private final MessageSource messageSource;
     private final UserRepository repository;
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
         User user = repository.findFirstByUsernameAndPassword(username, password);
         if (user != null) {
+            if (user.getTryCount() >= 3) {
+                LocalDateTime lockTime = user.getLockTime();
+                if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
+                    throw new LockedUserException("");
+                }
+                user.setTryCount(0);
+                user.setLockTime(null);
+                repository.save(user); // save the updated user entity with reset tryCount and lock time
+            }
             UserDto dto = UserMapper.mapToDTO(user);
             String token = jwtTokenUtil.generateToken(dto);
             dto.setToken(token);
             return dto;
+        } else {
+            user = repository.findFirstByUsername(username);
+            if (user != null) {
+                LocalDateTime lockTime = user.getLockTime();
+                if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
+                    throw new LockedUserException("");
+                }
+                int tryCount = user.getTryCount() + 1;
+                lockTime = LocalDateTime.now().plusMinutes(10);
+                if (tryCount >= 3) {
+                    user.setLockTime(lockTime);
+                }
+                user.setTryCount(tryCount);
+                repository.save(user); // save the updated user entity with incremented tryCount and lock time
+            }
+            logger.error("Invalid username or password");
+            throw new LoginException("");
         }
-        logger.error("invalid username or password");
-        throw new LoginException("");
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -58,7 +81,7 @@ public class UserService {
         User findUsername = repository.findFirstByUsername(username);
         if (findUsername != null)
             return UserMapper.mapToDTO(findUsername);
-        logger.error("user:"+username+"notFound");
+        logger.error("user:" + username + "notFound");
         throw new UserNotFoundException("");
 
 
@@ -72,15 +95,17 @@ public class UserService {
     public List<User> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<User> all = repository.findAll(pagination);
-        if (all.isEmpty()){
-            logger.warn("pageNumber: " +pageNumber + " " +"pageSize: "+ pageSize+ " not found");
+        if (all.isEmpty()) {
+            logger.warn("pageNumber: " + pageNumber + " " + "pageSize: " + pageSize + " not found");
             throw new DataNotFoundException("");
         }
         return all.getContent();
     }
+
     public long getAllCount() {
         return repository.count();
     }
+
     public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
@@ -96,8 +121,6 @@ public class UserService {
             user.setFirstname(userDto.getFirstname());
             user.setLastname(userDto.getLastname());
             user.setEnable(userDto.isEnable());
-            if (!StringUtils.isEmpty(userDto.getPassword()))
-                user.setPassword(securityUtils.encryptSHA1(userDto.getPassword()));
             User dataUpdated = repository.save(user);
             return UserMapper.mapToDTO(dataUpdated);
         }
@@ -112,8 +135,9 @@ public class UserService {
         }
         throw new DataNotFoundException("");
     }
+
     //for updatePass:
-    public User changePassword(long id,String oldPassword, String newPassword) throws NoSuchAlgorithmException {
+    public User changePassword(long id, String oldPassword, String newPassword) throws NoSuchAlgorithmException {
         oldPassword = securityUtils.encryptSHA1(oldPassword);
         newPassword = securityUtils.encryptSHA1(newPassword);
         Optional<User> find = repository.findById(id);
