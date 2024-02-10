@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ApiResponse<UserDto> update(@RequestBody @Valid UserDto data) throws NoSuchAlgorithmException {
+    public ApiResponse<UserDto> update(@RequestBody UserDto data) throws Exception {
         UserDto result = service.update(data);
         return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
     }
@@ -89,7 +89,7 @@ public class UserController {
     }
 
     @PutMapping("/change-password")
-    public ApiResponse<UserDto> changePassword(@RequestBody @Validated UserDto data) throws Exception {
+    public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws Exception {
         User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
         UserDto userDto = UserMapper.mapToDTO(result);
         return new ApiResponse<>(userDto,ApiResponseStatus.SUCCESS);

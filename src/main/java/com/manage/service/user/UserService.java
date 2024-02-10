@@ -16,13 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -113,18 +112,29 @@ public class UserService {
         return UserMapper.mapToDTO(data.get());
     }
 
-    public UserDto update(UserDto userDto) throws NoSuchAlgorithmException {
+    public UserDto update(UserDto userDto) {
         Optional<User> userData = repository.findById(userDto.getId());
-        if (userData.isPresent()) {
-            User user = userData.get();
+
+        if (userData.isEmpty())
+            throw new DataNotFoundException("");
+
+        User user = userData.get();
+
+        if (notEmptyAndNotNull(userDto.getUsername()))
             user.setUsername(userDto.getUsername());
+
+        if (notEmptyAndNotNull(userDto.getFirstname()))
             user.setFirstname(userDto.getFirstname());
+
+        if (notEmptyAndNotNull(userDto.getLastname()))
             user.setLastname(userDto.getLastname());
-            user.setEnable(userDto.isEnable());
-            User dataUpdated = repository.save(user);
-            return UserMapper.mapToDTO(dataUpdated);
-        }
-        throw new DataNotFoundException("");
+
+        user.setEnable(userDto.isEnable());
+        User dataUpdated = repository.save(user);
+        return UserMapper.mapToDTO(dataUpdated);
+    }
+    private boolean notEmptyAndNotNull(String value) {
+        return value != null && !value.isEmpty();
     }
 
     public boolean deleteById(long id) {
@@ -137,14 +147,24 @@ public class UserService {
     }
 
     //for updatePass:
-    public User changePassword(long id, String oldPassword, String newPassword) throws NoSuchAlgorithmException {
+    public User changePassword(long id, String oldPassword, String newPassword) throws Exception {
         oldPassword = securityUtils.encryptSHA1(oldPassword);
-        newPassword = securityUtils.encryptSHA1(newPassword);
         Optional<User> find = repository.findById(id);
         User user = find.orElseThrow(() -> new DataNotFoundException(""));
+
         if (!user.getPassword().equals(oldPassword))
             throw new OldPasswordNotFoundException("");
+
+        if (!validatePasswordPattern(newPassword))
+            throw new ValidateNewPasswordException("");
+
+        newPassword = securityUtils.encryptSHA1(newPassword);
         user.setPassword(newPassword);
         return repository.save(user);
+    }
+
+    private boolean validatePasswordPattern(String password) {
+        String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        return password.matches(passwordPattern);
     }
 }

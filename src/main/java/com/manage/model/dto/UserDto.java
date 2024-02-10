@@ -31,7 +31,6 @@ public class UserDto {
     @NotBlank(message = "the password failed is required")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "password must be a combination of uppercase letters, lowercase letters, numbers, and special characters")
     private String password;
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "password must be a combination of uppercase letters, lowercase letters, numbers, and special characters")
     private String newPassword;
     private String token;
 }
