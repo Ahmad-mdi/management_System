@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -36,37 +35,12 @@ public class UserService {
         password = securityUtils.encryptSHA1(password);
         User user = repository.findFirstByUsernameAndPassword(username, password);
         if (user != null) {
-            if (user.getTryCount() >= 3) {
-                LocalDateTime lockTime = user.getLockTime();
-                if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-                    throw new LockedUserException("");
-                }
-                user.setTryCount(0);
-                user.setLockTime(null);
-                repository.save(user); // save the updated user entity with reset tryCount and lock time
-            }
-            UserDto dto = UserMapper.mapToDTO(user);
-            String token = jwtTokenUtil.generateToken(dto);
-            dto.setToken(token);
-            return dto;
+            handleValidUser(user);
+            return createUserDtoWithToken(user);
         } else {
-            user = repository.findFirstByUsername(username);
-            if (user != null) {
-                LocalDateTime lockTime = user.getLockTime();
-                if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-                    throw new LockedUserException("");
-                }
-                int tryCount = user.getTryCount() + 1;
-                lockTime = LocalDateTime.now().plusMinutes(10);
-                if (tryCount >= 3) {
-                    user.setLockTime(lockTime);
-                }
-                user.setTryCount(tryCount);
-                repository.save(user); // save the updated user entity with incremented tryCount and lock time
-            }
-            logger.error("Invalid username or password");
-            throw new LoginException("");
+            handleInvalidUser(username);
         }
+        return null;
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -133,9 +107,6 @@ public class UserService {
         User dataUpdated = repository.save(user);
         return UserMapper.mapToDTO(dataUpdated);
     }
-    private boolean notEmptyAndNotNull(String value) {
-        return value != null && !value.isEmpty();
-    }
 
     public boolean deleteById(long id) {
         UserDto user = getById(id);
@@ -166,5 +137,47 @@ public class UserService {
     private boolean validatePasswordPattern(String password) {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         return password.matches(passwordPattern);
+    }
+
+    private boolean notEmptyAndNotNull(String value) {
+        return value != null && !value.isEmpty();
+    }
+
+    private void handleValidUser(User user) {
+        if (user.getTryCount() >= 3) {
+            LocalDateTime lockTime = user.getLockTime();
+            if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
+                throw new LockedUserException("");
+            }
+            user.setTryCount(0);
+            user.setLockTime(null);
+            repository.save(user); // save the updated user entity with reset tryCount and lock time
+        }
+    }
+
+    private UserDto createUserDtoWithToken(User user) {
+        UserDto dto = UserMapper.mapToDTO(user);
+        String token = jwtTokenUtil.generateToken(dto);
+        dto.setToken(token);
+        return dto;
+    }
+
+    private void handleInvalidUser(String username) {
+        User user = repository.findFirstByUsername(username);
+        if (user != null) {
+            LocalDateTime lockTime = user.getLockTime();
+            if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
+                throw new LockedUserException("");
+            }
+            int tryCount = user.getTryCount() + 1;
+            lockTime = LocalDateTime.now().plusMinutes(10);
+            if (tryCount >= 3) {
+                user.setLockTime(lockTime);
+            }
+            user.setTryCount(tryCount);
+            repository.save(user); // save the updated user entity with incremented tryCount and lock time
+        }
+        logger.error("Invalid username or password");
+        throw new LoginException("");
     }
 }
