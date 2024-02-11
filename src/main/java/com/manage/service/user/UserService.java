@@ -7,6 +7,7 @@ import com.manage.model.mapper.UserMapper;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
+import com.manage.helper.ListOfUsersInExcel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,14 +36,20 @@ public class UserService {
 
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
-        User user = repository.findFirstByUsernameAndPassword(username, password);
+        User user = repository.findFirstByUsername(username);
         if (user != null) {
-            handleValidUser(user);
-            return createUserDtoWithToken(user);
-        } else {
-            handleInvalidUser(username);
+            String storedPassword = user.getPassword();
+            if (password.equals(storedPassword)) {
+                handleSuccessfulLogin(user);
+                UserDto dto = UserMapper.mapToDTO(user);
+                String token = jwtTokenUtil.generateToken(dto);
+                dto.setToken(token);
+                return dto;
+            } else
+                handleFailedLogin(user);
         }
-        return null;
+        logger.error("Invalid username or password");
+        throw new LoginException("invalid.username.password");
     }
 
     public UserDto addUser(UserDto userDto) throws Exception {
@@ -55,8 +64,7 @@ public class UserService {
         if (findUsername != null)
             return UserMapper.mapToDTO(findUsername);
         logger.error("user:" + username + "notFound");
-        throw new UserNotFoundException("");
-
+        throw new UserNotFoundException("user.not.found");
 
     }
 
@@ -65,12 +73,17 @@ public class UserService {
         return UserMapper.mapToDTOList(searchedList);
     }
 
+    public ByteArrayInputStream importToExcel() throws IOException {
+        List<User> users = repository.findAll();
+        return ListOfUsersInExcel.dataToExcel(users);
+    }
+
     public List<User> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<User> all = repository.findAll(pagination);
         if (all.isEmpty()) {
             logger.warn("pageNumber: " + pageNumber + " " + "pageSize: " + pageSize + " not found");
-            throw new DataNotFoundException("");
+            throw new DataNotFoundException("data.not.found");
         }
         return all.getContent();
     }
@@ -82,7 +95,7 @@ public class UserService {
     public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
-            throw new DataNotFoundException("");
+            throw new DataNotFoundException("data.not.found");
         return UserMapper.mapToDTO(data.get());
     }
 
@@ -90,7 +103,7 @@ public class UserService {
         Optional<User> userData = repository.findById(userDto.getId());
 
         if (userData.isEmpty())
-            throw new DataNotFoundException("");
+            throw new DataNotFoundException("data.not.found");
 
         User user = userData.get();
 
@@ -114,7 +127,7 @@ public class UserService {
             repository.deleteById(id);
             return true;
         }
-        throw new DataNotFoundException("");
+        throw new DataNotFoundException("data.not.found");
     }
 
     //for updatePass:
@@ -124,10 +137,10 @@ public class UserService {
         User user = find.orElseThrow(() -> new DataNotFoundException(""));
 
         if (!user.getPassword().equals(oldPassword))
-            throw new OldPasswordNotFoundException("");
+            throw new OldPasswordNotFoundException("invalid.old.password");
 
         if (!validatePasswordPattern(newPassword))
-            throw new ValidateNewPasswordException("");
+            throw new ValidateNewPasswordException("pattern.password");
 
         newPassword = securityUtils.encryptSHA1(newPassword);
         user.setPassword(newPassword);
@@ -143,41 +156,31 @@ public class UserService {
         return value != null && !value.isEmpty();
     }
 
-    private void handleValidUser(User user) {
+    private void handleSuccessfulLogin(User user) {
         if (user.getTryCount() >= 3) {
             LocalDateTime lockTime = user.getLockTime();
             if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-                throw new LockedUserException("");
+                throw new LockedUserException("user.locked");
             }
             user.setTryCount(0);
             user.setLockTime(null);
             repository.save(user); // save the updated user entity with reset tryCount and lock time
         }
+        repository.save(user);
     }
 
-    private UserDto createUserDtoWithToken(User user) {
-        UserDto dto = UserMapper.mapToDTO(user);
-        String token = jwtTokenUtil.generateToken(dto);
-        dto.setToken(token);
-        return dto;
-    }
+    private void handleFailedLogin(User user)  {
+       LocalDateTime lockTime = user.getLockTime();
+       if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
+           throw new LockedUserException("user.locked");
+       }
+       int tryCount = user.getTryCount() + 1;
+       lockTime = LocalDateTime.now().plusMinutes(10);
+       if (tryCount >= 3) {
+           user.setLockTime(lockTime);
+       }
+       user.setTryCount(tryCount);
+       repository.save(user);
+   }
 
-    private void handleInvalidUser(String username) {
-        User user = repository.findFirstByUsername(username);
-        if (user != null) {
-            LocalDateTime lockTime = user.getLockTime();
-            if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-                throw new LockedUserException("");
-            }
-            int tryCount = user.getTryCount() + 1;
-            lockTime = LocalDateTime.now().plusMinutes(10);
-            if (tryCount >= 3) {
-                user.setLockTime(lockTime);
-            }
-            user.setTryCount(tryCount);
-            repository.save(user); // save the updated user entity with incremented tryCount and lock time
-        }
-        logger.error("Invalid username or password");
-        throw new LoginException("");
-    }
 }

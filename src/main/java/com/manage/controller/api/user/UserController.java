@@ -9,13 +9,18 @@ import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserService;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.Validation;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import org.springframework.core.io.Resource;
 
 @AllArgsConstructor
 @RestController
@@ -23,6 +28,18 @@ import java.util.List;
 public class UserController {
     private final UserService service;
     private final JwtTokenUtil jwtTokenUtil;
+    @GetMapping("/list-excel")
+    public ResponseEntity<Resource> downloadExcelFile() throws IOException {
+        String fileName = "users.xlsx";
+        ByteArrayInputStream actualData = service.importToExcel();
+        InputStreamResource file = new InputStreamResource(actualData);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+    }
+
+
     @PostMapping("/login")
     public ApiResponse<UserDto> login(@RequestBody UserDto user) throws NoSuchAlgorithmException {
         UserDto loggedIn = service.login(user.getUsername(), user.getPassword());
