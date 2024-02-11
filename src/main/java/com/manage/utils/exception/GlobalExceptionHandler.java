@@ -70,15 +70,18 @@ public class GlobalExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage("pattern.password"));
     }
 
+
+
+    public String getMessage(String key) {
+        Locale locale = Locale.getDefault();
+        return messageSource.getMessage(key, null, locale);
+    }
+
     /*@ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Object> handleNullPointerException(NullPointerException ex) {
         return new ApiResponse<>(messageError.validUsernameAndPassword,ApiResponseStatus.EXCEPTION);
     }*/
-    public String getMessage(String key) {
-        Locale locale = Locale.getDefault();
-        return messageSource.getMessage(key, null, locale);
-    }
 }
 
 
