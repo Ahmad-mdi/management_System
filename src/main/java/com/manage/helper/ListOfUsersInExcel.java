@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+
 public class ListOfUsersInExcel {
     public static String[] HEADERS = {
             "id",
@@ -25,18 +26,21 @@ public class ListOfUsersInExcel {
 
     public static ByteArrayInputStream dataToExcel(List<User> list) throws IOException {
         //create work book
-        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            //create sheet
-            Sheet sheet = workbook.createSheet(SHEET_NAME);
-            //create row
-            Row row = sheet.createRow(0);
-            for (int i = 0; i < HEADERS.length; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellValue(HEADERS[i]);
-            }
-            //value row
-            int rowIndex = 1;
-            for (User u : list) {
+        Workbook workbook = new XSSFWorkbook();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        //create sheet
+        Sheet sheet = workbook.createSheet(SHEET_NAME);
+        //create row
+        Row row = sheet.createRow(0);
+        for (int i = 0; i < HEADERS.length; i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(HEADERS[i]);
+        }
+        //value row
+        int rowIndex = 1;
+        for (User u : list) {
+            if (u.isEnable()) {
                 Row dataRow = sheet.createRow(rowIndex);
                 rowIndex++;
                 dataRow.createCell(0).setCellValue(u.getId());
@@ -46,14 +50,8 @@ public class ListOfUsersInExcel {
                 dataRow.createCell(4).setCellValue(u.getNationalCode());
                 dataRow.createCell(5).setCellValue(u.isEnable());
             }
-            workbook.write(out);
-            return new ByteArrayInputStream(out.toByteArray());
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println("fail import data to excel");
-            return null;
         }
+        workbook.write(out);
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }
