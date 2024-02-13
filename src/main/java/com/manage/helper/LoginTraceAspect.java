@@ -1,7 +1,7 @@
 package com.manage.helper;
 
 import com.manage.model.LoginTrace;
-import com.manage.repository.login.LoginTraceRepository;
+import com.manage.repository.user_trace.LoginTraceRepository;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;

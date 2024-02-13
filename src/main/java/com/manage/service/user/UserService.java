@@ -1,11 +1,10 @@
 package com.manage.service.user;
 
 import com.manage.config.JwtTokenUtil;
-import com.manage.model.LoginTrace;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
-import com.manage.repository.login.LoginTraceRepository;
+import com.manage.repository.user_trace.LoginTraceRepository;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
@@ -26,7 +25,6 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
 
 @Service
 @AllArgsConstructor
