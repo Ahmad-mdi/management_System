@@ -23,10 +23,24 @@
 			<artifactId>resilience4j-spring-boot2</artifactId>
 			<version>1.7.0</version>
 		</dependency>
+<!--excel-->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.5</version>
+		</dependency>
+<!--aop-->
+		<!-- AspectJ Weaver -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.7</version>
+		</dependency>
+
+		<!-- Spring AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 
 		<dependency>

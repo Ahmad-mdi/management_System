@@ -30,7 +30,7 @@ public class UserController {
     private final JwtTokenUtil jwtTokenUtil;
     @GetMapping("/list-excel")
     public ResponseEntity<Resource> downloadExcelFile() throws IOException {
-        String fileName = "users.xlsx";
+        String fileName = "list-of-users.xlsx";
         ByteArrayInputStream actualData = service.importToExcel();
         InputStreamResource file = new InputStreamResource(actualData);
         return ResponseEntity.ok()
@@ -107,9 +107,8 @@ public class UserController {
 
     @PutMapping("/change-password")
     public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws Exception {
-        User result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
-        UserDto userDto = UserMapper.mapToDTO(result);
-        return new ApiResponse<>(userDto,ApiResponseStatus.SUCCESS);
+        UserDto result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
+        return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
     }
 
 }

@@ -1,9 +1,11 @@
 package com.manage.service.user;
 
 import com.manage.config.JwtTokenUtil;
+import com.manage.model.LoginTrace;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
+import com.manage.repository.login.LoginTraceRepository;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
@@ -24,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +36,7 @@ public class UserService {
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final LoginTraceRepository loginTraceRepository;
 
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);
@@ -131,10 +135,10 @@ public class UserService {
     }
 
     //for updatePass:
-    public User changePassword(long id, String oldPassword, String newPassword) throws Exception {
+    public UserDto changePassword(long id, String oldPassword, String newPassword) throws Exception {
         oldPassword = securityUtils.encryptSHA1(oldPassword);
         Optional<User> find = repository.findById(id);
-        User user = find.orElseThrow(() -> new DataNotFoundException(""));
+        User user = find.orElseThrow(() -> new DataNotFoundException("data.not.found"));
 
         if (!user.getPassword().equals(oldPassword))
             throw new OldPasswordNotFoundException("invalid.old.password");
@@ -144,7 +148,8 @@ public class UserService {
 
         newPassword = securityUtils.encryptSHA1(newPassword);
         user.setPassword(newPassword);
-        return repository.save(user);
+        User updatedPass = repository.save(user);
+        return UserMapper.mapToDTO(updatedPass);
     }
 
     private boolean validatePasswordPattern(String password) {

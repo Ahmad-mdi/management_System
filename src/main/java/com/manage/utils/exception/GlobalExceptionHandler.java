@@ -30,32 +30,32 @@ public class GlobalExceptionHandler{
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        if (Objects.requireNonNull(ex.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
+    public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        if (Objects.requireNonNull(e.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
             return new ApiResponse<>(getMessage("already.nationalCode"), ApiResponseStatus.EXCEPTION);
          else
-            return new ApiResponse<>(getMessage("data.integrity"), ApiResponseStatus.EXCEPTION);
+            return new ApiResponse<>(getMessage(e.getMessage()), ApiResponseStatus.EXCEPTION);
     }
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("user.not.found"));
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<String> handleUserNotFoundException(LoginException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("invalid.username.password"));
+    public ResponseEntity<String> handleUserNotFoundException(LoginException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(OldPasswordNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(OldPasswordNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage("invalid.old.password"));
+    public ResponseEntity<String> handleUserNotFoundException(OldPasswordNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(DataNotFoundException ex) {
+    public ResponseEntity<String> handleUserNotFoundException(DataNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(getMessage("data.not.found"));
+                .body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid id format");
+    public ResponseEntity<String> handleNumberFormatException(NumberFormatException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -63,13 +63,12 @@ public class GlobalExceptionHandler{
     }
     @ExceptionHandler(LockedUserException.class)
     public ResponseEntity<String> handleIllegalArgumentException(LockedUserException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage("user.locked"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
     }
     @ExceptionHandler(ValidateNewPasswordException.class)
     public ResponseEntity<String> handleIllegalArgumentException(ValidateNewPasswordException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage("pattern.password"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
     }
-
 
 
     public String getMessage(String key) {
