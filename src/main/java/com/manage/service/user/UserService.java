@@ -4,7 +4,7 @@ import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
-import com.manage.repository.user_trace.LoginTraceRepository;
+import com.manage.repository.user_trace.LoginTraceReportRepository;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
@@ -34,7 +34,7 @@ public class UserService {
     private final SecurityUtils securityUtils;
     private final JwtTokenUtil jwtTokenUtil;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    private final LoginTraceRepository loginTraceRepository;
+    private final LoginTraceReportRepository loginTraceRepository;
 
     public UserDto login(String username, String password) throws NoSuchAlgorithmException {
         password = securityUtils.encryptSHA1(password);

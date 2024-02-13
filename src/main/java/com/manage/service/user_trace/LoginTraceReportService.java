@@ -1,7 +1,7 @@
 package com.manage.service.user_trace;
 
 import com.manage.model.LoginTrace;
-import com.manage.repository.user_trace.LoginTraceRepository;
+import com.manage.repository.user_trace.LoginTraceReportRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class LoginTraceReportService {
-    private final LoginTraceRepository loginTraceRepository;
+    private final LoginTraceReportRepository loginTraceRepository;
 
     public List<LoginTrace> getLoginTraceByUsername(String username) {
         List<LoginTrace> successfulLoginTrace = loginTraceRepository

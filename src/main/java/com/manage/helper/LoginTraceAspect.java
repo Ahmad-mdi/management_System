@@ -1,7 +1,7 @@
 package com.manage.helper;
 
 import com.manage.model.LoginTrace;
-import com.manage.repository.user_trace.LoginTraceRepository;
+import com.manage.repository.user_trace.LoginTraceReportRepository;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LoginTraceAspect {
 
-    private final LoginTraceRepository loginTraceRepository;
+    private final LoginTraceReportRepository loginTraceRepository;
     @AfterReturning(value = "execution(* com.manage.service.user.UserService.login(..))", returning = "result")
     public void successfulLogin(JoinPoint joinPoint, Object result) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
