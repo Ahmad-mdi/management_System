@@ -10,18 +10,19 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class LoginTraceReportService {
+public class LoginTraceReportServiceImpl implements LoginTraceReport {
     private final LoginTraceReportRepository loginTraceRepository;
 
+    @Override
     public List<LoginTrace> getLoginTraceByUsername(String username) {
-        List<LoginTrace> successfulLoginTrace = loginTraceRepository
+        List<LoginTrace> successLoginTrace = loginTraceRepository
                 .findTop3ByIsSuccessTrueAndUsernameOrderByLoginTimeDesc(username);
-        List<LoginTrace> unsuccessfulLoginTrace = loginTraceRepository
+        List<LoginTrace> failedLoginTrace = loginTraceRepository
                 .findTop3ByIsSuccessFalseAndUsernameOrderByLoginTimeDesc(username);
 
         List<LoginTrace> loginTraceList = new ArrayList<>();
-        loginTraceList.addAll(successfulLoginTrace);
-        loginTraceList.addAll(unsuccessfulLoginTrace);
+        loginTraceList.addAll(successLoginTrace);
+        loginTraceList.addAll(failedLoginTrace);
 
         return loginTraceList;
     }

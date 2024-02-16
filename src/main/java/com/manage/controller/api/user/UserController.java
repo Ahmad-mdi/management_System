@@ -6,7 +6,7 @@ import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
-import com.manage.service.user.UserService;
+import com.manage.service.user.UserServiceImpl;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -26,7 +26,7 @@ import org.springframework.core.io.Resource;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserService service;
+    private final UserServiceImpl service;
     private final JwtTokenUtil jwtTokenUtil;
     @GetMapping("/list-excel")
     public ResponseEntity<Resource> downloadExcelFile() throws IOException {

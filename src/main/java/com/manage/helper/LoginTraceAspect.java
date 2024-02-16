@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class LoginTraceAspect {
 
     private final LoginTraceReportRepository loginTraceRepository;
-    @AfterReturning(value = "execution(* com.manage.service.user.UserService.login(..))", returning = "result")
+    @AfterReturning(value = "execution(* com.manage.service.user.UserServiceImpl.login(..))", returning = "result")
     public void successfulLogin(JoinPoint joinPoint, Object result) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String username = (String) joinPoint.getArgs()[0];
@@ -28,7 +28,7 @@ public class LoginTraceAspect {
     }
 
 
-    @AfterThrowing(value = "execution(* com.manage.service.user.UserService.login(..))", throwing = "exception")
+    @AfterThrowing(value = "execution(* com.manage.service.user.UserServiceImpl.login(..))", throwing = "exception")
     public void failedLogin(JoinPoint joinPoint, Throwable exception) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String username = (String) joinPoint.getArgs()[0];

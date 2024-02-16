@@ -3,10 +3,13 @@ package com.manage.repository.user_trace;
 import com.manage.model.LoginTrace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 @Repository
 public interface LoginTraceReportRepository extends JpaRepository<LoginTrace,Long> {
     List<LoginTrace> findTop3ByIsSuccessTrueAndUsernameOrderByLoginTimeDesc(String username);
+
     List<LoginTrace> findTop3ByIsSuccessFalseAndUsernameOrderByLoginTimeDesc(String username);
 }
