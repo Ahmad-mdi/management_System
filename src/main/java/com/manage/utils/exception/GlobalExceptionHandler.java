@@ -76,11 +76,6 @@ public class GlobalExceptionHandler{
         return messageSource.getMessage(key, null, locale);
     }
 
-    /*@ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<Object> handleNullPointerException(NullPointerException ex) {
-        return new ApiResponse<>(messageError.validUsernameAndPassword,ApiResponseStatus.EXCEPTION);
-    }*/
 }
 
 
