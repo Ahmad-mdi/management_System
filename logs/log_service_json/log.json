@@ -1,0 +1,29 @@
+{
+  "result": {
+    "id": 0,
+    "fullName": "taha hasani",
+    "username": "tt-90",
+    "nationalCode": "3931659021",
+    "enable": false,
+    "firstname": null,
+    "lastname": null,
+    "password": null,
+    "newPassword": null,
+    "token": null
+  },
+  "methodName": "update",
+
+  "result": {
+    "id": 0,
+    "fullName": "ahmad mohammadi",
+    "username": "ahmad",
+    "nationalCode": "3920771869",
+    "enable": true,
+    "firstname": null,
+    "lastname": null,
+    "password": null,
+    "newPassword": null,
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhaG1hZCIsImV4cCI6MTcwOTA0NzQ3NywiaWF0IjoxNzA5MDI5NDc3fQ.TJseOAQhs4r69p0i_vct_SAWJ7hVCnhN-J3IJekbHRj-MGNxZzf_spq64Ie8txRkSS5BiMWZJz3V_OSYr_FrYQ"
+  },
+  "methodName": "login"
+}
