@@ -2,7 +2,10 @@ package com.manage.service.user;
 
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +15,8 @@ public interface UserService {
     UserDto login(String username, String password) throws NoSuchAlgorithmException;
 
     UserDto addUser(UserDto userDto) throws Exception;
+
+    ResponseEntity<String> generateUsersAndExportToExcel() throws IOException;
 
     UserDto getFirstByUsername(String username);
 

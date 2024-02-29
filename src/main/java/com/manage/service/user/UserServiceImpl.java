@@ -11,18 +11,26 @@ import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +69,27 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.mapToEntity(userDto);
         User savedUser = repository.save(user);
         return UserMapper.mapToDTO(savedUser);
+    }
+
+    @Override
+    public ResponseEntity<String> generateUsersAndExportToExcel() throws IOException {
+        List<User> users = generateUsersToExcel(3000);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Users");
+
+        for (int i = 0; i < users.size(); i++) {
+            Row row = sheet.createRow(i);
+            row.createCell(0).setCellValue(users.get(i).getUsername()); // Setting username
+            row.createCell(1).setCellValue(users.get(i).getPassword()); // Setting password
+        }
+
+        FileOutputStream fileOut = new FileOutputStream("users.xlsx");
+        workbook.write(fileOut);
+
+        workbook.close();
+
+        return ResponseEntity.ok("Excel file created successfully.");
     }
 
     @Override
@@ -196,5 +225,19 @@ public class UserServiceImpl implements UserService {
         user.setTryCount(tryCount);
         repository.save(user);
     }
+
+    private List<User> generateUsersToExcel(int numUsers) {
+        List<User> users = new ArrayList<>();
+
+        for (int i = 0; i < numUsers; i++) {
+            User user = new User();
+            user.setUsername("user "+i);
+            user.setPassword("pass "+i);
+            users.add(user);
+        }
+
+        return users;
+    }
+
 
 }

@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    User findFirstByUsernameAndPassword(String username,String password);
     @Query("SELECT u FROM User u WHERE lower(u.username) LIKE lower(concat('%', :query, '%'))")
     List<User> findByUsernameLike(@Param("query") String query);
     User findFirstByUsername(String username);
