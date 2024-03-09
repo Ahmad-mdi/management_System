@@ -3,7 +3,6 @@ package com.manage.service.user;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,9 @@ public interface UserService {
 
     UserDto addUser(UserDto userDto) throws Exception;
 
-    ResponseEntity<String> generateUsersAndExportToExcel() throws IOException;
+    ResponseEntity<String> generateAndSaveUsersToExcel() throws IOException;
+
+    ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException;
 
     UserDto getFirstByUsername(String username);
 

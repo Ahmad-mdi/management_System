@@ -4,6 +4,7 @@ import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
+import com.manage.repository.user.UserRepository;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserServiceImpl;
@@ -15,14 +16,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.springframework.core.io.Resource;
 public class UserController {
     private final UserServiceImpl service;
     private final JwtTokenUtil jwtTokenUtil;
+
     @GetMapping("/list-excel")
     public ResponseEntity<Resource> downloadExcelFile() throws IOException {
         String fileName = "list-of-users.xlsx";
@@ -44,7 +46,14 @@ public class UserController {
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
     }
-
+    @GetMapping("/generate-user-to-excel")
+    public ResponseEntity<String> generateAndSaveUsersToExcel() throws IOException {
+       return service.generateAndSaveUsersToExcel();
+    }
+    @GetMapping("/saved-users-from-excel")
+    public ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
+        return service.processUsersFromExcel();
+    }
 
     @PostMapping("/login")
     public ApiResponse<UserDto> login(@RequestBody UserDto user) throws NoSuchAlgorithmException {
@@ -56,11 +65,6 @@ public class UserController {
     public ApiResponse<UserDto> add(@RequestBody @Valid UserDto data) throws Exception {
         UserDto result = service.addUser(data);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
-    }
-
-    @GetMapping("/generate-user-to-excel")
-    public ResponseEntity<String> generateAndExportUsersToExcel() throws IOException {
-        return service.generateUsersAndExportToExcel();
     }
 
     @GetMapping("/search")

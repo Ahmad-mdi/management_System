@@ -1,5 +1,6 @@
 package com.manage.service.user;
 
+import com.manage.annotation.NationalCode;
 import com.manage.config.JwtTokenUtil;
 import com.manage.helper.ListOfUsersInExcel;
 import com.manage.model.User;
@@ -21,13 +22,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,25 +71,68 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> generateUsersAndExportToExcel() throws IOException {
-        List<User> users = generateUsersToExcel(3000);
-
+    public ResponseEntity<String> generateAndSaveUsersToExcel() throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Users");
+        Sheet sheet = workbook.createSheet("User Data");
 
-        for (int i = 0; i < users.size(); i++) {
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Username");
+        headerRow.createCell(1).setCellValue("Password");
+        headerRow.createCell(2).setCellValue("enable");
+        headerRow.createCell(3).setCellValue("firstname");
+        headerRow.createCell(4).setCellValue("lastname");
+        headerRow.createCell(5).setCellValue("lock_time");
+        headerRow.createCell(6).setCellValue("try_count");
+        headerRow.createCell(7).setCellValue("national_code");
+
+        // Generate and save 3000 users with fixed username and password
+        for (int i = 1; i <= 3000; i++) {
             Row row = sheet.createRow(i);
-            row.createCell(0).setCellValue(users.get(i).getUsername()); // Setting username
-            row.createCell(1).setCellValue(users.get(i).getPassword()); // Setting password
+            row.createCell(0).setCellValue("user" + i);
+            row.createCell(1).setCellValue("password123");
+            row.createCell(2).setCellValue("true");
+            row.createCell(3).setCellValue("firstname"+i);
+            row.createCell(4).setCellValue("lastname"+i);
+            row.createCell(5).setCellValue("lock_time"+i);
+            row.createCell(6).setCellValue("0");
+            row.createCell(7).setCellValue("123");
         }
 
-        FileOutputStream fileOut = new FileOutputStream("users.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("user_data.xlsx");
         workbook.write(fileOut);
 
+        fileOut.close();
         workbook.close();
 
-        return ResponseEntity.ok("Excel file created successfully.");
+        return ResponseEntity.ok("User data saved to Excel successfully.");
     }
+
+    @Override
+    @Scheduled(fixedRate = 60000) // Run every minute
+    public ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
+        FileInputStream file = new FileInputStream("user_data.xlsx");
+        Workbook workbook = new XSSFWorkbook(file);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            User user = new User();
+            user.setUsername(row.getCell(0).getStringCellValue());
+            user.setPassword(securityUtils.encryptSHA1(row.getCell(1).getStringCellValue()));
+            user.setEnable(Boolean.parseBoolean(row.getCell(2).getStringCellValue()));
+            user.setFirstname(row.getCell(3).getStringCellValue());
+            user.setLastname(row.getCell(4).getStringCellValue());
+            user.setTryCount(Integer.parseInt(row.getCell(6).getStringCellValue()));
+            user.setNationalCode(row.getCell(7).getStringCellValue());
+
+            repository.save(user);
+        }
+        workbook.close();
+        file.close();
+        return ResponseEntity.ok("3000 user saved to db");
+    }
+
 
     @Override
     public UserDto getFirstByUsername(String username) {
