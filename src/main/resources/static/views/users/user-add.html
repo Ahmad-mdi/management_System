@@ -4,8 +4,8 @@
         <br>
         <div class="card">
             <div class="card-header">
-                Add a New user
-                <a ng-click="changeMenu('user-list')" class="btn btn-sm btn-primary float-right"> <-Back </a>
+                ایجاد کاربر جدید
+                <a ng-click="changeMenu('user-list')" class="btn btn-sm btn-primary float-right"> <- برگشت </a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -13,23 +13,23 @@
                         <div class="row">
                             <div class="col login-box-holder">
                                 <div class="form-group">
-                                    <label for="firstname">FirstName</label>
+                                    <label for="firstname">نام</label>
                                     <input type="text" class="form-control" id="firstname" ng-model="data.firstname">
                                 </div>
                                 <div class="form-group">
-                                    <label for="lastname">LastName</label>
+                                    <label for="lastname">نام خانوادگی</label>
                                     <input type="text" class="form-control" id="lastname" ng-model="data.lastname">
                                 </div>
                                 <div class="form-group">
-                                    <label for="username">UserName</label>
+                                    <label for="username">نام کاربری</label>
                                     <input type="text" class="form-control" id="username" ng-model="data.username">
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">Password</label>
+                                    <label for="password">کلمه عبور</label>
                                     <input type="password" class="form-control" id="password" ng-model="data.password">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nationalCode">National-Code</label>
+                                    <label for="nationalCode">کد ملی</label>
                                     <input type="text" class="form-control" id="nationalCode" ng-model="data.nationalCode">
                                 </div>
                                 <!--<div class="form-group">
@@ -40,13 +40,13 @@
                                     </select>
                                 </div>-->
                                 <div class="form-group">
-                                    <label for="enable">Enable</label>
+                                    <label for="enable">تعیین وضعیت</label>
                                     <select class="form-control" id="enable" ng-model="data.enable">
-                                        <option value="true">Yes</option>
-                                        <option value="false">No</option>
+                                        <option value="true">فعال باشد</option>
+                                        <option value="false">غیر فعال باشد</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" ng-click="addData()">Insert</button>
+                                <button type="submit" class="btn btn-primary" ng-click="addData()">ثبت کاربر</button>
                             </div>
                         </div>
                     </div>

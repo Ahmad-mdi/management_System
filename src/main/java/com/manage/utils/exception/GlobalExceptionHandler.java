@@ -3,15 +3,14 @@ package com.manage.utils.exception;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestControllerAdvice
@@ -29,12 +28,14 @@ public class GlobalExceptionHandler{
         return errorMap;
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        if (Objects.requireNonNull(e.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
-            return new ApiResponse<>(getMessage("already.nationalCode"), ApiResponseStatus.EXCEPTION);
-         else
-            return new ApiResponse<>(getMessage(e.getMessage()), ApiResponseStatus.EXCEPTION);
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        String message;
+        if (Objects.requireNonNull(e.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf")) {
+            message = getMessage("already.nationalCode");
+        } else {
+            message = e.getMessage();
+        }
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
@@ -72,7 +73,7 @@ public class GlobalExceptionHandler{
 
 
     public String getMessage(String key) {
-        Locale locale = Locale.getDefault();
+        Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(key, null, locale);
     }
 

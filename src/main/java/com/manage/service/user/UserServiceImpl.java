@@ -1,6 +1,5 @@
 package com.manage.service.user;
 
-import com.manage.annotation.NationalCode;
 import com.manage.config.JwtTokenUtil;
 import com.manage.helper.ListOfUsersInExcel;
 import com.manage.model.User;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService {
         headerRow.createCell(6).setCellValue("try_count");
         headerRow.createCell(7).setCellValue("national_code");
 
-        // Generate and save 3000 users with fixed username and password
+        // Generate and save 3000 users fixed
         for (int i = 1; i <= 3000; i++) {
             Row row = sheet.createRow(i);
             row.createCell(0).setCellValue("user" + i);
@@ -96,7 +94,7 @@ public class UserServiceImpl implements UserService {
             row.createCell(4).setCellValue("lastname"+i);
             row.createCell(5).setCellValue("lock_time"+i);
             row.createCell(6).setCellValue("0");
-            row.createCell(7).setCellValue("123");
+            row.createCell(7).setCellValue("1234567"+i);
         }
 
         FileOutputStream fileOut = new FileOutputStream("user_data.xlsx");
@@ -110,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Scheduled(fixedRate = 60000) // Run every minute
-    public ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
+    public void processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
         FileInputStream file = new FileInputStream("user_data.xlsx");
         Workbook workbook = new XSSFWorkbook(file);
         Sheet sheet = workbook.getSheetAt(0);
@@ -130,7 +128,6 @@ public class UserServiceImpl implements UserService {
         }
         workbook.close();
         file.close();
-        return ResponseEntity.ok("3000 user saved to db");
     }
 
 
@@ -189,8 +186,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userData.get();
 
-        if (notEmptyAndNotNull(userDto.getUsername()))
-            user.setUsername(userDto.getUsername());
+        /*if (notEmptyAndNotNull(userDto.getUsername()))
+            user.setUsername(userDto.getUsername());*/
 
         if (notEmptyAndNotNull(userDto.getFirstname()))
             user.setFirstname(userDto.getFirstname());
@@ -232,6 +229,10 @@ public class UserServiceImpl implements UserService {
         return UserMapper.mapToDTO(updatedPass);
     }
 
+    /*
+    * other methods
+    */
+
     private boolean validatePasswordPattern(String password) {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         return password.matches(passwordPattern);
@@ -266,19 +267,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setTryCount(tryCount);
         repository.save(user);
-    }
-
-    private List<User> generateUsersToExcel(int numUsers) {
-        List<User> users = new ArrayList<>();
-
-        for (int i = 0; i < numUsers; i++) {
-            User user = new User();
-            user.setUsername("user "+i);
-            user.setPassword("pass "+i);
-            users.add(user);
-        }
-
-        return users;
     }
 
 

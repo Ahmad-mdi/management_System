@@ -4,26 +4,19 @@ import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
 import com.manage.model.dto.UserDto;
 import com.manage.model.mapper.UserMapper;
-import com.manage.repository.user.UserRepository;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserServiceImpl;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -51,8 +44,8 @@ public class UserController {
        return service.generateAndSaveUsersToExcel();
     }
     @GetMapping("/saved-users-from-excel")
-    public ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
-        return service.processUsersFromExcel();
+    public void processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
+         service.processUsersFromExcel();
     }
 
     @PostMapping("/login")

@@ -1,14 +1,23 @@
 package com.manage.annotation;
 
+import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
+import java.util.Locale;
 
+@AllArgsConstructor
 public class NationalCodeValidator implements ConstraintValidator<NationalCode, String> {
+    private final MessageSource messageSource;
+
     @Override
     public void initialize(NationalCode valid) {
         ConstraintValidator.super.initialize(valid);
     }
+
 
     @Override
     public boolean isValid(String nationalCode, ConstraintValidatorContext context) {

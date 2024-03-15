@@ -4,20 +4,23 @@ app.controller('userEditCtrl', function ($scope, apiHandler,$rootScope) {
 
     $scope.editData = () =>{
         if ($scope.data.firstname === undefined || $scope.data.firstname === "" || $scope.data.firstname == null){
-            Swal.fire("please enter firstname!");
+            Swal.fire("فیلد نام نمی تواند خالی باشد");
             return;
         }
         if ($scope.data.lastname === undefined || $scope.data.lastname === "" || $scope.data.lastname == null){
-            Swal.fire("please enter lastname!");
+            Swal.fire("فیلد نام خانوادگی نمی تواند خالی باشد");
             return;
         }
-
-        if ($scope.data.email === undefined || $scope.data.email === "" || $scope.data.email == null){
-            Swal.fire("please enter email!");
+        if ($scope.data.username === undefined || $scope.data.username === "" || $scope.data.username == null){
+            Swal.fire("فیلد نام کاربری نمی تواند خالی باشد");
+            return;
+        }
+        if ($scope.data.nationalCode === undefined || $scope.data.nationalCode === "" || $scope.data.nationalCode == null){
+            Swal.fire("فیلد کد ملی نمی تواند خالی باشد");
             return;
         }
         if ($scope.data.enable === undefined || $scope.data.enable == null){
-            Swal.fire("please set enable yes/no!");
+            Swal.fire("لطفا وضعیت فعال / غیر فعال بودن کاربر را مشخص کنید!");
             return;
         }
         apiHandler.callPut('user/update',$scope.data,(response) => {

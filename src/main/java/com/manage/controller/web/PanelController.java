@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PanelController {
     @GetMapping
     public String index(){
-        return "panel";
+        return "panel_tow";
+//        return "panel";
     }
 }

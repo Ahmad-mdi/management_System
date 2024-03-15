@@ -17,7 +17,7 @@ public interface UserService {
 
     ResponseEntity<String> generateAndSaveUsersToExcel() throws IOException;
 
-    ResponseEntity<String> processUsersFromExcel() throws IOException, NoSuchAlgorithmException;
+    void processUsersFromExcel() throws IOException, NoSuchAlgorithmException;
 
     UserDto getFirstByUsername(String username);
 

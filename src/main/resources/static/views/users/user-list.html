@@ -1,64 +1,65 @@
-<div ng-controller="userListCtrl">
-    <div class="container p-3">
-        <div class="row">
-            <div class="col">
-                <h1>user List</h1>
-                <a class="btn btn-sm btn-success float-right" ng-click="changeMenu('user-add')">Add New+</a>
-                <br>
-                <br>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">FullName</th>
-                        <th scope="col">UserName</th>
-                        <th scope="col">NationalCode</th>
-<!--                        <th scope="col">Role</th>-->
-                        <th scope="col">Enable</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="data in dataList"> <!--foreach in angular-->
-                        <th scope="row">{{$index + 1}}</th>
-<!--                        <td>{{data.firstname+' '+data.lastname}}</td>-->
-                        <td>{{data.fullName}}</td> <!--get by UserVM-->
-                        <td>{{data.username}}</td>
-                        <td>{{data.nationalCode}}</td>
-                        <!--<td>
-                            <span class="badge badge-success" ng-show="data.role === 'ADMIN'">{{data.role}}</span>
-                            <span class="badge badge-primary" ng-show="data.role === 'USER'">{{data.role}}</span>
-                        </td>-->
-                        <td>
-                            <i class="fa fa-check" ng-show="data.enable"></i>
-                            <i class="fa fa-times" ng-show="!data.enable"></i>
-                        </td>
-                        <td>
-                            <a ng-click="editItem(data.id)">
-                                <i title="edit" class="fa fa-edit color-green cursor-pointer"></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                            </a>
-                            <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)">
-                                <i title="delete" class="fa fa-times color-red cursor-pointer"></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <br>
-                <div>
-                    <nav>
-                        <ul class="pagination pagination-sm">
-                            <li ng-repeat="i in range(pageCount) track by $index" class="page-item">
-                                <span class="page-link" ng-click="changePage($index)">
-                                    {{($index + 1)}}
-                                </span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+<div class="main-content font-size-13" ng-controller="userListCtrl">
+    <div class="tab__box">
+        <div class="tab__items">
+            <h2 class="float-right">لیست کاربران</h2>
+            <a ng-click="changeMenu('user-add')" class="btn btn-sm btn-success" href="#">ایجاد کاربر جدید</a>
         </div>
     </div>
+    <div class="d-flex flex-space-between item-center flex-wrap padding-30 border-radius-3 bg-white">
+        <div class="t-header-search">
+            <form action="" onclick="event.preventDefault();" ng-model="">
+                <div class="t-header-searchbox font-size-13">
+                    <div type="text" class="text search-input__box ">جستجوی کاربر</div>
+                    <div class="t-header-search-content " style="display: none;">
+                        <input type="text" class="text" placeholder="نام کاربری">
+                        <a class="link" href="/api/user/list-excel">لیست اکسل</a><br>
+                        <btutton class="btn btn-brand">جستجو</btutton>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <div class="table__box">
+        <table class="table">
+            <thead role="rowgroup">
+            <tr role="row" class="title-row">
+                <th>شناسه</th>
+                <th>نام و نام خانوادگی</th>
+                <th>نام کاربری</th>
+                <th>کدملی</th>
+                <th>وضعیت </th>
+                <th>عملیات</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in dataList">
+                <td><a href="">{{$index+1}}</a></td>
+                <td><a href="">{{data.fullName}}</a></td>
+                <td><a href="">{{data.username}}</a></td>
+                <td>{{data.nationalCode}}</td>
+                <td>
+                    <i class="item-confirm mlg-15"  ng-show="data.enable"></i>
+                    <i class="item-reject mlg-15"   ng-show="!data.enable"></i>
+                </td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#" class="item-delete mlg-15" title="حذف"></a>
+                    <!--<a href="" class="item-confirm mlg-15" title="تایید"></a>
+                    <a href="" class="item-reject mlg-15" title="رد"></a>
+                    <a href="edit-user.html" target="_blank" class="item-eye mlg-15" title="مشاهده"></a>-->
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div><br>
+    <nav>
+        <ul class="pagination pagination-sm">
+            <li ng-repeat="i in range(pageCount) track by $index" class="page-item">
+                <span style="cursor: pointer" class="page-link" ng-click="changePage($index)">
+                    {{($index + 1)}}
+                </span>
+            </li>
+        </ul>
+    </nav>
 </div>
