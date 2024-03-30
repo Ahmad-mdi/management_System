@@ -23,6 +23,17 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         }, true);
     }
 
+    $scope.downloadExcel = function() {
+        apiHandler.downloadExcel().then(function(response) {
+            let file = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            let fileURL = URL.createObjectURL(file);
+            let a = document.createElement('a');
+            a.href = fileURL;
+            a.download = 'list-of-users.xlsx';
+            a.click();
+        });
+    };
+
     $scope.changePage = (pageNumber) => {
         $scope.query.pageNumber = pageNumber;
         $scope.getDataList();
@@ -59,5 +70,16 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
             }
         });
     }
+
+    $scope.search = function() {
+        apiHandler.searchUsersByUsername($scope.usernameLike)
+            .then(function(response) {
+                $scope.users = response.data;
+            })
+            .catch(function(error) {
+                console.error('Error searching users:', error);
+            });
+    };
+
     $scope.getDataList();
 });

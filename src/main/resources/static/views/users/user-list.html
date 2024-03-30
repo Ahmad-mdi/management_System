@@ -1,24 +1,28 @@
 <div class="main-content font-size-13" ng-controller="userListCtrl">
     <div class="tab__box">
         <div class="tab__items">
-            <h2 class="float-right">لیست کاربران</h2>
-            <a ng-click="changeMenu('user-add')" class="btn btn-sm btn-success" href="#">ایجاد کاربر جدید</a>
+            <a ng-click="changeMenu('user-add')" class="tab__item is-active" href="#">ایجاد کاربر جدید</a>
+            <a class="tab__item is-active" href="#" ng-click="downloadExcel()">دانلود لیست کاربران</a>
         </div>
     </div>
-    <div class="d-flex flex-space-between item-center flex-wrap padding-30 border-radius-3 bg-white">
-        <div class="t-header-search">
-            <form action="" onclick="event.preventDefault();" ng-model="">
-                <div class="t-header-searchbox font-size-13">
-                    <div type="text" class="text search-input__box ">جستجوی کاربر</div>
-                    <div class="t-header-search-content " style="display: none;">
-                        <input type="text" class="text" placeholder="نام کاربری">
-                        <a class="link" href="/api/user/list-excel">لیست اکسل</a><br>
-                        <btutton class="btn btn-brand">جستجو</btutton>
-                    </div>
+    <div class="t-header-search">
+        <form ng-submit="search()">
+            <div class="t-header-searchbox font-size-13">
+                <div type="text" class="text search-input__box ">جستجو</div>
+                <div class="t-header-search-content " style="display: block;">
+                    <input type="text" class="text" ng-model="usernameLike" placeholder="جستجو براساس نام کاربری">
+                    <button class="btn btn-brand" type="submit">جستجو</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+
+    <div ng-if="users">
+        <ul>
+            <li ng-repeat="user in users">{{ user.username }}</li>
+        </ul>
+    </div>
+
     <br>
     <div class="table__box">
         <table class="table">

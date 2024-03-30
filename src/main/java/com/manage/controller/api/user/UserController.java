@@ -29,7 +29,7 @@ public class UserController {
     private final UserServiceImpl service;
     private final JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/list-excel")
+    @GetMapping("/download-excel")
     public ResponseEntity<Resource> downloadExcelFile() throws IOException {
         String fileName = "list-of-users.xlsx";
         ByteArrayInputStream actualData = service.importToExcel();
