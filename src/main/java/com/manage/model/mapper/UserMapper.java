@@ -10,7 +10,7 @@ public class UserMapper {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setId(user.getId());
-//        userDto.setPassword(user.getPassword());
+        userDto.setPassword(user.getPassword());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
         userDto.setNationalCode(user.getNationalCode());
@@ -38,6 +38,7 @@ public class UserMapper {
         }
         return UserDtoList;
     }
+
     public static List<User> mapToEntityList(List<UserDto> userList) {
         List<User> userEntityList = new ArrayList<>();
         for (UserDto userDto : userList) {
