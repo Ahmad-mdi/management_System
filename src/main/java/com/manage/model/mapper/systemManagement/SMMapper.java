@@ -1,17 +1,15 @@
-package com.manage.model.mapper;
+package com.manage.model.mapper.systemManagement;
 
 import com.manage.model.SystemManagement;
-import com.manage.model.User;
-import com.manage.model.dto.SystemManagementDto;
-import com.manage.model.dto.UserDto;
+import com.manage.model.dto.systemManagement.SMDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SystemManagementMapper {
-    public static SystemManagementDto mapToDTO(SystemManagement systemManagement) {
-        SystemManagementDto systemManagementDto = new SystemManagementDto();
+public class SMMapper {
+    public static SMDto mapToDTO(SystemManagement systemManagement) {
+        SMDto systemManagementDto = new SMDto();
         systemManagementDto.setEn_name(systemManagement.getEn_name());
         systemManagementDto.setFa_name(systemManagement.getFa_name());
         systemManagementDto.setRoute(systemManagement.getRoute());
@@ -19,7 +17,7 @@ public class SystemManagementMapper {
     }
 
 
-    public static SystemManagement mapToEntity(SystemManagementDto systemManagementDto) {
+    public static SystemManagement mapToEntity(SMDto systemManagementDto) {
         SystemManagement systemManagement = new SystemManagement();
         systemManagement.setEn_name(systemManagementDto.getEn_name());
         systemManagement.setFa_name(systemManagementDto.getFa_name());
@@ -27,18 +25,18 @@ public class SystemManagementMapper {
         return systemManagement;
     }
 
-    public static List<SystemManagementDto> mapToDTOList(List<SystemManagement> list) {
-        List<SystemManagementDto> dtoList = new ArrayList<>();
+    public static List<SMDto> mapToDTOList(List<SystemManagement> list) {
+        List<SMDto> dtoList = new ArrayList<>();
         for (SystemManagement systemManagement : list) {
-            SystemManagementDto dto = mapToDTO(systemManagement);
+            SMDto dto = mapToDTO(systemManagement);
             dtoList.add(dto);
         }
         return dtoList;
     }
 
-    public static List<SystemManagement> mapToEntityList(List<SystemManagementDto> list) {
+    public static List<SystemManagement> mapToEntityList(List<SMDto> list) {
         List<SystemManagement> systemManagementEntityList = new ArrayList<>();
-        for (SystemManagementDto dto : list) {
+        for (SMDto dto : list) {
             SystemManagement systemManagement = mapToEntity(dto);
             systemManagementEntityList.add(systemManagement);
         }

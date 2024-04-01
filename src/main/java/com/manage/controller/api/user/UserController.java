@@ -2,8 +2,8 @@ package com.manage.controller.api.user;
 
 import com.manage.config.JwtTokenUtil;
 import com.manage.model.User;
-import com.manage.model.dto.UserDto;
-import com.manage.model.mapper.UserMapper;
+import com.manage.model.dto.user.UserDto;
+import com.manage.model.mapper.user.UserMapper;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.user.UserServiceImpl;

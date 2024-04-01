@@ -1,10 +1,9 @@
 package com.manage.service.user;
 
 import com.manage.model.User;
-import com.manage.model.dto.UserDto;
+import com.manage.model.dto.user.UserDto;
 import org.springframework.http.ResponseEntity;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;

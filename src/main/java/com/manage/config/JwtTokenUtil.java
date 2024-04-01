@@ -1,6 +1,6 @@
 package com.manage.config;
 
-import com.manage.model.dto.UserDto;
+import com.manage.model.dto.user.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

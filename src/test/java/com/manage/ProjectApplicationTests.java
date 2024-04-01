@@ -1,13 +1,12 @@
 package com.manage;
 
 import com.manage.model.User;
-import com.manage.model.dto.UserDto;
-import com.manage.model.mapper.UserMapper;
+import com.manage.model.dto.user.UserDto;
+import com.manage.model.mapper.user.UserMapper;
 import com.manage.repository.user.UserRepository;
 import com.manage.service.user.UserServiceImpl;
 import com.manage.utils.hashing.SecurityUtils;
 import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;

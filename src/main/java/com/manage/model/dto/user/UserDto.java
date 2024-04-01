@@ -1,4 +1,4 @@
-package com.manage.model.dto;
+package com.manage.model.dto.user;
 
 import com.manage.annotation.NationalCode;
 import lombok.AllArgsConstructor;
