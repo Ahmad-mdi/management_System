@@ -1,6 +1,6 @@
 package com.manage;
 
-import com.manage.model.User;
+import com.manage.model.user.User;
 import com.manage.model.dto.user.UserDto;
 import com.manage.model.mapper.user.UserMapper;
 import com.manage.repository.user.UserRepository;

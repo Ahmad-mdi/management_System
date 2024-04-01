@@ -1,6 +1,6 @@
 package com.manage.model.mapper.systemManagement;
 
-import com.manage.model.SystemManagement;
+import com.manage.model.system_management.SM;
 import com.manage.model.dto.systemManagement.SMDto;
 
 import java.util.ArrayList;
@@ -8,38 +8,38 @@ import java.util.List;
 
 
 public class SMMapper {
-    public static SMDto mapToDTO(SystemManagement systemManagement) {
-        SMDto systemManagementDto = new SMDto();
-        systemManagementDto.setEn_name(systemManagement.getEn_name());
-        systemManagementDto.setFa_name(systemManagement.getFa_name());
-        systemManagementDto.setRoute(systemManagement.getRoute());
-        return systemManagementDto;
+    public static SMDto mapToDTO(SM sm) {
+        SMDto smDto = new SMDto();
+        smDto.setEn_name(sm.getEn_name());
+        smDto.setFa_name(sm.getFa_name());
+        smDto.setRoute(sm.getRoute());
+        return smDto;
     }
 
 
-    public static SystemManagement mapToEntity(SMDto systemManagementDto) {
-        SystemManagement systemManagement = new SystemManagement();
-        systemManagement.setEn_name(systemManagementDto.getEn_name());
-        systemManagement.setFa_name(systemManagementDto.getFa_name());
-        systemManagement.setRoute(systemManagementDto.getRoute());
-        return systemManagement;
+    public static SM mapToEntity(SMDto smDto) {
+        SM sm = new SM();
+        sm.setEn_name(smDto.getEn_name());
+        sm.setFa_name(smDto.getFa_name());
+        sm.setRoute(smDto.getRoute());
+        return sm;
     }
 
-    public static List<SMDto> mapToDTOList(List<SystemManagement> list) {
+    public static List<SMDto> mapToDTOList(List<SM> list) {
         List<SMDto> dtoList = new ArrayList<>();
-        for (SystemManagement systemManagement : list) {
-            SMDto dto = mapToDTO(systemManagement);
-            dtoList.add(dto);
+        for (SM sm : list) {
+            SMDto smDto = mapToDTO(sm);
+            dtoList.add(smDto);
         }
         return dtoList;
     }
 
-    public static List<SystemManagement> mapToEntityList(List<SMDto> list) {
-        List<SystemManagement> systemManagementEntityList = new ArrayList<>();
+    public static List<SM> mapToEntityList(List<SMDto> list) {
+        List<SM> smEntityList = new ArrayList<>();
         for (SMDto dto : list) {
-            SystemManagement systemManagement = mapToEntity(dto);
-            systemManagementEntityList.add(systemManagement);
+            SM sm = mapToEntity(dto);
+            smEntityList.add(sm);
         }
-        return systemManagementEntityList;
+        return smEntityList;
     }
 }

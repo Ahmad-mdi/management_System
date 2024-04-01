@@ -1,6 +1,6 @@
 package com.manage.helper;
 
-import com.manage.model.User;
+import com.manage.model.user.User;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

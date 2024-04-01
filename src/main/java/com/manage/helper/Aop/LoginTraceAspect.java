@@ -1,5 +1,6 @@
 package com.manage.helper.Aop;
 
+import com.manage.model.user_trace.LoginTrace;
 import com.manage.repository.user_trace.LoginTraceReportRepository;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -36,7 +37,7 @@ public class LoginTraceAspect {
     }
 
     private void saveLoginTrace(String username, String ipAddress, boolean isSuccess) {
-        com.manage.model.LoginTrace loginTrace = new com.manage.model.LoginTrace();
+        LoginTrace loginTrace = new LoginTrace();
         loginTrace.setUsername(username);
         loginTrace.setIp(ipAddress);
         loginTrace.setLoginTime(LocalDateTime.now());

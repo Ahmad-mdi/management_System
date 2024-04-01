@@ -1,6 +1,6 @@
 package com.manage.model.mapper.user;
 
-import com.manage.model.User;
+import com.manage.model.user.User;
 import com.manage.model.dto.user.UserDto;
 import java.util.ArrayList;
 import java.util.List;

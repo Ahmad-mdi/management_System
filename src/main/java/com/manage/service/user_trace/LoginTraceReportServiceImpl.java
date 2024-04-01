@@ -1,6 +1,6 @@
 package com.manage.service.user_trace;
 
-import com.manage.model.LoginTrace;
+import com.manage.model.user_trace.LoginTrace;
 import com.manage.repository.user_trace.LoginTraceReportRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

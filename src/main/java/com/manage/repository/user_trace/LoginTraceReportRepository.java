@@ -1,10 +1,8 @@
 package com.manage.repository.user_trace;
 
-import com.manage.model.LoginTrace;
+import com.manage.model.user_trace.LoginTrace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 @Repository

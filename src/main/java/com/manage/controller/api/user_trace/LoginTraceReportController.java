@@ -1,6 +1,6 @@
 package com.manage.controller.api.user_trace;
 
-import com.manage.model.LoginTrace;
+import com.manage.model.user_trace.LoginTrace;
 import com.manage.service.user_trace.LoginTraceReportServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

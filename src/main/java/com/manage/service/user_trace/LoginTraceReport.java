@@ -1,6 +1,6 @@
 package com.manage.service.user_trace;
 
-import com.manage.model.LoginTrace;
+import com.manage.model.user_trace.LoginTrace;
 
 import java.util.List;
 
