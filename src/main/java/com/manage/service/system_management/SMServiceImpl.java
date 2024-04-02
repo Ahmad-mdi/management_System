@@ -1,11 +1,8 @@
 package com.manage.service.system_management;
 
-import com.manage.model.dto.user.UserDto;
-import com.manage.model.mapper.user.UserMapper;
 import com.manage.model.system_management.SM;
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.model.user.User;
 import com.manage.repository.system_management.SMRepository;
 import com.manage.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -54,23 +51,14 @@ public class SMServiceImpl implements SMService {
 
         SM sm = findId.get();
 
-        if (notEmptyAndNotNull(dto.getEn_name()))
-            sm.setEn_name(dto.getEn_name());
-        if (notEmptyAndNotNull(dto.getFa_name()))
-            sm.setFa_name(dto.getFa_name());
-        if (notEmptyAndNotNull(dto.getRoute()))
-            sm.setRoute(dto.getRoute());
-
+        sm.setEn_name(dto.getEn_name());
+        sm.setFa_name(dto.getFa_name());
+        sm.setRoute(dto.getRoute());
         sm.setUpdated_date(LocalDateTime.now());
         sm.setUpdated_user(LocalDateTime.now());
-
 
         SM dataUpdated = repository.save(sm);
         return SMMapper.mapToDTO(dataUpdated);
     }
 
-    @Override
-    public boolean notEmptyAndNotNull(String value) {
-        return value != null && !value.isEmpty();
-    }
 }

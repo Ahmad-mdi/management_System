@@ -90,11 +90,11 @@ public class UserServiceImpl implements UserService {
             row.createCell(0).setCellValue("user" + i);
             row.createCell(1).setCellValue("password123");
             row.createCell(2).setCellValue("true");
-            row.createCell(3).setCellValue("firstname"+i);
-            row.createCell(4).setCellValue("lastname"+i);
-            row.createCell(5).setCellValue("lock_time"+i);
+            row.createCell(3).setCellValue("firstname" + i);
+            row.createCell(4).setCellValue("lastname" + i);
+            row.createCell(5).setCellValue("lock_time" + i);
             row.createCell(6).setCellValue("0");
-            row.createCell(7).setCellValue("1234567"+i);
+            row.createCell(7).setCellValue("1234567" + i);
         }
 
         FileOutputStream fileOut = new FileOutputStream("user_data.xlsx");
@@ -186,12 +186,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userData.get();
 
-        /*if (notEmptyAndNotNull(userDto.getUsername()))
-            user.setUsername(userDto.getUsername());*/
-
         if (notEmptyAndNotNull(userDto.getFirstname()))
             user.setFirstname(userDto.getFirstname());
-
         if (notEmptyAndNotNull(userDto.getLastname()))
             user.setLastname(userDto.getLastname());
 
@@ -230,8 +226,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /*
-    * other methods
-    */
+     * other methods
+     */
 
     private boolean validatePasswordPattern(String password) {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";

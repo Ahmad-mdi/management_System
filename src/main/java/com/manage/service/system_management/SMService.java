@@ -13,6 +13,4 @@ public interface SMService {
     SMDto add(SMDto dto);
 
     SMDto update(SMDto dto);
-
-    boolean notEmptyAndNotNull(String value);
 }
