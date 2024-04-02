@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ApiResponse<UserDto> update(@RequestBody UserDto data) throws Exception {
+    public ApiResponse<UserDto> update(@RequestBody @Valid UserDto data) throws Exception {
         UserDto result = service.update(data);
         return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
     }

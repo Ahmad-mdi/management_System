@@ -34,4 +34,11 @@ public class SMController {
         SMDto result = service.add(dto);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
+
+    @PutMapping("/update")
+    public ApiResponse<SMDto> update(@RequestBody @Valid SMDto dto){
+        SMDto getData = service.update(dto);
+        return new ApiResponse<>(getData,ApiResponseStatus.SUCCESS);
+    }
+
 }

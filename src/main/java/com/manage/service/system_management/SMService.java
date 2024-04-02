@@ -11,4 +11,8 @@ public interface SMService {
     long getAllCount();
 
     SMDto add(SMDto dto);
+
+    SMDto update(SMDto dto);
+
+    boolean notEmptyAndNotNull(String value);
 }
