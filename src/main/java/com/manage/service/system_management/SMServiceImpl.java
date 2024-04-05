@@ -1,5 +1,6 @@
 package com.manage.service.system_management;
 
+import com.manage.model.dto.user.UserDto;
 import com.manage.model.system_management.SM;
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
@@ -59,6 +60,16 @@ public class SMServiceImpl implements SMService {
 
         SM dataUpdated = repository.save(sm);
         return SMMapper.mapToDTO(dataUpdated);
+    }
+
+    @Override
+    public boolean deleteById(long id) {
+        Optional<SM> sm = repository.findById(id);
+        if (sm.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        }
+        throw new DataNotFoundException("data.not.found");
     }
 
 }

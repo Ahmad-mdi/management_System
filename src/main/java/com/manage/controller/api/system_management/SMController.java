@@ -41,4 +41,10 @@ public class SMController {
         return new ApiResponse<>(getData,ApiResponseStatus.SUCCESS);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Boolean> delete(@PathVariable long id) {
+        boolean result = service.deleteById(id);
+        return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
+    }
+
 }
