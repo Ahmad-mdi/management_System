@@ -48,8 +48,10 @@ public class SMController {
     }
 
     @PostMapping("/filter")
-    public List<SM> filter(@RequestBody SMDto filter) {
-        return service.getFilteredSM(filter);
+    public ApiResponse<SMDto> filter(@RequestBody SMDto filter) {
+        List<SM> smFilterList = service.getFilteredSM(filter);
+        List<SMDto> convertDtoFilterList = SMMapper.mapToDTOList(smFilterList);
+        return new ApiResponse<>(convertDtoFilterList,ApiResponseStatus.SUCCESS);
     }
 
 }

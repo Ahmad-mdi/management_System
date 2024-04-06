@@ -15,8 +15,6 @@ public class SM {
     private String en_name;
     private String fa_name;
     private String route;
-    /*private LocalDateTime created_user;
-    private LocalDateTime updated_user;*/
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
 }

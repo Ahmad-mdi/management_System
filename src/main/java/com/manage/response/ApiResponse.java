@@ -16,9 +16,9 @@ public class ApiResponse<T> implements Serializable {
     public ApiResponse(List<T> dataList, ApiResponseStatus status) {
         this.dataList = dataList;
         this.status = status;
-        this.message = "";
+        this.message = "نمایش دیتای درخواستی";
         this.hasError = status != ApiResponseStatus.SUCCESS;
-        this.totalCount = 0;
+//        this.totalCount = 0;
     }
     public ApiResponse(List<T> dataList,long totalCount, ApiResponseStatus status) {
         this.dataList = dataList;

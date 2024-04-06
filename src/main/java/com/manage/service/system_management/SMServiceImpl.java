@@ -3,7 +3,6 @@ package com.manage.service.system_management;
 import com.manage.model.system_management.SM;
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.model.system_management.SMFilter;
 import com.manage.repository.system_management.SMRepository;
 import com.manage.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -73,8 +72,9 @@ public class SMServiceImpl implements SMService {
 
     @Override
     public List<SM> getFilteredSM(SMDto filter) {
-        return repository.findByFilter(filter.getEn_name(), filter.getFa_name(), filter.getRoute());
+        return repository.findByFilter(filter.getEn_name(),
+                filter.getFa_name(),
+                filter.getRoute());
     }
-
 
 }
