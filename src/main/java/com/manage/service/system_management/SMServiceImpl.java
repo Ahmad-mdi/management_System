@@ -37,6 +37,7 @@ public class SMServiceImpl implements SMService {
     @Override
     public SMDto add(SMDto dto) {
         SM sm = SMMapper.mapToEntity(dto);
+        sm.setCreated_date(LocalDateTime.now());
         SM savedData = repository.save(sm);
         return SMMapper.mapToDTO(savedData);
     }
@@ -72,9 +73,7 @@ public class SMServiceImpl implements SMService {
 
     @Override
     public List<SM> getFilteredSM(SMDto filter) {
-        return repository.findByFilter(filter.getEn_name(),
-                filter.getFa_name(),
-                filter.getRoute());
+        return repository.findByFilter(filter.getEn_name(), filter.getFa_name(), filter.getRoute());
     }
 
 }
