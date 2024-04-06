@@ -47,4 +47,9 @@ public class SMController {
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
+    @PostMapping("/filter")
+    public List<SM> filter(@RequestBody SMDto filter) {
+        return service.getFilteredSM(filter);
+    }
+
 }

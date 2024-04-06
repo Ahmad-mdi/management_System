@@ -18,8 +18,8 @@ public class SMDto {
     private String fa_name;
     @NotBlank(message = "مسیر سامانه نباید خالی باشد")
     private String route;
-    private LocalDateTime created_user;
-    private LocalDateTime updated_user;
+    /*private LocalDateTime created_user;
+    private LocalDateTime updated_user;*/
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
 }

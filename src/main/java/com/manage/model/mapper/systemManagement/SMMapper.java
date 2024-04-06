@@ -14,8 +14,8 @@ public class SMMapper {
         smDto.setEn_name(sm.getEn_name());
         smDto.setFa_name(sm.getFa_name());
         smDto.setRoute(sm.getRoute());
-        smDto.setCreated_user(sm.getCreated_user());
-        smDto.setUpdated_user(sm.getUpdated_user());
+        /*smDto.setCreated_user(sm.getCreated_user());
+        smDto.setUpdated_user(sm.getUpdated_user());*/
         smDto.setCreated_date(sm.getCreated_date());
         smDto.setUpdated_date(sm.getUpdated_date());
         return smDto;
