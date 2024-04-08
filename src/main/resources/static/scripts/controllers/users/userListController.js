@@ -50,19 +50,20 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
 
     $scope.deleteItem = (id) => {
         Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            title: "برای حذف مطمئن هستید؟",
+            text: "اطلاعات کاربر فعلی پاک میشود!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            cancelButtonText: "لغو",
+            confirmButtonText: "پاک شود"
         }).then((result) => {
             if (result.isConfirmed) {
                 apiHandler.callDelete('user/delete/'+id,(response) =>{
                     Swal.fire({
-                        title: "Deleted!",
-                        text: "Your data has been deleted.",
+                        title: "حذف ",
+                        text: "کاربر با موفقیت حذف شد",
                         icon: "success"
                     });
                     $scope.getDataList();

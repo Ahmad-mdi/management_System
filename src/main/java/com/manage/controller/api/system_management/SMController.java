@@ -1,19 +1,15 @@
 package com.manage.controller.api.system_management;
 
 import com.manage.model.dto.systemManagement.SMDto;
-import com.manage.model.dto.user.UserDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.model.mapper.user.UserMapper;
 import com.manage.model.system_management.SM;
-import com.manage.model.user.User;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.system_management.SMServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,24 +19,25 @@ import java.util.List;
 public class SMController {
 
     private final SMServiceImpl service;
+
     @GetMapping("get-all")
-    public ApiResponse<SMDto> getAll(@RequestParam Integer pageSize,@RequestParam Integer PageNumber){
-        List<SM> dataList = service.getAll(pageSize,PageNumber);
+    public ApiResponse<SMDto> getAll(@RequestParam Integer pageSize, @RequestParam Integer PageNumber) {
+        List<SM> dataList = service.getAll(pageSize, PageNumber);
         List<SMDto> mappedToDTOList = SMMapper.mapToDTOList(dataList);
         long totalCount = service.getAllCount();
-        return new ApiResponse<>(mappedToDTOList,totalCount,ApiResponseStatus.SUCCESS);
+        return new ApiResponse<>(mappedToDTOList, totalCount, ApiResponseStatus.SUCCESS);
     }
 
     @PostMapping("/add")
-    public ApiResponse<SMDto> add(@RequestBody @Valid SMDto dto){
+    public ApiResponse<SMDto> add(@RequestBody @Valid SMDto dto) {
         SMDto result = service.add(dto);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
     @PutMapping("/update")
-    public ApiResponse<SMDto> update(@RequestBody @Valid SMDto dto){
+    public ApiResponse<SMDto> update(@RequestBody @Valid SMDto dto) {
         SMDto getData = service.update(dto);
-        return new ApiResponse<>(getData,ApiResponseStatus.SUCCESS);
+        return new ApiResponse<>(getData, ApiResponseStatus.SUCCESS);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -49,15 +46,14 @@ public class SMController {
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
-    @PostMapping("/filter")
-    public ApiResponse<SMDto> filterdSm(@RequestBody SMDto filter,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<SM> result = service.getFilteredSM(filter,pageable);
-        List<SMDto> userDtoList = SMMapper.mapToDTOList(result);//mapped to dto
-        long totalCount = service.getAllCount();
-        return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
+    @GetMapping("/filter")
+    public ApiResponse<Page<SMDto>> filters(
+            @RequestParam(required = false) String en_name,
+            @RequestParam(required = false) String fa_name,
+            @RequestParam(required = false) String route, Pageable pageable) {
+        Page<SM> data = service.filterSm(en_name, fa_name, route, pageable);
+        Page<SMDto> dataDtoPage = data.map(SMMapper::mapToDTO);
+        return new ApiResponse<>(dataDtoPage, ApiResponseStatus.SUCCESS);
     }
 
 }

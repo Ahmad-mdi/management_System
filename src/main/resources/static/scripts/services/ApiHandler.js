@@ -31,7 +31,7 @@ app.service("apiHandler", function ($http, $cookies) {
             Swal.fire({
                 icon: "error",
                 title: "خطای درج اطلاعات",
-                text: JSON.stringify(err.data)
+                text: JSON.stringify(err)
                 // text: err.getValidationMessage
             });
             onError(err);

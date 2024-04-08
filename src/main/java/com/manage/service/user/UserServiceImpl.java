@@ -9,6 +9,7 @@ import com.manage.repository.user_trace.LoginTraceReportRepository;
 import com.manage.repository.user.UserRepository;
 import com.manage.utils.exception.*;
 import com.manage.utils.hashing.SecurityUtils;
+import com.manage.utils.specification.UserSpecification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Row;
@@ -207,7 +208,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //for updatePass:
     public UserDto changePassword(long id, String oldPassword, String newPassword) throws Exception {
         oldPassword = securityUtils.encryptSHA1(oldPassword);
         Optional<User> find = repository.findById(id);
@@ -226,15 +226,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getFilteredUser(UserDto filter,Pageable pageable) {
-        return repository.findByFilter(filter.getUsername(), filter.getFirstname(),
-                filter.getLastname(),filter.isEnable(),filter.getNationalCode(),pageable);
+    public Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable) {
+        return repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pageable);
     }
 
 
-
     /*******************************************************************************************************************
-****** other methods
+                                          ****** other methods ******
      *******************************************************************************************************************/
 
 

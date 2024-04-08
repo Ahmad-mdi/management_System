@@ -13,24 +13,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> , JpaSpecificationExecutor<User>{
     @Query("SELECT u FROM User u WHERE lower(u.username) LIKE lower(concat('%', :query, '%'))")
     List<User> findByUsernameLike(@Param("query") String query);
 
     User findFirstByUsername(String username);
 
-    @Query("SELECT u FROM User u " +
-            "WHERE (:username is null or u.username = :username) and " +
-            "(:firstname is null or u.firstname = :firstname) and " +
-            "(:lastname is null or  u.lastname = :lastname) and " +
-            "(:enable is false or  u.enable = :enable) and " +
-            "(:enable is true or  u.enable = :enable) and " +
-            "(:nationalCode is null or u.nationalCode = :nationalCode)")
-
-    List<User> findByFilter(@Param("username") String username,
-                            @Param("firstname") String firstname,
-                            @Param("lastname") String lastname,
-                            @Param("enable") boolean enable,
-                            @Param("nationalCode") String nationalCode,
-                            Pageable pageable);
 }

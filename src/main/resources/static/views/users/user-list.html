@@ -17,13 +17,41 @@
         </form>
     </div>
 
-    <div ng-if="users">
-        <ul>
-            <li ng-repeat="user in users">{{ user.username }}</li>
-        </ul>
+    <div ng-if="users" class="table__box">
+        <table class="table">
+            <thead role="rowgroup">
+            <tr role="row" class="title-row">
+                <th>شناسه</th>
+                <th>نام و نام خانوادگی</th>
+                <th>نام کاربری</th>
+                <th>کدملی</th>
+                <th>وضعیت </th>
+                <th>عملیات</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in dataList">
+                <td><a href="">{{$index+1}}</a></td>
+                <td><a href="">{{data.fullName}}</a></td>
+                <td><a href="">{{data.username}}</a></td>
+                <td>{{data.nationalCode}}</td>
+                <td>
+                    <i class="item-confirm mlg-15"  ng-show="data.enable"></i>
+                    <i class="item-reject mlg-15"   ng-show="!data.enable"></i>
+                </td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#" class="item-delete mlg-15" title="حذف"></a>
+                    <!--<a href="" class="item-confirm mlg-15" title="تایید"></a>
+                    <a href="" class="item-reject mlg-15" title="رد"></a>
+                    <a href="edit-user.html" target="_blank" class="item-eye mlg-15" title="مشاهده"></a>-->
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
     <br>
+
     <div class="table__box">
         <table class="table">
             <thead role="rowgroup">

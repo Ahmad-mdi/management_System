@@ -5,6 +5,7 @@ import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
 import com.manage.repository.system_management.SMRepository;
 import com.manage.utils.exception.DataNotFoundException;
+import com.manage.utils.specification.SMSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,9 +73,8 @@ public class SMServiceImpl implements SMService {
     }
 
     @Override
-    public List<SM> getFilteredSM(SMDto filter, Pageable pageable) {
-        return repository.findByFilter(filter.getEn_name(), filter.getFa_name(),
-                filter.getRoute(),pageable);
+    public Page<SM> filterSm(String en_name, String fa_name, String route, Pageable pageable) {
+        return repository.findAll(SMSpecification.filterBy(en_name, fa_name, route), pageable);
     }
 
 }

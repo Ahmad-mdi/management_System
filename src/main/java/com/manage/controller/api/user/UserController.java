@@ -131,14 +131,16 @@ public class UserController {
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
-    @PostMapping("/filter")
-    public ApiResponse<UserDto> filterdUsers(@RequestBody UserDto filter,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<User> result = service.getFilteredUser(filter,pageable);
-        List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
-        long totalCount = service.getAllCount();
-        return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
+    @GetMapping("/filter")
+    public ApiResponse<Page<UserDto>> filterUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String lastname,
+            @RequestParam(required = false) String nationalCode, Pageable pageable) {
+        Page<User> users = service.filterUsers(username, firstname, lastname, nationalCode, pageable);
+        Page<UserDto> userDtoPage = users.map(UserMapper::mapToDTO);
+        return new ApiResponse<>(userDtoPage, ApiResponseStatus.SUCCESS);
     }
+
+
 }
