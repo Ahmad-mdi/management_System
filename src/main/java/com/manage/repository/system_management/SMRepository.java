@@ -1,6 +1,7 @@
 package com.manage.repository.system_management;
 
 import com.manage.model.system_management.SM;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +19,8 @@ public interface SMRepository extends JpaRepository<SM, Long> {
 
     List<SM> findByFilter(@Param("en_name") String en_name,
                           @Param("fa_name") String fa_name,
-                          @Param("route") String route);
+                          @Param("route") String route,
+                          Pageable pageable);
 
 
 }

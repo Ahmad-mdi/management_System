@@ -10,9 +10,9 @@ public class UserMapper {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setId(user.getId());
-        userDto.setPassword(user.getPassword());
-        userDto.setFirstname(user.getFirstname());
-        userDto.setLastname(user.getLastname());
+//        userDto.setPassword(user.getPassword());
+       /* userDto.setFirstname(user.getFirstname());
+        userDto.setLastname(user.getLastname());*/
         userDto.setNationalCode(user.getNationalCode());
         userDto.setFullName(user.getFirstname()+" "+user.getLastname());
         userDto.setEnable(user.isEnable());

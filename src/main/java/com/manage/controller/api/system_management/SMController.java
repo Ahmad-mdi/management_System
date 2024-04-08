@@ -10,6 +10,8 @@ import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.system_management.SMServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/sm")
+@RequestMapping("/api/systme_management")
 public class SMController {
 
     private final SMServiceImpl service;
@@ -48,10 +50,14 @@ public class SMController {
     }
 
     @PostMapping("/filter")
-    public ApiResponse<SMDto> filter(@RequestBody SMDto filter) {
-        List<SM> smFilterList = service.getFilteredSM(filter);
-        List<SMDto> convertDtoFilterList = SMMapper.mapToDTOList(smFilterList);
-        return new ApiResponse<>(convertDtoFilterList,ApiResponseStatus.SUCCESS);
+    public ApiResponse<SMDto> filterdSm(@RequestBody SMDto filter,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<SM> result = service.getFilteredSM(filter,pageable);
+        List<SMDto> userDtoList = SMMapper.mapToDTOList(result);//mapped to dto
+        long totalCount = service.getAllCount();
+        return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.manage.model.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manage.annotation.NationalCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;

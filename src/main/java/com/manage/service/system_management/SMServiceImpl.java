@@ -72,8 +72,9 @@ public class SMServiceImpl implements SMService {
     }
 
     @Override
-    public List<SM> getFilteredSM(SMDto filter) {
-        return repository.findByFilter(filter.getEn_name(), filter.getFa_name(), filter.getRoute());
+    public List<SM> getFilteredSM(SMDto filter, Pageable pageable) {
+        return repository.findByFilter(filter.getEn_name(), filter.getFa_name(),
+                filter.getRoute(),pageable);
     }
 
 }

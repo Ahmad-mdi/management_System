@@ -225,9 +225,18 @@ public class UserServiceImpl implements UserService {
         return UserMapper.mapToDTO(updatedPass);
     }
 
-    /*
-     * other methods
-     */
+    @Override
+    public List<User> getFilteredUser(UserDto filter,Pageable pageable) {
+        return repository.findByFilter(filter.getUsername(), filter.getFirstname(),
+                filter.getLastname(),filter.isEnable(),filter.getNationalCode(),pageable);
+    }
+
+
+
+    /*******************************************************************************************************************
+****** other methods
+     *******************************************************************************************************************/
+
 
     private boolean validatePasswordPattern(String password) {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";

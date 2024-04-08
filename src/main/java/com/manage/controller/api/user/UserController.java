@@ -1,6 +1,9 @@
 package com.manage.controller.api.user;
 
 import com.manage.config.JwtTokenUtil;
+import com.manage.model.dto.systemManagement.SMDto;
+import com.manage.model.mapper.systemManagement.SMMapper;
+import com.manage.model.system_management.SM;
 import com.manage.model.user.User;
 import com.manage.model.dto.user.UserDto;
 import com.manage.model.mapper.user.UserMapper;
@@ -10,16 +13,23 @@ import com.manage.service.user.UserServiceImpl;
 import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.core.io.Resource;
 
 @AllArgsConstructor
@@ -35,17 +45,19 @@ public class UserController {
         ByteArrayInputStream actualData = service.importToExcel();
         InputStreamResource file = new InputStreamResource(actualData);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
     }
+
     @GetMapping("/generate-user-to-excel")
     public ResponseEntity<String> generateAndSaveUsersToExcel() throws IOException {
-       return service.generateAndSaveUsersToExcel();
+        return service.generateAndSaveUsersToExcel();
     }
+
     @GetMapping("/saved-users-from-excel")
     public void processUsersFromExcel() throws IOException, NoSuchAlgorithmException {
-         service.processUsersFromExcel();
+        service.processUsersFromExcel();
     }
 
     @PostMapping("/login")
@@ -98,13 +110,13 @@ public class UserController {
     @GetMapping("/{id}")
     public ApiResponse<UserDto> getById(@PathVariable long id) {
         UserDto user = service.getById(id);
-        return new ApiResponse<>(user,ApiResponseStatus.SUCCESS);
+        return new ApiResponse<>(user, ApiResponseStatus.SUCCESS);
     }
 
     @PutMapping("/update")
     public ApiResponse<UserDto> update(@RequestBody UserDto data) throws Exception {
         UserDto result = service.update(data);
-        return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
+        return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -116,7 +128,17 @@ public class UserController {
     @PutMapping("/change-password")
     public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws Exception {
         UserDto result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
-        return new ApiResponse<>(result,ApiResponseStatus.SUCCESS);
+        return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 
+    @PostMapping("/filter")
+    public ApiResponse<UserDto> filterdUsers(@RequestBody UserDto filter,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<User> result = service.getFilteredUser(filter,pageable);
+        List<UserDto> userDtoList = UserMapper.mapToDTOList(result);//mapped to dto
+        long totalCount = service.getAllCount();
+        return new ApiResponse<>(userDtoList, totalCount, ApiResponseStatus.SUCCESS);
+    }
 }

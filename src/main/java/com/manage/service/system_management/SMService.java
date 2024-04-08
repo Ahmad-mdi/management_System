@@ -2,6 +2,7 @@ package com.manage.service.system_management;
 
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.system_management.SM;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface SMService {
 
     boolean deleteById(long id);
 
-    List<SM> getFilteredSM(SMDto filter);
+    List<SM> getFilteredSM(SMDto filter, Pageable pageable);
 }
