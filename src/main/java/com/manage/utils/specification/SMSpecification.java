@@ -22,7 +22,9 @@ public class SMSpecification {
                 predicates.add(cb.like(root.get("route"), "%" + route + "%"));
             }
 
-            return cb.and(predicates.toArray(new Predicate[0]));
+            query.distinct(true);
+            Predicate[] predicatesArray = new Predicate[predicates.size()];
+            return cb.and(predicates.toArray(predicatesArray));
         };
     }
 }

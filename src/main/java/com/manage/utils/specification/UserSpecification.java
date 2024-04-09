@@ -26,7 +26,9 @@ public class UserSpecification {
                 predicates.add(cb.equal(root.get("nationalCode"), nationalCode));
             }
 
-            return cb.and(predicates.toArray(new Predicate[0]));
+            query.distinct(true);
+            Predicate[] predicatesArray = new Predicate[predicates.size()];
+            return cb.and(predicates.toArray(predicatesArray));
         };
     }
 }
