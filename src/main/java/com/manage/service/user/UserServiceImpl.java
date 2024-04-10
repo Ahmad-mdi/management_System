@@ -142,11 +142,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<UserDto> getByUsernameLike(String usernameLike) {
-        List<User> searchedList = repository.findByUsernameLike(usernameLike);
-        return UserMapper.mapToDTOList(searchedList);
-    }
 
     @Override
     public ByteArrayInputStream importToExcel() throws IOException {
@@ -229,10 +224,14 @@ public class UserServiceImpl implements UserService {
     public Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable) {
         return repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pageable);
     }
+    @Override
+    public Page<User> searchByUsername(String username, Pageable pageable) {
+        return repository.findAll(UserSpecification.searchByUsername(username), pageable);
+    }
 
 
     /*******************************************************************************************************************
-                                          ****** other methods ******
+     ************************************************ other methods ****************************************************
      *******************************************************************************************************************/
 
 

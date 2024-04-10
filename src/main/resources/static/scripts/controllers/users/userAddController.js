@@ -29,7 +29,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "نام نمی تواند خالی باشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -37,7 +38,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "نام خانوادگی نمی تواند خالی باشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -45,7 +47,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "نام کاربری نمی تواند خالی باشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -53,7 +56,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "کلمه عبور نمی تواند خالی باشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -63,7 +67,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "کدملی نمی تواند خالی باشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -72,7 +77,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "فرمت کدملی صحیح نیست",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -80,7 +86,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "کد ملی وارد شده نامعتبر میباشد",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -88,7 +95,8 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             Swal.fire({
                 title: "خطا",
                 text: "لطفا فعال / غیرفعال کاربر را تعیین کنید!",
-                icon: "error"
+                icon: "error",
+                confirmButtonText: "فهمیدم"
             });
             return;
         }
@@ -97,8 +105,9 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             $scope.changeMenu('user-list');//after set switch in nav list page
             Swal.fire({
                 title: "موفق",
-                text: "ایجاد کاربر با خطایت به ثبت رسید",
-                icon: "success"
+                text: "ایجاد کاربر با موفقیت به ثبت رسید",
+                icon: "success",
+                confirmButtonText: "فهمیدم"
             });
         }, (error) => {
         }, true)

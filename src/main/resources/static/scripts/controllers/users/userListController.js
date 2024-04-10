@@ -5,7 +5,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     };
     $scope.totalCount = 0;
     $scope.dataList = [];
-    $scope.getDataSearch = [];
+    $scope.all = [];
     $scope.pageCount = 0;
     $scope.userInfo = $rootScope.userInfo;
 
@@ -75,14 +75,11 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     }
 
     $scope.searchByUsername = () => {
-        let url = 'user/search?usernameLike=' + encodeURIComponent($scope.usernameLike);
+        let url = `user/search?username=${encodeURIComponent($scope.username)}&pageSize=${$scope.query.pageSize}&pageNumber=${$scope.query.pageNumber}`;
         apiHandler.callGet(url, (response) => {
-            $scope.dataList = response.dataList;
+            $scope.all =  response.dataList[0].content;
             $scope.totalCount = response.totalCount;
-            $scope.pageCount = $scope.totalCount / $scope.query.pageSize;
-            $scope.pageCount = parseInt($scope.pageCount);
-            if ($scope.totalCount % $scope.pageSize > 0)
-                $scope.pageCount++;
+            $scope.pageCount = Math.ceil($scope.totalCount / $scope.query.pageSize);
         }, (error) => {
             console.error('Error searching users:', error);
         }, true);

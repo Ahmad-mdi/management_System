@@ -31,5 +31,19 @@ public class UserSpecification {
             return cb.and(predicates.toArray(predicatesArray));
         };
     }
+
+    public static Specification<User> searchByUsername(String username) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (username != null) {
+                predicates.add(cb.like(root.get("username"), "%" + username + "%"));
+            }
+
+            query.distinct(true);
+            Predicate[] predicatesArray = new Predicate[predicates.size()];
+            return cb.and(predicates.toArray(predicatesArray));
+        };
+    }
 }
 

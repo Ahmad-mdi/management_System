@@ -5,6 +5,7 @@ import com.manage.model.dto.user.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -22,8 +23,6 @@ public interface UserService {
 
     UserDto getFirstByUsername(String username);
 
-    List<UserDto> getByUsernameLike(String username);
-
     ByteArrayInputStream importToExcel() throws IOException;
 
     List<User> getAll(Integer pageSize, Integer pageNumber);
@@ -39,4 +38,6 @@ public interface UserService {
     UserDto changePassword(long id, String oldPassword, String newPassword) throws Exception;
 
     Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable);
+
+    Page<User> searchByUsername(String username, Pageable pageable);
 }

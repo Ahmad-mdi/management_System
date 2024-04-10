@@ -8,17 +8,51 @@
 
     <!-- Search by Username -->
     <div class="t-header-search">
-        <form ng-submit="searchByUsername()" >
             <div class="t-header-searchbox font-size-13 open">
                 <div type="text" class="text search-input__box ">جستجوی کاربر</div>
                 <div class="t-header-search-content " style="display: block;">
                     <label>
-                        <input ng-model="usernameLike" type="text" class="text" placeholder="بر اساس نام کاربری">
+                        <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
                     </label>
-                    <button type="submit" class="btn btn-brand">جستجو</button>
+                    <button ng-click="searchByUsername()" class="btn btn-brand">جستجو</button>
                 </div>
             </div>
-        </form>
+    </div>
+    <br>
+
+    <div class="table__box" ng-show="all.length > 0">
+        <table class="table">
+            <thead role="rowgroup">
+            <tr role="row" class="title-row">
+                <th>شناسه</th>
+                <th>نام و نام خانوادگی</th>
+                <th>نام کاربری</th>
+                <th>کدملی</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in all">
+                <td><a href="">{{data.id}}</a></td>
+                <td><a href="">{{data.fullName}}</a></td>
+                <td><a href="">{{data.username}}</a></td>
+                <td>{{data.nationalCode}}</td>
+                <td>
+                    <i class="item-confirm mlg-15" ng-show="data.enable"></i>
+                    <i class="item-reject mlg-15" ng-show="!data.enable"></i>
+                </td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#"
+                       class="item-delete mlg-15" title="حذف"></a>
+                    <!--<a href="" class="item-confirm mlg-15" title="تایید"></a>
+                    <a href="" class="item-reject mlg-15" title="رد"></a>
+                    <a href="edit-user.html" target="_blank" class="item-eye mlg-15" title="مشاهده"></a>-->
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <br>
 
@@ -40,7 +74,7 @@
 
 
     <!--  list users  -->
-    <div class="table__box" ng-show="dataList.length > 0">
+    <div class="table__box" ng-show="dataList.length > 0" ng-hide="all.length > 0">
         <table class="table">
             <thead role="rowgroup">
             <tr role="row" class="title-row">
@@ -77,7 +111,7 @@
     <br>
 
     <!-- pagination -->
-    <div class="pagination">
+    <!--<div class="pagination">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
                 <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();" aria-label="Previous">
@@ -93,7 +127,5 @@
                 </a>
             </li>
         </ul>
-    </div>
-
-
+    </div>-->
 </div>
