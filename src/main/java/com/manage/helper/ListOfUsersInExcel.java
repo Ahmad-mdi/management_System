@@ -15,12 +15,12 @@ import java.util.List;
 
 public class ListOfUsersInExcel {
     public static String[] HEADERS = {
-            "id",
-            "username",
-            "firstname",
-            "lastname",
-            "nationalCode",
-            "active"
+            "شناسه",
+            "نام کاربری",
+            "نام",
+            "نام خانوادگی",
+            "کدملی",
+            "وضعیت"
     };
     public static String SHEET_NAME = "user_data";
 
