@@ -20,7 +20,7 @@
     </div>
     <br>
 
-    <div class="table__box" ng-show="all.length > 0">
+    <div class="table__box" ng-show="getSearch.length > 0">
         <table class="table">
             <thead role="rowgroup">
             <tr role="row" class="title-row">
@@ -33,7 +33,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr role="row" ng-repeat="data in all">
+            <tr role="row" ng-repeat="data in getSearch">
                 <td><a href="">{{data.id}}</a></td>
                 <td><a href="">{{data.fullName}}</a></td>
                 <td><a href="">{{data.username}}</a></td>
@@ -55,6 +55,23 @@
         </table>
     </div>
     <br>
+    <div class="pagination" ng-if="getSearch.length > 0">
+        <ul class="pagination">
+            <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; searchByUsername();" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">صفحه {{query.pageNumber + 1}} از {{pageCount}}</span>
+            </li>
+            <li class="page-item" ng-class="{disabled: query.pageNumber >= pageCount - 1}">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber + 1; searchByUsername();" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
     <!-- Filter Users -->
    <!-- <div class="t-header-search">
@@ -74,7 +91,7 @@
 
 
     <!--  list users  -->
-    <div class="table__box" ng-show="dataList.length > 0" ng-hide="all.length > 0">
+    <div class="table__box" ng-show="dataList.length > 0 && getSearch.length == 0">
         <table class="table">
             <thead role="rowgroup">
             <tr role="row" class="title-row">
@@ -110,8 +127,8 @@
     </div>
     <br>
 
-    <!-- pagination -->
-    <!--<div class="pagination">
+<!--     pagination -->
+    <div class="pagination" ng-if="dataList.length > 0 && getSearch.length == 0">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
                 <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();" aria-label="Previous">
@@ -127,5 +144,5 @@
                 </a>
             </li>
         </ul>
-    </div>-->
+    </div>
 </div>

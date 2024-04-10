@@ -1,13 +1,16 @@
 package com.manage.response;
 
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 @Data
 public class ApiResponse<T> implements Serializable {
     private List<T> dataList;
+    private Page<T> dataLists;
     private ApiResponseStatus status;
     private boolean hasError;
     private String message;
@@ -20,21 +23,32 @@ public class ApiResponse<T> implements Serializable {
         this.hasError = status != ApiResponseStatus.SUCCESS;
 //        this.totalCount = 0;
     }
-    public ApiResponse(List<T> dataList,long totalCount, ApiResponseStatus status) {
+
+    public ApiResponse(List<T> dataList, long totalCount, ApiResponseStatus status) {
         this.dataList = dataList;
         this.status = status;
         this.message = "";
         this.hasError = status != ApiResponseStatus.SUCCESS;
         this.totalCount = totalCount;
     }
+
+    public ApiResponse(Page<T> dataLists, long totalCount, ApiResponseStatus status) {
+        this.dataLists = dataLists;
+        this.status = status;
+        this.message = "";
+        this.hasError = status != ApiResponseStatus.SUCCESS;
+        this.totalCount = totalCount;
+    }
+
     public ApiResponse(T data, ApiResponseStatus status) {
         this.dataList = new ArrayList<T>();
-        this.dataList .add(data);
+        this.dataList.add(data);
         this.status = status;
         this.message = "ok";
         this.hasError = status != ApiResponseStatus.SUCCESS;
         this.totalCount = 1;
     }
+
     public ApiResponse(String message, ApiResponseStatus status) {
         this.dataList = new ArrayList<T>();
         this.status = status;
@@ -42,6 +56,7 @@ public class ApiResponse<T> implements Serializable {
         this.hasError = status != ApiResponseStatus.SUCCESS;
         this.totalCount = 1;
     }
+
     public ApiResponse(Exception ex) {
         this.dataList = new ArrayList<T>();
         this.status = ApiResponseStatus.EXCEPTION;

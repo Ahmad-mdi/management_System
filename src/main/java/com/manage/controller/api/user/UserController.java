@@ -1,9 +1,6 @@
 package com.manage.controller.api.user;
 
 import com.manage.config.JwtTokenUtil;
-import com.manage.model.dto.systemManagement.SMDto;
-import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.model.system_management.SM;
 import com.manage.model.user.User;
 import com.manage.model.dto.user.UserDto;
 import com.manage.model.mapper.user.UserMapper;
@@ -14,7 +11,6 @@ import com.manage.utils.exception.JwtTokenException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,9 +22,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.core.io.Resource;
 
@@ -40,7 +34,7 @@ public class UserController {
     private final JwtTokenUtil jwtTokenUtil;
 
     /*******************************************************************************************************************
-     ************************************************** Get Mapping *****************************************************
+     ************************************************** Get Mapping ****************************************************
      *******************************************************************************************************************/
 
     @GetMapping("/get-all")
@@ -52,11 +46,12 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<Page<UserDto>> searchByUsername(
+    public ApiResponse<UserDto> searchByUsername(
             @RequestParam(required = false) String username, Pageable pageable) {
         Page<User> users = service.searchByUsername(username, pageable);
         Page<UserDto> userDtoPage = users.map(UserMapper::mapToDTO);
-        return new ApiResponse<>(userDtoPage, ApiResponseStatus.SUCCESS);
+        long totalCont = service.getAllCount();
+        return new ApiResponse<>(userDtoPage,totalCont, ApiResponseStatus.SUCCESS);
     }
 
     @GetMapping("/filter")
@@ -120,7 +115,7 @@ public class UserController {
     }
 
     /*******************************************************************************************************************
-     ************************************************** Post Mapping *****************************************************
+     ************************************************** Post Mapping ***************************************************
      *******************************************************************************************************************/
 
     @PostMapping("/login")
