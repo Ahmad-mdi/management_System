@@ -1,11 +1,11 @@
 app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
-
     $scope.query = {
-        pageSize: 100,
+        pageSize: 15,
         pageNumber: 0
     };
     $scope.totalCount = 0;
     $scope.dataList = [];
+    $scope.getDataSearch = [];
     $scope.pageCount = 0;
     $scope.userInfo = $rootScope.userInfo;
 
@@ -23,8 +23,9 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         }, true);
     }
 
-    $scope.downloadExcel = function() {
-        apiHandler.downloadExcel().then(function(response) {
+
+    $scope.downloadExcelUserList = function () {
+        apiHandler.downloadExcel().then(function (response) {
             let file = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
             let fileURL = URL.createObjectURL(file);
             let a = document.createElement('a');
@@ -60,27 +61,34 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
             confirmButtonText: "پاک شود"
         }).then((result) => {
             if (result.isConfirmed) {
-                apiHandler.callDelete('user/delete/'+id,(response) =>{
+                apiHandler.callDelete('user/delete/' + id, (response) => {
                     Swal.fire({
                         title: "حذف ",
                         text: "کاربر با موفقیت حذف شد",
                         icon: "success"
                     });
                     $scope.getDataList();
-                },(error)=>{},true);
+                }, (error) => {
+                }, true);
             }
         });
     }
 
-    $scope.search = function() {
-        apiHandler.searchUsersByUsername($scope.usernameLike)
-            .then(function(response) {
-                $scope.users = response.data;
-            })
-            .catch(function(error) {
-                console.error('Error searching users:', error);
-            });
+    $scope.searchByUsername = () => {
+        let url = 'user/search?usernameLike=' + encodeURIComponent($scope.usernameLike);
+        apiHandler.callGet(url, (response) => {
+            $scope.dataList = response.dataList;
+            $scope.totalCount = response.totalCount;
+            $scope.pageCount = $scope.totalCount / $scope.query.pageSize;
+            $scope.pageCount = parseInt($scope.pageCount);
+            if ($scope.totalCount % $scope.pageSize > 0)
+                $scope.pageCount++;
+        }, (error) => {
+            console.error('Error searching users:', error);
+        }, true);
     };
 
+
+    $scope.searchByUsername();
     $scope.getDataList();
 });

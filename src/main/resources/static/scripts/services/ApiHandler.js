@@ -159,15 +159,6 @@ app.service("apiHandler", function ($http, $cookies) {
     this.downloadExcel = function() {
         return $http.get('http://127.0.0.1:8080/api/user/download-excel', {responseType: 'blob'});
     };
-
-    this.searchUsersByUsername = function(usernameLike) {
-        return $http.get('/api/user/search', {
-            params: {
-                usernameLike: usernameLike
-            }
-        });
-    };
-
 });
 
 
