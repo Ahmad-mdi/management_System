@@ -18,5 +18,12 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> , JpaSpecificationExecutor<User>{
     @Query("SELECT COUNT(u) FROM User u WHERE u.username LIKE %:username%")
     long countByUsername(@Param("username") String username);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.username LIKE %:username% OR u.firstname LIKE %:firstname% OR u.lastname LIKE %:lastname% OR u.nationalCode LIKE %:nationalCode%")
+    long countByUsernameOrFirstNameOrLastNameOrNationalCode(
+            @Param("username") String username,
+            @Param("firstname") String firstname,
+            @Param("lastname") String lastname,
+            @Param("nationalCode") String nationalCode);
     User findFirstByUsername(String username);
 }

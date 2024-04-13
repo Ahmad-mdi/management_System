@@ -65,7 +65,7 @@ public class UserController {
             @RequestParam int pageNumber) {
         List<User> usersFilterd = service.filterUsers(username,firstname,lastname,nationalCode, pageSize,pageNumber);
         List<UserDto> userDtoList = UserMapper.mapToDTOList(usersFilterd);//mapped to dto
-        long totalCont = service.getAllCountForUserName(username);
+        long totalCont = service.countByUsernameOrFirstNameOrLastNameOrNationalCode(username,firstname,lastname,nationalCode);
         return new ApiResponse<>(userDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 

@@ -33,6 +33,9 @@ public interface UserService {
 
     long getAllCountForUserName(String username);
 
+
+    long countByUsernameOrFirstNameOrLastNameOrNationalCode(String username, String firstname, String lastname, String nationalCode);
+
     UserDto getById(long id);
 
     UserDto update(UserDto userDto);

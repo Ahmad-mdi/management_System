@@ -184,6 +184,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public long countByUsernameOrFirstNameOrLastNameOrNationalCode(String username,String firstname, String lastname, String nationalCode) {
+        return repository.countByUsernameOrFirstNameOrLastNameOrNationalCode(username,firstname,lastname,nationalCode);
+    }
+
+    @Override
     public UserDto getById(long id) {
         Optional<User> data = repository.findById(id);
         if (data.isEmpty())
