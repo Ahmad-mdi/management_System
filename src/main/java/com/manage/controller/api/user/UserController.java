@@ -46,12 +46,13 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<UserDto> searchByUsername(
-            @RequestParam(required = false) String username, Pageable pageable) {
-        Page<User> users = service.searchByUsername(username, pageable);
-        Page<UserDto> userDtoPage = users.map(UserMapper::mapToDTO);
-        long totalCont = service.getAllCount();
-        return new ApiResponse<>(userDtoPage,totalCont, ApiResponseStatus.SUCCESS);
+    public ApiResponse<UserDto> searchByUsername(@RequestParam(required = false) String username,
+                                                 @RequestParam int pageSize,
+                                                 @RequestParam int pageNumber) {
+        List<User> users = service.searchByUsername(username, pageSize,pageNumber);
+        List<UserDto> userDtoList = UserMapper.mapToDTOList(users);//mapped to dto
+        long totalCont = service.getAllCountForUserName(username);
+        return new ApiResponse<>(userDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 
     @GetMapping("/filter")

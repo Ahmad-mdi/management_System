@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 public class ApiResponse<T> implements Serializable {
     private List<T> dataList;
-    private Page<T> dataLists;
     private ApiResponseStatus status;
     private boolean hasError;
     private String message;
@@ -26,14 +25,6 @@ public class ApiResponse<T> implements Serializable {
 
     public ApiResponse(List<T> dataList, long totalCount, ApiResponseStatus status) {
         this.dataList = dataList;
-        this.status = status;
-        this.message = "";
-        this.hasError = status != ApiResponseStatus.SUCCESS;
-        this.totalCount = totalCount;
-    }
-
-    public ApiResponse(Page<T> dataLists, long totalCount, ApiResponseStatus status) {
-        this.dataLists = dataLists;
         this.status = status;
         this.message = "";
         this.hasError = status != ApiResponseStatus.SUCCESS;

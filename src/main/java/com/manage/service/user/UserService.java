@@ -29,6 +29,8 @@ public interface UserService {
 
     long getAllCount();
 
+    long getAllCountForUserName(String username);
+
     UserDto getById(long id);
 
     UserDto update(UserDto userDto);
@@ -37,7 +39,8 @@ public interface UserService {
 
     UserDto changePassword(long id, String oldPassword, String newPassword) throws Exception;
 
+    List<User> searchByUsername(String username, int pageSize, int pageNumber);
+
     Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable);
 
-    Page<User> searchByUsername(String username, Pageable pageable);
 }

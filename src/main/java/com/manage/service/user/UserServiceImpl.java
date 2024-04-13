@@ -161,8 +161,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> searchByUsername(String username, int pageSize, int pageNumber) {
+        Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+        Page<User> pageList = repository.findAll(UserSpecification.searchByUsername(username),pagination);
+        return pageList.getContent();
+    }
+
+    @Override
+    public Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable) {
+        return repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pageable);
+    }
+
+    @Override
     public long getAllCount() {
         return repository.count();
+    }
+    @Override
+    public long getAllCountForUserName(String username) {
+        return repository.countByUsername(username);
     }
 
     @Override
@@ -218,15 +234,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(newPassword);
         User updatedPass = repository.save(user);
         return UserMapper.mapToDTO(updatedPass);
-    }
-
-    @Override
-    public Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable) {
-        return repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pageable);
-    }
-    @Override
-    public Page<User> searchByUsername(String username, Pageable pageable) {
-        return repository.findAll(UserSpecification.searchByUsername(username), pageable);
     }
 
 

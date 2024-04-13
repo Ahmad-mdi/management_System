@@ -3,9 +3,13 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         pageSize: 10,
         pageNumber: 0
     };
-    $scope.totalCount = 0;
+    $scope.searchQuery = {
+        searchPageSize: 10,
+        searchPageNumber: 0
+    };
     $scope.dataList = [];
     $scope.getSearch = [];
+    $scope.totalCount = 0;
     $scope.pageCount = 0;
     $scope.userInfo = $rootScope.userInfo;
 
@@ -38,6 +42,8 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     $scope.changePage = (pageNumber) => {
         $scope.query.pageNumber = pageNumber;
         $scope.getDataList();
+        $scope.searchQuery.searchPageNumber = pageNumber;
+        $scope.searchByUsername();
     }
 
     $scope.range = (max) => {
@@ -74,15 +80,42 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         });
     }
 
+    $scope.reloadList = () => {
+        $scope.username = '';
+        $scope.searchQuery.searchPageNumber = 0;
+        $scope.getSearch = [];
+        $scope.totalCount = 0;
+        $scope.pageCount = 0;
+        $scope.getDataList();
+    };
+
+    $scope.showInfoText = () => {
+        Swal.fire({
+            title: "راهنمایی",
+            html: `
+                <p style="text-align: justify;">              
+                      نکته اول: گزینه "بازگردانی لیست" برای شما به نمایش گذاشته شده است لطفا برای جلوگیری از مشکلات احتمالی، بعد از اینکه جستجوی شما به اتمام رسید روی این گزینه کلیک نمایید!
+                </p>
+                <br>                      
+                <p style="text-align: justify;">              
+                     نکته دوم: اگر جستجوی شما مطابقت نداشته باشد صفحه بندی روی صفحه یک قفل میشود! برای حل این مشکل لطفا بر روی "بازگردانی لیست" کلیک کرده و جستجو را دوباره آغاز کنید!
+                </p>
+                <br>
+                <p style="text-align: justify;">              
+                     نکته سوم: اگر مطمئن هستید در هنگام جستجو کاربر مورد نظر وجود دارد ولی اطلاعاتی برای شما  نمایش داده نمیشود لطفا یکبار روی گزینه "بازگردانی لیست" کلیک کنید.
+                </p>
+            `,
+            icon: "info",
+            confirmButtonText: "فهمیدم"
+        });
+    }
+
     $scope.searchByUsername = () => {
-        let url = `user/search?username=${encodeURIComponent($scope.username)}&pageSize=${$scope.query.pageSize}&pageNumber=${$scope.query.pageNumber}`;
+        let url = `user/search?username=${encodeURIComponent($scope.username)}&pageSize=${$scope.searchQuery.searchPageSize}&pageNumber=${$scope.searchQuery.searchPageNumber}`;
         apiHandler.callGet(url, (response) => {
-            $scope.getSearch =  response.dataLists.content;
+            $scope.getSearch = response.dataList;
             $scope.totalCount = response.totalCount;
-            $scope.pageCount = $scope.totalCount / $scope.query.pageSize;
-            $scope.pageCount = parseInt($scope.pageCount);
-            if ($scope.totalCount % $scope.pageSize > 0)
-                $scope.pageCount++;
+            $scope.pageCount = Math.ceil($scope.totalCount / $scope.searchQuery.searchPageSize);
         }, (error) => {
             console.error('Error searching users:', error);
         }, true);

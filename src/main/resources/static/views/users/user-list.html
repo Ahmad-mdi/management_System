@@ -8,15 +8,18 @@
 
     <!-- Search by Username -->
     <div class="t-header-search">
-            <div class="t-header-searchbox font-size-13 open">
-                <div type="text" class="text search-input__box ">جستجوی کاربر</div>
-                <div class="t-header-search-content " style="display: block;">
-                    <label>
-                        <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
-                    </label>
-                    <button ng-click="searchByUsername()" class="btn btn-brand">جستجو</button>
-                </div>
+        <div class="t-header-searchbox font-size-13 open">
+            <div type="text" class="text search-input__box ">جستجوی کاربر</div>
+            <div class="t-header-search-content " style="display: block;">
+                <label>
+                    <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
+                </label>
+                <button ng-click="searchByUsername()" class="btn btn-brand">جستجو</button>
+                <a style="color: #1e7e34" href="#" title="بازگردانی لیست" ng-click="reloadList()" class="item-eye cursor-pointer">بازگردانی لیست</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" title="راهنما" ng-click="showInfoText()" class="item-eye cursor-pointer">راهنمای جستجو</a>
             </div>
+        </div>
     </div>
     <br>
 
@@ -24,6 +27,7 @@
         <table class="table">
             <thead role="rowgroup">
             <tr role="row" class="title-row">
+                <th>ردیف</th>
                 <th>شناسه</th>
                 <th>نام و نام خانوادگی</th>
                 <th>نام کاربری</th>
@@ -34,6 +38,7 @@
             </thead>
             <tbody>
             <tr role="row" ng-repeat="data in getSearch">
+                <td><a href="">{{$index+1}}</a></td>
                 <td><a href="">{{data.id}}</a></td>
                 <td><a href="">{{data.fullName}}</a></td>
                 <td><a href="">{{data.username}}</a></td>
@@ -55,39 +60,39 @@
         </table>
     </div>
     <br>
-    <div class="pagination" ng-if="getSearch.length > 0">
+<!-- pageination for after search   -->
+    <div class="pagination" ng-show="getSearch.length > 0">
         <ul class="pagination">
-            <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
-                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; searchByUsername();" aria-label="Previous">
+            <li class="page-item" ng-class="{disabled: searchQuery.searchPageNumber == 0}">
+                <a class="page-link" href="#" ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber - 1; searchByUsername();" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item disabled">
-                <span class="page-link">صفحه {{query.pageNumber + 1}} از {{pageCount}}</span>
+                <span class="page-link">صفحه {{searchQuery.searchPageNumber + 1}} از {{pageCount}}</span>
             </li>
-            <li class="page-item" ng-class="{disabled: query.pageNumber >= pageCount - 1}">
-                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber + 1; searchByUsername();" aria-label="Next">
+            <li class="page-item" ng-class="{disabled: searchQuery.searchPageNumber >= pageCount - 1}">
+                <a class="page-link" href="#" ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber + 1; searchByUsername();" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </div>
-
     <!-- Filter Users -->
-   <!-- <div class="t-header-search">
-        <div class="t-header-searchbox font-size-13 open">
-            <div type="text" class="text search-input__box ">سرچ فیلتر</div>
-            <div class="t-header-search-content " style="display: block;">
-                <label>
-                    <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
-                    <input ng-model="firstname" type="text" class="text" placeholder="بر اساس نام ">
-                    <input ng-model="lastname" type="text" class="text" placeholder="بر اساس نام خانوادگی">
-                    <input ng-model="nationalCode" type="text" class="text" placeholder="بر اساس کدملی">
-                </label>
-                <button ng-click="filterUsers()" class="btn btn-brand">فیلتر کن</button>
-            </div>
-        </div>
-    </div>-->
+    <!-- <div class="t-header-search">
+         <div class="t-header-searchbox font-size-13 open">
+             <div type="text" class="text search-input__box ">سرچ فیلتر</div>
+             <div class="t-header-search-content " style="display: block;">
+                 <label>
+                     <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
+                     <input ng-model="firstname" type="text" class="text" placeholder="بر اساس نام ">
+                     <input ng-model="lastname" type="text" class="text" placeholder="بر اساس نام خانوادگی">
+                     <input ng-model="nationalCode" type="text" class="text" placeholder="بر اساس کدملی">
+                 </label>
+                 <button ng-click="filterUsers()" class="btn btn-brand">فیلتر کن</button>
+             </div>
+         </div>
+     </div>-->
 
 
     <!--  list users  -->
@@ -95,6 +100,7 @@
         <table class="table">
             <thead role="rowgroup">
             <tr role="row" class="title-row">
+                <th>ردیف</th>
                 <th>شناسه</th>
                 <th>نام و نام خانوادگی</th>
                 <th>نام کاربری</th>
@@ -105,6 +111,7 @@
             </thead>
             <tbody>
             <tr role="row" ng-repeat="data in dataList">
+                <td><a href="">{{$index+1}}</a></td>
                 <td><a href="">{{data.id}}</a></td>
                 <td><a href="">{{data.fullName}}</a></td>
                 <td><a href="">{{data.username}}</a></td>
@@ -127,8 +134,8 @@
     </div>
     <br>
 
-<!--     pagination -->
-    <div class="pagination" ng-if="dataList.length > 0 && getSearch.length == 0">
+    <!--     pagination -->
+    <div class="pagination" ng-show="dataList.length > 0 && getSearch.length == 0">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
                 <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();" aria-label="Previous">
@@ -146,3 +153,4 @@
         </ul>
     </div>
 </div>
+
