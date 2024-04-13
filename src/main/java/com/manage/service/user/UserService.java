@@ -27,6 +27,8 @@ public interface UserService {
 
     List<User> getAll(Integer pageSize, Integer pageNumber);
 
+    List<User> filterUsers(String username, String firstname, String lastname, String nationalCode, int pageSize, int pageNumber);
+
     long getAllCount();
 
     long getAllCountForUserName(String username);
@@ -41,6 +43,6 @@ public interface UserService {
 
     List<User> searchByUsername(String username, int pageSize, int pageNumber);
 
-    Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable);
+
 
 }

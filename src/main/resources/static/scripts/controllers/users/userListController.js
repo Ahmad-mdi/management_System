@@ -7,8 +7,13 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         searchPageSize: 10,
         searchPageNumber: 0
     };
+    $scope.filter = {
+        filterPageSize: 10,
+        filterPageNumber: 0
+    };
     $scope.dataList = [];
     $scope.getSearch = [];
+    $scope.getFilters = [];
     $scope.totalCount = 0;
     $scope.pageCount = 0;
     $scope.userInfo = $rootScope.userInfo;
@@ -80,10 +85,21 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         });
     }
 
-    $scope.reloadList = () => {
+    $scope.reloadListAfterSearch = () => {
         $scope.username = '';
         $scope.searchQuery.searchPageNumber = 0;
         $scope.getSearch = [];
+        $scope.totalCount = 0;
+        $scope.pageCount = 0;
+        $scope.getDataList();
+    };
+    $scope.reloadListAfterFilter = () => {
+        $scope.usernameFilter = '';
+        $scope.firstname = '';
+        $scope.lastname = '';
+        $scope.nationalCode = '';
+        $scope.filter.filterPageNumber = 0;
+        $scope.getFilters = [];
         $scope.totalCount = 0;
         $scope.pageCount = 0;
         $scope.getDataList();
@@ -121,7 +137,33 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         }, true);
     };
 
+    $scope.filterByColumns = () => {
+        let url = 'user/filter?';
 
-    $scope.searchByUsername();
+        if ($scope.usernameFilter) {
+            url += `username=${encodeURIComponent($scope.usernameFilter)}&`;
+        }
+        if ($scope.firstname) {
+            url += `firstname=${encodeURIComponent($scope.firstname)}&`;
+        }
+        if ($scope.lastname) {
+            url += `lastname=${encodeURIComponent($scope.lastname)}&`;
+        }
+        if ($scope.nationalCode) {
+            url += `nationalCode=${encodeURIComponent($scope.nationalCode)}&`;
+        }
+
+        url += `pageSize=${$scope.filter.filterPageSize}&pageNumber=${$scope.filter.filterPageNumber}`;
+
+        apiHandler.callGet(url, (response) => {
+            $scope.getFilters = response.dataList;
+            $scope.totalCount = response.totalCount;
+            $scope.pageCount = Math.ceil($scope.totalCount / $scope.filter.filterPageSize);
+        }, (error) => {
+            console.error('Error filterd all columns of users:', error);
+        }, true);
+    };
+
+
     $scope.getDataList();
 });

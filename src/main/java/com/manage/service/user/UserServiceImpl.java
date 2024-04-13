@@ -168,8 +168,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> filterUsers(String username, String firstname, String lastname, String nationalCode, Pageable pageable) {
-        return repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pageable);
+    public List<User> filterUsers(String username, String firstname, String lastname, String nationalCode, int pageSize , int pageNumber) {
+        Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+        Page<User> pageList = repository.findAll(UserSpecification.filterBy(username, firstname, lastname, nationalCode), pagination);
+        return pageList.getContent();
     }
 
     @Override

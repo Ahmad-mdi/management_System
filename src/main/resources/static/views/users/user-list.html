@@ -6,26 +6,79 @@
         </div>
     </div>
 
-    <!-- Search by Username -->
-    <div class="t-header-search">
-        <div class="t-header-searchbox font-size-13 open">
-            <div type="text" class="text search-input__box ">جستجوی کاربر</div>
-            <div class="t-header-search-content " style="display: block;">
-                <label>
-                    <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
-                </label>
-                <button ng-click="searchByUsername()" class="btn btn-brand">جستجو</button>
-                <a style="color: #1e7e34" href="#" title="بازگردانی لیست" ng-click="reloadList()" class="item-eye cursor-pointer">بازگردانی لیست</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" title="راهنما" ng-click="showInfoText()" class="item-eye cursor-pointer">راهنمای جستجو</a>
+    <div class="container">
+        <div class="row">
+            <!-- Search by Username -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        جستجوی کاربر
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <input ng-model="username" type="text" class="form-control"
+                                       placeholder="بر اساس نام کاربری">
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button ng-click="searchByUsername()" class="btn btn-primary">جستجو</button>
+                                <div>
+                                    <a style="text-decoration: none;font-size: small" href="#" title="بازگردانی لیست"
+                                       ng-click="reloadListAfterSearch()"
+                                       class="btn btn-link">بازگردانی لیست</a>
+                                    <a style="text-decoration: none;font-size: small" href="#" title="راهنما"
+                                       ng-click="showInfoText()" class="btn btn-link">راهنمای
+                                        جستجو</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter by all columns -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        فیلتر بر اساس ستون ها
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <input ng-model="usernameFilter" type="text" class="form-control"
+                                       placeholder="بر اساس نام کاربری">
+                                <input ng-model="firstname" type="text" class="form-control mt-2"
+                                       placeholder="بر اساس نام">
+                                <input ng-model="lastname" type="text" class="form-control mt-2"
+                                       placeholder="بر اساس نام خانوادگی">
+                                <input ng-model="nationalCode" type="text" class="form-control mt-2"
+                                       placeholder="بر اساس کد ملی">
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button ng-click="filterByColumns()" class="btn btn-primary">اعمال فیلتر</button>
+                                <div>
+                                    <a style="text-decoration: none;font-size: small" href="#" title="بازگردانی لیست"
+                                       ng-click="reloadListAfterFilter()"
+                                       class="btn btn-link">بازگردانی لیست</a>
+                                    <a style="text-decoration: none;font-size: small" href="#" title="راهنما"
+                                       ng-click="showInfoText()" class="btn btn-link">راهنمای
+                                        جستجو</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <br>
 
-    <div class="table__box" ng-show="getSearch.length > 0">
+
+    <!-- List of users after search -->
+    <div class="table__box" ng-if="getSearch.length > 0 ">
         <table class="table">
             <thead role="rowgroup">
+            تعداد نتایج یافت شده پس از جستجو: {{totalCount}}
             <tr role="row" class="title-row">
                 <th>ردیف</th>
                 <th>شناسه</th>
@@ -33,12 +86,12 @@
                 <th>نام کاربری</th>
                 <th>کدملی</th>
                 <th>وضعیت</th>
-                <th>عملیات</th>
+                <th>حذف/ویرایش</th>
             </tr>
             </thead>
             <tbody>
             <tr role="row" ng-repeat="data in getSearch">
-                <td><a href="">{{$index+1}}</a></td>
+                <td><a href="">{{$index + 1}}</a></td>
                 <td><a href="">{{data.id}}</a></td>
                 <td><a href="">{{data.fullName}}</a></td>
                 <td><a href="">{{data.username}}</a></td>
@@ -60,11 +113,13 @@
         </table>
     </div>
     <br>
-<!-- pageination for after search   -->
-    <div class="pagination" ng-show="getSearch.length > 0">
+    <!-- pageination for after search   -->
+    <div class="pagination" ng-if="getSearch.length > 0">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: searchQuery.searchPageNumber == 0}">
-                <a class="page-link" href="#" ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber - 1; searchByUsername();" aria-label="Previous">
+                <a class="page-link" href="#"
+                   ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber - 1; searchByUsername();"
+                   aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -72,33 +127,23 @@
                 <span class="page-link">صفحه {{searchQuery.searchPageNumber + 1}} از {{pageCount}}</span>
             </li>
             <li class="page-item" ng-class="{disabled: searchQuery.searchPageNumber >= pageCount - 1}">
-                <a class="page-link" href="#" ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber + 1; searchByUsername();" aria-label="Next">
+                <a class="page-link" href="#"
+                   ng-click="searchQuery.searchPageNumber = searchQuery.searchPageNumber + 1; searchByUsername();"
+                   aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </div>
-    <!-- Filter Users -->
-    <!-- <div class="t-header-search">
-         <div class="t-header-searchbox font-size-13 open">
-             <div type="text" class="text search-input__box ">سرچ فیلتر</div>
-             <div class="t-header-search-content " style="display: block;">
-                 <label>
-                     <input ng-model="username" type="text" class="text" placeholder="بر اساس نام کاربری">
-                     <input ng-model="firstname" type="text" class="text" placeholder="بر اساس نام ">
-                     <input ng-model="lastname" type="text" class="text" placeholder="بر اساس نام خانوادگی">
-                     <input ng-model="nationalCode" type="text" class="text" placeholder="بر اساس کدملی">
-                 </label>
-                 <button ng-click="filterUsers()" class="btn btn-brand">فیلتر کن</button>
-             </div>
-         </div>
-     </div>-->
 
 
-    <!--  list users  -->
-    <div class="table__box" ng-show="dataList.length > 0 && getSearch.length == 0">
+    <!--*****************************************************************************************************************-->
+
+    <!-- List of users after filters -->
+    <div class="table__box" ng-if="getFilters.length > 0 && getSearch.length == 0">
         <table class="table">
             <thead role="rowgroup">
+            تعداد نتایج یافت شده پس از اعمال فیلتر: {{totalCount}}
             <tr role="row" class="title-row">
                 <th>ردیف</th>
                 <th>شناسه</th>
@@ -106,12 +151,12 @@
                 <th>نام کاربری</th>
                 <th>کدملی</th>
                 <th>وضعیت</th>
-                <th>عملیات</th>
+                <th>حذف/ویرایش</th>
             </tr>
             </thead>
             <tbody>
-            <tr role="row" ng-repeat="data in dataList">
-                <td><a href="">{{$index+1}}</a></td>
+            <tr role="row" ng-repeat="data in getFilters">
+                <td><a href="">{{$index + 1}}</a></td>
                 <td><a href="">{{data.id}}</a></td>
                 <td><a href="">{{data.fullName}}</a></td>
                 <td><a href="">{{data.username}}</a></td>
@@ -133,12 +178,74 @@
         </table>
     </div>
     <br>
+    <!-- pageination for after filters   -->
+    <div class="pagination" ng-if="getFilters.length > 0 && getSearch.length == 0 ">
+        <ul class="pagination">
+            <li class="page-item" ng-class="{disabled: filter.filterPageNumber == 0}">
+                <a class="page-link" href="#" ng-click="filter.filterPageNumber = filter.filterPageNumber - 1; filterByColumns();"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">صفحه {{filter.filterPageNumber + 1}} از {{pageCount}}</span>
+            </li>
+            <li class="page-item" ng-class="{disabled: filter.filterPageNumber >= pageCount - 1}">
+                <a class="page-link" href="#" ng-click="filter.filterPageNumber = filter.filterPageNumber + 1; filterByColumns();"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    <!--     pagination -->
-    <div class="pagination" ng-show="dataList.length > 0 && getSearch.length == 0">
+    <!--*****************************************************************************************************************-->
+
+    <!--  list users  -->
+    <div class="table__box" ng-if="dataList.length > 0 && getSearch.length == 0 && getFilters.length == 0 ">
+        <table class="table">
+            <thead role="rowgroup">
+                تعداد لیست کاربران: {{totalCount}}
+            <tr role="row" class="title-row">
+                <th>ردیف</th>
+                <th>شناسه</th>
+                <th>نام و نام خانوادگی</th>
+                <th>نام کاربری</th>
+                <th>کدملی</th>
+                <th>وضعیت</th>
+                <th>حذف/ویرایش</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in dataList">
+                <td><a href="">{{$index + 1}}</a></td>
+                <td><a href="">{{data.id}}</a></td>
+                <td><a href="">{{data.fullName}}</a></td>
+                <td><a href="">{{data.username}}</a></td>
+                <td>{{data.nationalCode}}</td>
+                <td>
+                    <i class="item-confirm mlg-15" ng-show="data.enable"></i>
+                    <i class="item-reject mlg-15" ng-show="!data.enable"></i>
+                </td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#"
+                       class="item-delete mlg-15" title="حذف"></a>
+                    <!--<a href="" class="item-confirm mlg-15" title="تایید"></a>
+                    <a href="" class="item-reject mlg-15" title="رد"></a>
+                    <a href="edit-user.html" target="_blank" class="item-eye mlg-15" title="مشاهده"></a>-->
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <!--  pagination for all list -->
+    <div class="pagination" ng-if="dataList.length > 0 && getSearch.length == 0 && getFilters.length == 0">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
-                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();" aria-label="Previous">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();"
+                   aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -146,11 +253,13 @@
                 <span class="page-link">صفحه {{query.pageNumber + 1}} از {{pageCount}}</span>
             </li>
             <li class="page-item" ng-class="{disabled: query.pageNumber >= pageCount - 1}">
-                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber + 1; getDataList();" aria-label="Next">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber + 1; getDataList();"
+                   aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </div>
+
 </div>
 

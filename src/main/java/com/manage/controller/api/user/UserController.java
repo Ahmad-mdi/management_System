@@ -56,14 +56,17 @@ public class UserController {
     }
 
     @GetMapping("/filter")
-    public ApiResponse<Page<UserDto>> filterUsers(
+    public ApiResponse<UserDto> filterUsers(
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String firstname,
             @RequestParam(required = false) String lastname,
-            @RequestParam(required = false) String nationalCode, Pageable pageable) {
-        Page<User> users = service.filterUsers(username, firstname, lastname, nationalCode, pageable);
-        Page<UserDto> userDtoPage = users.map(UserMapper::mapToDTO);
-        return new ApiResponse<>(userDtoPage, ApiResponseStatus.SUCCESS);
+            @RequestParam(required = false) String nationalCode,
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber) {
+        List<User> usersFilterd = service.filterUsers(username,firstname,lastname,nationalCode, pageSize,pageNumber);
+        List<UserDto> userDtoList = UserMapper.mapToDTOList(usersFilterd);//mapped to dto
+        long totalCont = service.getAllCountForUserName(username);
+        return new ApiResponse<>(userDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 
     //jwt auth:
