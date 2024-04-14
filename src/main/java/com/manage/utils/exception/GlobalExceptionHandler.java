@@ -29,14 +29,20 @@ public class GlobalExceptionHandler{
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        String message;
-        if (Objects.requireNonNull(e.getMessage()).contains("uk_2f3xrn5enpplukjdl7e0c7rdf")) {
-            message = getMessage("already.nationalCode");
-        } else {
-            message = e.getMessage();
+        String message = e.getMessage();
+        if (message == null) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+
+        if (message.contains("uk_2f3xrn5enpplukjdl7e0c7rdf")) {
+            return new ResponseEntity<>(getMessage("already.nationalCode"), HttpStatus.BAD_REQUEST);
+        } else if (message.contains("uk_r43af9ap4edm43mmtq01oddj6")) {
+            return new ResponseEntity<>(getMessage("already.username"), HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
     }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
