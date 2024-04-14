@@ -1,6 +1,6 @@
 package com.manage.utils.specification;
 
-import com.manage.model.system_management.SM;
+import com.manage.model.sysman.Sysman;
 import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SMSpecification {
 
-    public static Specification<SM> filterBy(String en_name, String fa_name, String route) {
+    public static Specification<Sysman> filterBy(String en_name, String fa_name, String route) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 

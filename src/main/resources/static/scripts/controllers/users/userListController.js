@@ -1,4 +1,5 @@
 app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
+
     $scope.query = {
         pageSize: 10,
         pageNumber: 0
@@ -18,6 +19,19 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     $scope.pageCount = 0;
     $scope.userInfo = $rootScope.userInfo;
 
+    $scope.changePage = (pageNumber) => {
+        $scope.query.pageNumber = pageNumber;
+        $scope.getDataList();
+        $scope.searchQuery.searchPageNumber = pageNumber;
+        $scope.searchByUsername();
+        $scope.filter.filterPageNumber = pageNumber;
+        $scope.filterByColumns();
+    }
+
+    $scope.range = (max) => {
+        return new Array(max);
+    }
+
     $scope.getDataList = () => {
         let url = 'user/get-all?pageSize=' + $scope.query.pageSize + '&pageNumber=' + $scope.query.pageNumber;
         apiHandler.callGet(url, (response) => {
@@ -32,7 +46,6 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         }, true);
     }
 
-
     $scope.downloadExcelUserList = function () {
         apiHandler.downloadExcel().then(function (response) {
             let file = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
@@ -43,17 +56,6 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
             a.click();
         });
     };
-
-    $scope.changePage = (pageNumber) => {
-        $scope.query.pageNumber = pageNumber;
-        $scope.getDataList();
-        $scope.searchQuery.searchPageNumber = pageNumber;
-        $scope.searchByUsername();
-    }
-
-    $scope.range = (max) => {
-        return new Array(max);
-    }
 
     $scope.editItem = (id) => {
         $rootScope.dataId = id;
@@ -93,6 +95,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         $scope.pageCount = 0;
         $scope.getDataList();
     };
+
     $scope.reloadListAfterFilter = () => {
         $scope.usernameFilter = '';
         $scope.firstname = '';
@@ -105,7 +108,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         $scope.getDataList();
     };
 
-    $scope.showInfoText = () => {
+    $scope.showInfoTextForSearch = () => {
         Swal.fire({
             title: "راهنمایی",
             html: `
@@ -118,7 +121,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
                 </p>
                 <br>
                 <p style="text-align: justify;">              
-                     نکته سوم: اگر مطمئن هستید در هنگام جستجو کاربر مورد نظر وجود دارد ولی اطلاعاتی برای شما  نمایش داده نمیشود لطفا یکبار روی گزینه "بازگردانی لیست" کلیک کنید.
+                    نکته سوم: اگر مطمئن هستید در هنگام جستجو کاربر مورد نظر وجود دارد ولی اطلاعاتی برای شما  نمایش داده نمیشود لطفا یکبار روی گزینه "بازگردانی لیست" کلیک کنید و دوباره جستجو را تکرار کنید!
                 </p>
             `,
             icon: "info",

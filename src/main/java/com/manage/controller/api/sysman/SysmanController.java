@@ -1,11 +1,11 @@
-package com.manage.controller.api.system_management;
+package com.manage.controller.api.sysman;
 
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.model.system_management.SM;
+import com.manage.model.sysman.Sysman;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
-import com.manage.service.system_management.SMServiceImpl;
+import com.manage.service.sysman.SysmanServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,13 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/systme_management")
-public class SMController {
+public class SysmanController {
 
-    private final SMServiceImpl service;
+    private final SysmanServiceImpl service;
 
     @GetMapping("get-all")
     public ApiResponse<SMDto> getAll(@RequestParam Integer pageSize, @RequestParam Integer PageNumber) {
-        List<SM> dataList = service.getAll(pageSize, PageNumber);
+        List<Sysman> dataList = service.getAll(pageSize, PageNumber);
         List<SMDto> mappedToDTOList = SMMapper.mapToDTOList(dataList);
         long totalCount = service.getAllCount();
         return new ApiResponse<>(mappedToDTOList, totalCount, ApiResponseStatus.SUCCESS);
@@ -51,7 +51,7 @@ public class SMController {
             @RequestParam(required = false) String en_name,
             @RequestParam(required = false) String fa_name,
             @RequestParam(required = false) String route, Pageable pageable) {
-        Page<SM> data = service.filterSm(en_name, fa_name, route, pageable);
+        Page<Sysman> data = service.filterSm(en_name, fa_name, route, pageable);
         Page<SMDto> dataDtoPage = data.map(SMMapper::mapToDTO);
         return new ApiResponse<>(dataDtoPage, ApiResponseStatus.SUCCESS);
     }

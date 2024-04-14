@@ -1,9 +1,9 @@
-package com.manage.service.system_management;
+package com.manage.service.sysman;
 
-import com.manage.model.system_management.SM;
+import com.manage.model.sysman.Sysman;
 import com.manage.model.dto.systemManagement.SMDto;
 import com.manage.model.mapper.systemManagement.SMMapper;
-import com.manage.repository.system_management.SMRepository;
+import com.manage.repository.sysman.SysmanRepository;
 import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.specification.SMSpecification;
 import lombok.AllArgsConstructor;
@@ -19,14 +19,14 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class SMServiceImpl implements SMService {
+public class SysmanServiceImpl implements SysmanService {
 
-    private final SMRepository repository;
+    private final SysmanRepository repository;
 
     @Override
-    public List<SM> getAll(Integer pageSize, Integer pageNumber) {
+    public List<Sysman> getAll(Integer pageSize, Integer pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
-        Page<SM> all = repository.findAll(pagination);
+        Page<Sysman> all = repository.findAll(pagination);
         return all.getContent();
     }
 
@@ -37,34 +37,34 @@ public class SMServiceImpl implements SMService {
 
     @Override
     public SMDto add(SMDto dto) {
-        SM sm = SMMapper.mapToEntity(dto);
-        sm.setCreated_date(LocalDateTime.now());
-        SM savedData = repository.save(sm);
+        Sysman sysman = SMMapper.mapToEntity(dto);
+        sysman.setCreated_date(LocalDateTime.now());
+        Sysman savedData = repository.save(sysman);
         return SMMapper.mapToDTO(savedData);
     }
 
 
     @Override
     public SMDto update(SMDto dto) {
-        Optional<SM> findId = repository.findById(dto.getId());
+        Optional<Sysman> findId = repository.findById(dto.getId());
 
         if (findId.isEmpty())
             throw new DataNotFoundException("data.not.found");
 
-        SM sm = findId.get();
+        Sysman sysman = findId.get();
 
-        sm.setEn_name(dto.getEn_name());
-        sm.setFa_name(dto.getFa_name());
-        sm.setRoute(dto.getRoute());
-        sm.setUpdated_date(LocalDateTime.now());
+        sysman.setEn_name(dto.getEn_name());
+        sysman.setFa_name(dto.getFa_name());
+        sysman.setRoute(dto.getRoute());
+        sysman.setUpdated_date(LocalDateTime.now());
 
-        SM dataUpdated = repository.save(sm);
+        Sysman dataUpdated = repository.save(sysman);
         return SMMapper.mapToDTO(dataUpdated);
     }
 
     @Override
     public boolean deleteById(long id) {
-        Optional<SM> sm = repository.findById(id);
+        Optional<Sysman> sm = repository.findById(id);
         if (sm.isPresent()) {
             repository.deleteById(id);
             return true;
@@ -73,7 +73,7 @@ public class SMServiceImpl implements SMService {
     }
 
     @Override
-    public Page<SM> filterSm(String en_name, String fa_name, String route, Pageable pageable) {
+    public Page<Sysman> filterSm(String en_name, String fa_name, String route, Pageable pageable) {
         return repository.findAll(SMSpecification.filterBy(en_name, fa_name, route), pageable);
     }
 

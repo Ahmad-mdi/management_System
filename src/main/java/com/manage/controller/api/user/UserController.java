@@ -69,6 +69,7 @@ public class UserController {
         return new ApiResponse<>(userDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 
+
     //jwt auth:
     @GetMapping("/get-user-info")
     public ApiResponse<UserDto> getUserInfo(HttpServletRequest servletRequest) {

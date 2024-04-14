@@ -32,7 +32,7 @@
 <div class="container-fluid" ng-controller="panelCtlr">
     <div class="col p-0">
         <div class="panel-header">
-            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+            <a href="/logout" class="btn btn-danger btn-sysman">Logout</a>
         </div>
     </div>
     <div class="row">

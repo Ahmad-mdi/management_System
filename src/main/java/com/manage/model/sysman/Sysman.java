@@ -1,4 +1,4 @@
-package com.manage.model.system_management;
+package com.manage.model.sysman;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "system_managements")
-public class SM {
+public class Sysman {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

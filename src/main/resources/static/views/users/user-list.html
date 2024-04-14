@@ -1,8 +1,10 @@
 <div class="main-content font-size-13" ng-controller="userListCtrl">
     <div class="tab__box">
         <div class="tab__items">
-            <a ng-click="changeMenu('user-add')" class="tab__item is-active" href="#">ایجاد کاربر جدید</a>
-            <a class="tab__item is-active" href="#" ng-click="downloadExcelUserList()">دانلود لیست کاربران</a>
+            <a ng-click="changeMenu('user-add')" class="tab__item is-active" href="#">ایجاد کاربر جدید+</a>
+            <a class="tab__item is-active" href="#" ng-click="downloadExcelUserList()">دانلود لیست اکسل کاربران فعال</a>
+            <a title="راهنمای جستجو و فیلترینگ" href="#" ng-click="showInfoTextForSearch()" class="tab__item is-active">راهنمای
+                جستجو و اعمال فیلتر</a>
         </div>
     </div>
 
@@ -21,14 +23,11 @@
                                        placeholder="بر اساس نام کاربری">
                             </div>
                             <div class="d-flex justify-content-between mt-3">
-                                <button ng-click="searchByUsername()" class="btn btn-primary">جستجو</button>
+                                <button ng-click="searchByUsername()" class="btn btn-primary" ng-disabled="!username">جستجو</button>
                                 <div>
                                     <a style="text-decoration: none;font-size: small" href="#" title="بازگردانی لیست"
                                        ng-click="reloadListAfterSearch()"
                                        class="btn btn-link">بازگردانی لیست</a>
-                                    <a style="text-decoration: none;font-size: small" href="#" title="راهنما"
-                                       ng-click="showInfoText()" class="btn btn-link">راهنمای
-                                        جستجو</a>
                                 </div>
                             </div>
                         </form>
@@ -55,14 +54,11 @@
                                        placeholder="بر اساس کد ملی">
                             </div>
                             <div class="d-flex justify-content-between mt-3">
-                                <button ng-click="filterByColumns()" class="btn btn-primary">اعمال فیلتر</button>
+                                <button ng-click="filterByColumns()" class="btn btn-primary" ng-disabled="!usernameFilter && !firstname && !lastname && !nationalCode">اعمال فیلتر</button>
                                 <div>
                                     <a style="text-decoration: none;font-size: small" href="#" title="بازگردانی لیست"
                                        ng-click="reloadListAfterFilter()"
                                        class="btn btn-link">بازگردانی لیست</a>
-                                    <a style="text-decoration: none;font-size: small" href="#" title="راهنما"
-                                       ng-click="showInfoText()" class="btn btn-link">راهنمای
-                                        جستجو</a>
                                 </div>
                             </div>
                         </form>
@@ -182,7 +178,8 @@
     <div class="pagination" ng-if="getFilters.length > 0 && getSearch.length == 0 ">
         <ul class="pagination">
             <li class="page-item" ng-class="{disabled: filter.filterPageNumber == 0}">
-                <a class="page-link" href="#" ng-click="filter.filterPageNumber = filter.filterPageNumber - 1; filterByColumns();"
+                <a class="page-link" href="#"
+                   ng-click="filter.filterPageNumber = filter.filterPageNumber - 1; filterByColumns();"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
@@ -191,7 +188,8 @@
                 <span class="page-link">صفحه {{filter.filterPageNumber + 1}} از {{pageCount}}</span>
             </li>
             <li class="page-item" ng-class="{disabled: filter.filterPageNumber >= pageCount - 1}">
-                <a class="page-link" href="#" ng-click="filter.filterPageNumber = filter.filterPageNumber + 1; filterByColumns();"
+                <a class="page-link" href="#"
+                   ng-click="filter.filterPageNumber = filter.filterPageNumber + 1; filterByColumns();"
                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
@@ -199,13 +197,13 @@
         </ul>
     </div>
 
-    <!--*****************************************************************************************************************-->
+    <!--****************************************************************************************************************-->
 
     <!--  list users  -->
     <div class="table__box" ng-if="dataList.length > 0 && getSearch.length == 0 && getFilters.length == 0 ">
         <table class="table">
             <thead role="rowgroup">
-                تعداد لیست کاربران: {{totalCount}}
+            تعداد لیست کاربران: {{totalCount}}
             <tr role="row" class="title-row">
                 <th>ردیف</th>
                 <th>شناسه</th>
