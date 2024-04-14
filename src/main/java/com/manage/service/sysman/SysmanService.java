@@ -1,9 +1,7 @@
 package com.manage.service.sysman;
 
-import com.manage.model.dto.systemManagement.SMDto;
+import com.manage.model.dto.sysman.SysmanDto;
 import com.manage.model.sysman.Sysman;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,11 +10,16 @@ public interface SysmanService {
 
     long getAllCount();
 
-    SMDto add(SMDto dto);
+    SysmanDto add(SysmanDto dto);
 
-    SMDto update(SMDto dto);
+    SysmanDto update(SysmanDto dto);
 
     boolean deleteById(long id);
 
-    Page<Sysman> filterSm(String en_name, String fa_name, String route, Pageable pageable);
+    SysmanDto getById(long id);
+
+    List<Sysman> filterSysman(String en_name, String fa_name, String route, int pageSize, int pageNumber);
+
+    long countByEn_nameOrFa_nameOrRoute(String en_name, String fa_name, String route);
+
 }

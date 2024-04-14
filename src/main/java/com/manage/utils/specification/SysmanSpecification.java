@@ -6,7 +6,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SMSpecification {
+public class SysmanSpecification {
 
     public static Specification<Sysman> filterBy(String en_name, String fa_name, String route) {
         return (root, query, cb) -> {

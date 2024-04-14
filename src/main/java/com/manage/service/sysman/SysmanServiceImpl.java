@@ -1,11 +1,11 @@
 package com.manage.service.sysman;
 
 import com.manage.model.sysman.Sysman;
-import com.manage.model.dto.systemManagement.SMDto;
-import com.manage.model.mapper.systemManagement.SMMapper;
+import com.manage.model.dto.sysman.SysmanDto;
+import com.manage.model.mapper.sysman.SysmanMapper;
 import com.manage.repository.sysman.SysmanRepository;
 import com.manage.utils.exception.DataNotFoundException;
-import com.manage.utils.specification.SMSpecification;
+import com.manage.utils.specification.SysmanSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,16 +36,16 @@ public class SysmanServiceImpl implements SysmanService {
     }
 
     @Override
-    public SMDto add(SMDto dto) {
-        Sysman sysman = SMMapper.mapToEntity(dto);
+    public SysmanDto add(SysmanDto dto) {
+        Sysman sysman = SysmanMapper.mapToEntity(dto);
         sysman.setCreated_date(LocalDateTime.now());
         Sysman savedData = repository.save(sysman);
-        return SMMapper.mapToDTO(savedData);
+        return SysmanMapper.mapToDTO(savedData);
     }
 
 
     @Override
-    public SMDto update(SMDto dto) {
+    public SysmanDto update(SysmanDto dto) {
         Optional<Sysman> findId = repository.findById(dto.getId());
 
         if (findId.isEmpty())
@@ -59,7 +59,7 @@ public class SysmanServiceImpl implements SysmanService {
         sysman.setUpdated_date(LocalDateTime.now());
 
         Sysman dataUpdated = repository.save(sysman);
-        return SMMapper.mapToDTO(dataUpdated);
+        return SysmanMapper.mapToDTO(dataUpdated);
     }
 
     @Override
@@ -73,8 +73,23 @@ public class SysmanServiceImpl implements SysmanService {
     }
 
     @Override
-    public Page<Sysman> filterSm(String en_name, String fa_name, String route, Pageable pageable) {
-        return repository.findAll(SMSpecification.filterBy(en_name, fa_name, route), pageable);
+    public SysmanDto getById(long id) {
+        Optional<Sysman> data = repository.findById(id);
+        if (data.isEmpty())
+            throw new DataNotFoundException("data.not.found");
+        return SysmanMapper.mapToDTO(data.get());
+    }
+
+    @Override
+    public List<Sysman> filterSysman(String en_name, String fa_name, String route, int pageSize, int pageNumber) {
+        Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+        Page<Sysman> pageList = repository.findAll(SysmanSpecification.filterBy(en_name, fa_name, route), pagination);
+        return pageList.getContent();
+    }
+
+    @Override
+    public long countByEn_nameOrFa_nameOrRoute(String en_name, String fa_name, String route) {
+        return repository.countByEn_nameOrFa_nameOrRoute(en_name,fa_name,route);
     }
 
 }

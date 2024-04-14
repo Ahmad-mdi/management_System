@@ -1,0 +1,149 @@
+<div class="main-content font-size-13" ng-controller="sysmanListCtrl">
+    <div class="tab__box">
+        <div class="tab__items">
+            <a ng-click="changeMenu('sysman-add')" class="tab__item is-active" href="#">ایجاد سامانه جدید+</a>
+            <a title="راهنمای جستجو و فیلترینگ" href="#" ng-click="showInfoTextForSearch()" class="tab__item is-active">راهنمای
+                جستجو و اعمال فیلتر</a>
+        </div>
+    </div>
+
+    <!-- filters form -->
+    <div class="container" ng-show="dataList.length > 0">
+        <div class="row">
+            <!-- Filter by all columns -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        فیلتر بر اساس ستون ها
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <input ng-model="en_name" type="text" class="form-control-sm"
+                                       placeholder="بر اساس نام انگلیسی" ng-disabled="getFilters.length > 0">
+                                <input ng-model="fa_name" type="text" class="form-control-sm "
+                                       placeholder="بر اساس نام فارسی" ng-disabled="getFilters.length > 0">
+                                <input ng-model="route" type="text" class="form-control-sm "
+                                       placeholder="بر اساس مسیر سامانه" ng-disabled="getFilters.length > 0">
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button ng-hide="getFilters.length > 0" ng-click="filterByColumns()" class="btn btn-primary"  ng-disabled="!en_name && !fa_name && !route">اعمال فیلتر</button>
+                                <button ng-click="reloadListAfterFilter()" class="btn btn-outline-warning" ng-show="getFilters.length > 0">بازگردانی لیست</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!--  list sysman  -->
+    <div class="table__box" ng-if="dataList.length > 0 && getFilters.length == 0 ">
+        <table class="table">
+            <thead role="rowgroup">
+            تعداد لیست سامانه ها: {{totalCount}}
+            <tr role="row" class="title-row">
+                <th>ردیف</th>
+                <th>شناسه</th>
+                <th>نام انگلیسی</th>
+                <th>نام فارسی</th>
+                <th>مسیر</th>
+                <th>حذف/ویرایش</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in dataList">
+                <td><a href="">{{$index + 1}}</a></td>
+                <td><a href="">{{data.id}}</a></td>
+                <td><a href="">{{data.en_name}}</a></td>
+                <td><a href="">{{data.fa_name}}</a></td>
+                <td><a href="">{{data.route}}</a></td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#"
+                       class="item-delete mlg-15" title="حذف"></a>
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <!--  pagination for all sysman -->
+    <div class="pagination" ng-if="dataList.length > 0 && getFilters.length == 0">
+        <ul class="pagination">
+            <li class="page-item" ng-class="{disabled: query.pageNumber == 0}">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber - 1; getDataList();"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">صفحه {{query.pageNumber + 1}} از {{pageCount}}</span>
+            </li>
+            <li class="page-item" ng-class="{disabled: query.pageNumber >= pageCount - 1}">
+                <a class="page-link" href="#" ng-click="query.pageNumber = query.pageNumber + 1; getDataList();"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- List of sysman after filters -->
+    <div class="table__box" ng-if="getFilters.length > 0">
+        <table class="table">
+            <thead role="rowgroup">
+            تعداد نتایج یافت شده پس از اعمال فیلتر: {{totalCount}}
+            <tr role="row" class="title-row">
+                <th>ردیف</th>
+                <th>شناسه</th>
+                <th>نام انگلیسی</th>
+                <th>نام فارسی</th>
+                <th>مسیر</th>
+                <th>حذف/ویرایش</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr role="row" ng-repeat="data in getFilters">
+                <td><a href="">{{$index + 1}}</a></td>
+                <td><a href="">{{data.id}}</a></td>
+                <td><a href="">{{data.en_name}}</a></td>
+                <td><a href="">{{data.fa_name}}</a></td>
+                <td><a href="">{{data.route}}</a></td>
+                <td>
+                    <a ng-hide="userInfo.id == data.id" ng-click="deleteItem(data.id)" href="#"
+                       class="item-delete mlg-15" title="حذف"></a>
+                    <a ng-click="editItem(data.id)" href="#" class="item-edit " title="ویرایش"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <!-- pageination for after filters   -->
+    <div class="pagination" ng-if="getFilters.length > 0">
+        <ul class="pagination">
+            <li class="page-item" ng-class="{disabled: filter.filterPageNumber == 0}">
+                <a class="page-link" href="#"
+                   ng-click="filter.filterPageNumber = filter.filterPageNumber - 1; filterByColumns();"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">صفحه {{filter.filterPageNumber + 1}} از {{pageCount}}</span>
+            </li>
+            <li class="page-item" ng-class="{disabled: filter.filterPageNumber >= pageCount - 1}">
+                <a class="page-link" href="#"
+                   ng-click="filter.filterPageNumber = filter.filterPageNumber + 1; filterByColumns();"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+

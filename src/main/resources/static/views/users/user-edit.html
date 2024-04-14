@@ -34,7 +34,7 @@
                                         <option value="false" ng-selected="!data.enable">غیرفعال</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-outline-success" ng-click="editData()">Update</button>
+                                <button type="submit" ng-disabled="!data.firstname || !data.lastname || !data.enable" class="btn btn-outline-success" ng-click="editData()">بروزرسانی</button>
                             </div>
                         </div>
                     </div>

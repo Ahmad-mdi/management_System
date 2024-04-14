@@ -26,8 +26,8 @@ app.controller('userEditCtrl', function ($scope, apiHandler,$rootScope) {
         apiHandler.callPut('user/update',$scope.data,(response) => {
             $scope.changeMenu('user-list');
             Swal.fire({
-                title: "success",
-                text: "your data updated successfully",
+                title: "بروزرسانی اطلاعات کاربر",
+                text: "کاربر با موفقیت بروزرسانی شد",
                 icon: "success"
             });
         },(error) => {

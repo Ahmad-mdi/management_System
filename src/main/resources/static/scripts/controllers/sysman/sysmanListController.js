@@ -1,19 +1,18 @@
-app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
+app.controller('sysmanListCtrl', function ($scope, apiHandler, $rootScope) {
 
     $scope.query = {
         pageSize: 10,
         pageNumber: 0
     };
-    $scope.searchQuery = {
+    /*$scope.searchQuery = {
         searchPageSize: 10,
         searchPageNumber: 0
-    };
+    };*/
     $scope.filter = {
         filterPageSize: 10,
         filterPageNumber: 0
     };
     $scope.dataList = [];
-    $scope.getSearch = [];
     $scope.getFilters = [];
     $scope.totalCount = 0;
     $scope.pageCount = 0;
@@ -22,8 +21,6 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     $scope.changePage = (pageNumber) => {
         $scope.query.pageNumber = pageNumber;
         $scope.getDataList();
-        $scope.searchQuery.searchPageNumber = pageNumber;
-        $scope.searchByUsername();
         $scope.filter.filterPageNumber = pageNumber;
         $scope.filterByColumns();
     }
@@ -33,7 +30,7 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
     }
 
     $scope.getDataList = () => {
-        let url = 'user/get-all?pageSize=' + $scope.query.pageSize + '&pageNumber=' + $scope.query.pageNumber;
+        let url = 'sysman/get-all?pageSize=' + $scope.query.pageSize + '&pageNumber=' + $scope.query.pageNumber;
         apiHandler.callGet(url, (response) => {
             $scope.dataList = response.dataList;
             $scope.totalCount = response.totalCount;
@@ -45,26 +42,16 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         }, true);
     }
 
-    $scope.downloadExcelUserList = function () {
-        apiHandler.downloadExcel().then(function (response) {
-            let file = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-            let fileURL = URL.createObjectURL(file);
-            let a = document.createElement('a');
-            a.href = fileURL;
-            a.download = 'list-of-users.xlsx';
-            a.click();
-        });
-    };
 
     $scope.editItem = (id) => {
         $rootScope.dataId = id;
-        $scope.changeMenu('user-edit');
+        $scope.changeMenu('sysman-edit');
     }
 
     $scope.deleteItem = (id) => {
         Swal.fire({
             title: "برای حذف مطمئن هستید؟",
-            text: "اطلاعات کاربر فعلی پاک میشود!",
+            text: "اطلاعات سامانه فعلی پاک میشود!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -73,10 +60,10 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
             confirmButtonText: "پاک شود"
         }).then((result) => {
             if (result.isConfirmed) {
-                apiHandler.callDelete('user/delete/' + id, (response) => {
+                apiHandler.callDelete('sysman/delete/' + id, (response) => {
                     Swal.fire({
                         title: "حذف ",
-                        text: "کاربر با موفقیت حذف شد",
+                        text: "سامانه با موفقیت حذف شد",
                         icon: "success"
                     });
                     $scope.getDataList();
@@ -86,20 +73,10 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         });
     }
 
-    $scope.reloadListAfterSearch = () => {
-        $scope.username = '';
-        $scope.searchQuery.searchPageNumber = 0;
-        $scope.getSearch = [];
-        $scope.totalCount = 0;
-        $scope.pageCount = 0;
-        $scope.getDataList();
-    };
-
     $scope.reloadListAfterFilter = () => {
-        $scope.usernameFilter = '';
-        $scope.firstname = '';
-        $scope.lastname = '';
-        $scope.nationalCode = '';
+        $scope.en_name = '';
+        $scope.fa_name = '';
+        $scope.route = '';
         $scope.filter.filterPageNumber = 0;
         $scope.getFilters = [];
         $scope.totalCount = 0;
@@ -128,31 +105,17 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         });
     }
 
-    $scope.searchByUsername = () => {
-        let url = `user/search?username=${encodeURIComponent($scope.username)}&pageSize=${$scope.searchQuery.searchPageSize}&pageNumber=${$scope.searchQuery.searchPageNumber}`;
-        apiHandler.callGet(url, (response) => {
-            $scope.getSearch = response.dataList;
-            $scope.totalCount = response.totalCount;
-            $scope.pageCount = Math.ceil($scope.totalCount / $scope.searchQuery.searchPageSize);
-        }, (error) => {
-            console.error('Error searching users:', error);
-        }, true);
-    };
-
     $scope.filterByColumns = () => {
-        let url = 'user/filter?';
+        let url = 'sysman/filter?';
 
-        if ($scope.usernameFilter) {
-            url += `username=${encodeURIComponent($scope.usernameFilter)}&`;
+        if ($scope.en_name) {
+            url += `en_name=${encodeURIComponent($scope.en_name)}&`;
         }
-        if ($scope.firstname) {
-            url += `firstname=${encodeURIComponent($scope.firstname)}&`;
+        if ($scope.fa_name) {
+            url += `fa_name=${encodeURIComponent($scope.fa_name)}&`;
         }
-        if ($scope.lastname) {
-            url += `lastname=${encodeURIComponent($scope.lastname)}&`;
-        }
-        if ($scope.nationalCode) {
-            url += `nationalCode=${encodeURIComponent($scope.nationalCode)}&`;
+        if ($scope.route) {
+            url += `route=${encodeURIComponent($scope.route)}&`;
         }
 
         url += `pageSize=${$scope.filter.filterPageSize}&pageNumber=${$scope.filter.filterPageNumber}`;
@@ -162,9 +125,11 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
             $scope.totalCount = response.totalCount;
             $scope.pageCount = Math.ceil($scope.totalCount / $scope.filter.filterPageSize);
         }, (error) => {
-            console.error('Error filterd all columns of users:', error);
+            console.error('Error filterd all columns of systme_management:', error);
         }, true);
     };
+
+
 
 
     $scope.getDataList();

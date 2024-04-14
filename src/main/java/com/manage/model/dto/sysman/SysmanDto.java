@@ -1,4 +1,4 @@
-package com.manage.model.dto.systemManagement;
+package com.manage.model.dto.sysman;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SMDto {
+public class SysmanDto {
     private long id;
     @NotBlank(message = "نام انگلیسی سامانه نباید خالی باشد")
     private String en_name;
