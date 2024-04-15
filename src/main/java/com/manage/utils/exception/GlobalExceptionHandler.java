@@ -1,9 +1,9 @@
 package com.manage.utils.exception;
 
+
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,18 +28,18 @@ public class GlobalExceptionHandler{
         return errorMap;
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+    public ApiResponse<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         String message = e.getMessage();
         if (message == null) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ApiResponse<>(e.getMessage(), ApiResponseStatus.EXCEPTION);
         }
 
         if (message.contains("uk_2f3xrn5enpplukjdl7e0c7rdf")) {
-            return new ResponseEntity<>(getMessage("already.nationalCode"), HttpStatus.BAD_REQUEST);
+            return new ApiResponse<>(getMessage("already.nationalCode"), ApiResponseStatus.EXCEPTION);
         } else if (message.contains("uk_r43af9ap4edm43mmtq01oddj6")) {
-            return new ResponseEntity<>(getMessage("already.username"), HttpStatus.BAD_REQUEST);
+            return new ApiResponse<>(getMessage("already.username"), ApiResponseStatus.EXCEPTION);
         } else {
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            return new ApiResponse<>(message, ApiResponseStatus.EXCEPTION);
         }
     }
 

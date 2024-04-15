@@ -1,11 +1,11 @@
-app.service("apiHandler", function ($http, $cookies) {
+app.service("apiHandler", function ($http, $cookies,$q) {
 
     this.callPost = (url, data, onSuccess, onError, setToken) => {
         url = "/api/" + url;
         let request = {
             url: url,
             method: "POST",
-            data: data
+            data: data,
         };
         this.checkAndSetToken(request, setToken)
         $http(request).then((response) => {
@@ -16,23 +16,25 @@ app.service("apiHandler", function ($http, $cookies) {
                 } else if (result.hasError) {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: result.message /*result.statusText*/
+                        title: "خطای درج اطلاعات",
+                        text: result.message,
+                        confirmButtonText: "فهمیدم"
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: "unknown error!"
+                        title: "خطای سرور",
+                        text: "ارور نامشخص!",
+                        confirmButtonText: "فهمیدم"
                     });
                 }
             }
         }).catch((err) => {
             Swal.fire({
                 icon: "error",
-                title: "خطای درج اطلاعات",
-                text: JSON.stringify(err)
-                // text: err.getValidationMessage
+                title: "خطا",
+                text: err,
+                confirmButtonText: "فهمیدم"
             });
             onError(err);
         });
@@ -53,22 +55,25 @@ app.service("apiHandler", function ($http, $cookies) {
                 } else if (result.hasError) {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: result.message
+                        title: "خطای دریافت اطلاعات",
+                        text: result.message,
+                        confirmButtonText: "فهمیدم"
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: "unknown error!"
+                        title: "خطا",
+                        text: "خطای نامشخص !",
+                        confirmButtonText: "فهمیدم"
                     });
                 }
             }
         }, (err) => {
             Swal.fire({
                 icon: "error",
-                title: "Error",
-                text: "Exception on server"
+                title: "خطا",
+                text: "خطای سمت سرور",
+                confirmButtonText: "فهمیدم"
             });
             onError(err);
         });
@@ -90,22 +95,25 @@ app.service("apiHandler", function ($http, $cookies) {
                 } else if (result.hasError) {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: result.message
+                        title: "خطای اطلاعات",
+                        text: result.message,
+                        confirmButtonText: "فهمیدم"
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: "unknown error!"
+                        title: "خطا",
+                        text: "خطای نامشخص!",
+                        confirmButtonText: "فهمیدم"
                     });
                 }
             }
         }, (err) => {
             Swal.fire({
                 icon: "error",
-                title: "Error",
-                text: JSON.stringify(err.data)
+                title: "خطا",
+                text: "خطای سمت سرور",
+                confirmButtonText: "فهمیدم"
             });
             onError(err);
         });
@@ -126,22 +134,25 @@ app.service("apiHandler", function ($http, $cookies) {
                 } else if (result.hasError) {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: result.message
+                        title: "خطای اطلاعات",
+                        text: result.message,
+                        confirmButtonText: "فهمیدم"
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "Error",
-                        text: "unknown error!"
+                        title: "خطا",
+                        text: "خطای نامشخص!",
+                        confirmButtonText: "فهمیدم"
                     });
                 }
             }
         }, (err) => {
             Swal.fire({
                 icon: "error",
-                title: "Error",
-                text: "Exception on server"
+                title: "خطا",
+                text: "خطای سمت سرور",
+                confirmButtonText: "فهمیدم"
             });
             onError(err);
         });

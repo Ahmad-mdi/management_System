@@ -34,6 +34,7 @@ app.controller('userAddCtrl', function ($scope, apiHandler) {
             });
             return;
         }
+
         if ($scope.data.lastname === undefined || $scope.data.lastname === "" || $scope.data.lastname == null) {
             Swal.fire({
                 title: "خطا",
