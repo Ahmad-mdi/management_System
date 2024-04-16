@@ -25,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -232,7 +231,7 @@ public class UserServiceImpl implements UserService {
         User user = find.orElseThrow(() -> new DataNotFoundException("data.not.found"));
 
         if (!user.getPassword().equals(oldPassword))
-            throw new OldPasswordNotFoundException("invalid.old.password");
+            throw new PassNotFoundException("invalid.old.password");
 
         if (!validatePasswordPattern(newPassword))
             throw new ValidateNewPasswordException("pattern.password");
@@ -262,7 +261,7 @@ public class UserServiceImpl implements UserService {
         if (user.getTryCount() >= 3) {
             LocalDateTime lockTime = user.getLockTime();
             if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-                throw new LockedUserException("user.locked");
+                throw new LockUserException("user.locked");
             }
             user.setTryCount(0);
             user.setLockTime(null);
@@ -274,7 +273,7 @@ public class UserServiceImpl implements UserService {
     private void handleFailedLogin(User user) {
         LocalDateTime lockTime = user.getLockTime();
         if (lockTime != null && lockTime.isAfter(LocalDateTime.now())) {
-            throw new LockedUserException("user.locked");
+            throw new LockUserException("user.locked");
         }
         int tryCount = user.getTryCount() + 1;
         lockTime = LocalDateTime.now().plusMinutes(10);

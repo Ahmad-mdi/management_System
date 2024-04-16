@@ -1,10 +1,32 @@
-body{
+body {
     background-color: #4285F3;
+    direction: rtl;
+    font-family: 'B Nazanin', Tahoma, sans-serif;
 }
-.login-box-holder{
+
+.login-box-holder {
     background: #fff;
     border-radius: 5px;
     border: 1px solid #eee;
-    padding: 15px;
+    padding: 20px;
     margin: 5% auto 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-box-holder h3 {
+    margin-bottom: 20px;
+}
+
+.login-box-holder .form-group {
+    margin-bottom: 15px;
+}
+
+.login-box-holder .form-control {
+    border-radius: 0;
+}
+
+.login-box-holder .btn-primary {
+    border-radius: 0;
+    padding: 10px 20px;
+    margin-top: 20px;
 }

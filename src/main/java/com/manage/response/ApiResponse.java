@@ -1,14 +1,21 @@
 package com.manage.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.domain.Page;
+import lombok.NoArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Data
+@AllArgsConstructor
 public class ApiResponse<T> implements Serializable {
+
     private List<T> dataList;
     private ApiResponseStatus status;
     private boolean hasError;
@@ -55,4 +62,5 @@ public class ApiResponse<T> implements Serializable {
         this.hasError = true;
 //        this.totalCount = 0;
     }
+
 }

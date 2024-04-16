@@ -3,84 +3,111 @@ package com.manage.utils.exception;
 
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
+import com.manage.service.user.UserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestControllerAdvice
 @AllArgsConstructor
-public class GlobalExceptionHandler{
+public class GlobalExceptionHandler {
+
     private final MessageSource messageSource;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+
+    //annotation errors (NotBlank or ...):
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String,String> HandleInvalidArguments(MethodArgumentNotValidException ex)
-    {
-        Map<String,String> errorMap = new HashMap<>();
+    public Map<String, String> HandleInvalidArguments(MethodArgumentNotValidException ex) {
+        Map<String, String> errorMap = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errorMap.put(error.getField(),error.getDefaultMessage());
+            errorMap.put(error.getField(), error.getDefaultMessage());
         });
         return errorMap;
     }
+
+    //unique columns db:
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ApiResponse<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         String message = e.getMessage();
-        if (message == null) {
+        if (message == null)
             return new ApiResponse<>(e.getMessage(), ApiResponseStatus.EXCEPTION);
-        }
 
-        if (message.contains("uk_2f3xrn5enpplukjdl7e0c7rdf")) {
-            return new ApiResponse<>(getMessage("already.nationalCode"), ApiResponseStatus.EXCEPTION);
-        } else if (message.contains("uk_r43af9ap4edm43mmtq01oddj6")) {
-            return new ApiResponse<>(getMessage("already.username"), ApiResponseStatus.EXCEPTION);
-        } else {
+        if (message.contains("uk_2f3xrn5enpplukjdl7e0c7rdf"))
+            return new ApiResponse<>(getMessgeOfResourceBundle("already.nationalCode"), ApiResponseStatus.EXCEPTION);
+        else if (message.contains("uk_r43af9ap4edm43mmtq01oddj6"))
+            return new ApiResponse<>(getMessgeOfResourceBundle("already.username"), ApiResponseStatus.EXCEPTION);
+        else
             return new ApiResponse<>(message, ApiResponseStatus.EXCEPTION);
-        }
     }
 
+    //user notFound:
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
+    public ApiResponse<String> handleUserNotFoundException(UserNotFoundException e) {
+        String message = e.getMessage();
+        if (message == null)
+            return new ApiResponse<>(e.getMessage(), ApiResponseStatus.EXCEPTION);
+
+        return new ApiResponse<>(getMessgeOfResourceBundle("user.not.found"), ApiResponseStatus.EXCEPTION);
     }
+
+    //locked users:
+    @ExceptionHandler(LockUserException.class)
+    public ApiResponse<String> handleLockUserException(LockUserException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle("user.locked"), ApiResponseStatus.EXCEPTION);
+    }
+
+    //login users:
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<String> handleUserNotFoundException(LoginException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
+    public ApiResponse<String> handleLoginException(LoginException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle("invalid.username.password"), ApiResponseStatus.EXCEPTION);
     }
-    @ExceptionHandler(OldPasswordNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(OldPasswordNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getMessage(e.getMessage()));
+
+    //pass notFound:
+    @ExceptionHandler(PassNotFoundException.class)
+    public ApiResponse<String> handlePassNotFoundException(PassNotFoundException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle("invalid.old.password"), ApiResponseStatus.EXCEPTION);
     }
-    @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(DataNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(getMessage(e.getMessage()));
-    }
+
+    //pagination:
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<String> handleNumberFormatException(NumberFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
+    public ApiResponse<String> handleNumberFormatException(NumberFormatException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle(e.getMessage()), ApiResponseStatus.EXCEPTION);
     }
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-    @ExceptionHandler(LockedUserException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(LockedUserException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
-    }
-    @ExceptionHandler(ValidateNewPasswordException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(ValidateNewPasswordException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessage(e.getMessage()));
+
+    //data notFound:
+    @ExceptionHandler(DataNotFoundException.class)
+    public ApiResponse<String> handleDataNotFoundException(DataNotFoundException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle("data.not.found"), ApiResponseStatus.EXCEPTION);
     }
 
 
-    public String getMessage(String key) {
+
+
+
+    //config resourceBundle (get message errors)
+    public String getMessgeOfResourceBundle(String key) {
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(key, null, locale);
+    }
+
+    //handle null exception (get jvm message exp)
+    public void handleExceptionMessage (Throwable e){
+        String message = e.getMessage();
+        logger.debug(message);
     }
 
 }
