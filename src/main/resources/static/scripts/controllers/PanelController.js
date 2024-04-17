@@ -33,7 +33,7 @@ app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) 
         $scope.getMenuPrefix = (templateName) => {
             if (templateName === 'dashboard') {
                 return 'views/' + templateName + '.html';
-            } else if (templateName === 'user-list' || templateName === 'user-add' || templateName === 'user-edit') {
+            } else if (templateName === 'user-list' || templateName === 'user-add' || templateName === 'user-edit' || templateName ==='user-edit-pass') {
                 return 'views/users/' + templateName + '.html';
             } else if (templateName === 'sysman-list' || templateName === 'sysman-add' || templateName === 'sysman-edit') {
                 return 'views/sysman/' + templateName + '.html';
@@ -47,7 +47,7 @@ app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) 
         $scope.getMenuGroup = (templateName) => {
             if (templateName === 'dashboard') {
                 return 'dashboard';
-            } else if (templateName === 'user-list' || templateName === 'user-edit' || templateName === 'user-add') {
+            } else if (templateName === 'user-list' || templateName === 'user-edit' || templateName === 'user-add' || templateName === 'user-edit-pass') {
                 return 'user';
 
             } else if (templateName === 'sysman-list' || templateName === 'sysman-edit' || templateName === 'sysman-add') {

@@ -148,8 +148,10 @@ public class UserController {
     }
 
     @PutMapping("/change-password")
-    public ApiResponse<UserDto> changePassword(@RequestBody UserDto data) throws Exception {
-        UserDto result = service.changePassword(data.getId(), data.getPassword(), data.getNewPassword());
+    public ApiResponse<UserDto> changePassword(@RequestParam long id ,
+                                               @RequestParam String password ,
+                                               @RequestParam String newPassword) throws Exception {
+        UserDto result = service.changePassword(id, password, newPassword);
         return new ApiResponse<>(result, ApiResponseStatus.SUCCESS);
     }
 

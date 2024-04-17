@@ -2,9 +2,10 @@
     <div class="tab__box">
         <div class="tab__items">
             <a ng-click="changeMenu('user-add')" class="tab__item is-active" href="#">ایجاد کاربر جدید+</a>
+            <a ng-click="editPassword(user.id)" class="tab__item is-active" href="#">تغییر کلمه عبور</a>
             <a class="tab__item is-active" href="#" ng-click="downloadExcelUserList()">دانلود لیست اکسل کاربران فعال</a>
-            <a title="راهنمای جستجو و فیلترینگ" href="#" ng-click="showInfoTextForSearch()" class="tab__item is-active">راهنمای
-                جستجو و اعمال فیلتر</a>
+            <a title="راهنمای جستجو" href="#" ng-click="showInfoTextForSearch()" class="tab__item is-active">راهنمای
+                جستجو </a>
         </div>
     </div>
 

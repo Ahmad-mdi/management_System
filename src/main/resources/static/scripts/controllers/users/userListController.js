@@ -60,6 +60,10 @@ app.controller('userListCtrl', function ($scope, apiHandler, $rootScope) {
         $rootScope.dataId = id;
         $scope.changeMenu('user-edit');
     }
+    $scope.editPassword = (id) => {
+        $rootScope.dataId = id;
+        $scope.changeMenu('user-edit-pass');
+    }
 
     $scope.deleteItem = (id) => {
         Swal.fire({

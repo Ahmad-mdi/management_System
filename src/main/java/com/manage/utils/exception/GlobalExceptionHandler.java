@@ -80,6 +80,13 @@ public class GlobalExceptionHandler {
         return new ApiResponse<>(getMessgeOfResourceBundle("invalid.old.password"), ApiResponseStatus.EXCEPTION);
     }
 
+    //validate pattern for changePass:
+    @ExceptionHandler(ValidateNewPasswordException.class)
+    public ApiResponse<String> handleValidateNewPasswordException(ValidateNewPasswordException e) {
+        handleExceptionMessage(e);
+        return new ApiResponse<>(getMessgeOfResourceBundle("pattren.password"), ApiResponseStatus.EXCEPTION);
+    }
+
     //pagination:
     @ExceptionHandler(NumberFormatException.class)
     public ApiResponse<String> handleNumberFormatException(NumberFormatException e) {

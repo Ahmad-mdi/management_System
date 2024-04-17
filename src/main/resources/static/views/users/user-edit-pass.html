@@ -1,0 +1,34 @@
+<div ng-controller="userEditPassCtrl">
+    <div class="container p-3">
+        <br>
+        <div class="card">
+            <div class="card-header">
+                تغییر کلمه عبور کاربر : {{data.fullName}}
+                <a ng-click="changeMenu('user-list')" class="btn btn-sysman btn-primary float-right"> <- برگشت </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col login-box-holder">
+                                <div class="form-group">
+                                    <label for="oldPassword">کلمه عبور فعلی </label>
+                                    <input type="text" class="form-control" id="oldPassword" ng-model="data.password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password"> ایجاد کلمه عبور جدید</label>
+                                    <input type="text" class="form-control" id="password" ng-model="data.newPassword">
+                                </div>
+                                <div class="form-group">
+                                    <label for="c_password"> تکرار کلمه عبور جدید</label>
+                                    <input type="text" class="form-control" id="c_password" ng-model="data.c_password">
+                                </div>
+                                <button type="submit" ng-disabled="!data.password || !data.newPassword || !data.c_password"  class="btn btn-outline-success" ng-click="editData()">تغییر کلمه عبور</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
