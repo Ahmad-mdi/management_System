@@ -2,10 +2,7 @@ package com.manage.service.user;
 
 import com.manage.model.user.User;
 import com.manage.model.dto.user.UserDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -45,7 +42,4 @@ public interface UserService {
     UserDto changePassword(long id, String oldPassword, String newPassword) throws Exception;
 
     List<User> searchByUsername(String username, int pageSize, int pageNumber);
-
-
-
 }

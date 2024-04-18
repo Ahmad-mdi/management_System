@@ -1,9 +1,10 @@
 package com.manage.model.sysman;
 
+import com.manage.model.menu.Menu;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,4 +18,7 @@ public class Sysman {
     private String route;
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
+
+    @OneToMany(mappedBy = "sysman", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Menu> menus;
 }
