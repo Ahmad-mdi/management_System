@@ -1,21 +1,18 @@
 package com.manage.model.menu;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.manage.model.sysman.Sysman;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Data
 @Entity
 @Table(name = "menu_managements")
 public class Menu {
-    @javax.persistence.Id
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -26,9 +23,15 @@ public class Menu {
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "sysman_id", referencedColumnName = "id")
-    @JsonProperty
+    @JsonProperty("sysman")
     private Sysman sysman;
+
+    //for deleted by id from Sysman (relation supported by Set<> interface) and set hashcode for objects:
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, menu_code, org_menu);
+    }
 
 }

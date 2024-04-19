@@ -3,7 +3,6 @@ package com.manage.model.dto.sysman;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
