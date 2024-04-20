@@ -1,14 +1,12 @@
 package com.manage.controller.api.menu;
 
 import com.manage.model.dto.menu.MenuDto;
-import com.manage.model.dto.sysman.SysmanDto;
 import com.manage.model.mapper.menu.MenuMapper;
 import com.manage.model.menu.Menu;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.menu.MenuServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

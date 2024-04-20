@@ -7,6 +7,7 @@ import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.sysman.SysmanServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -24,6 +25,13 @@ public class SysmanController {
         List<SysmanDto> mappedToDTOList = SysmanMapper.mapToDTOList(dataList);
         long totalCount = service.getAllCount();
         return new ApiResponse<>(mappedToDTOList, totalCount, ApiResponseStatus.SUCCESS);
+    }
+
+    @GetMapping("/list-for-menus")
+    public ApiResponse<SysmanDto> getAllSysmans() {
+        List<Sysman> sysmans = service.findAllForMenus();
+        List<SysmanDto> dtoList = SysmanMapper.mapToDTOList(sysmans);
+        return new ApiResponse<>(dtoList,ApiResponseStatus.SUCCESS);
     }
 
     @PostMapping("/add")

@@ -7,7 +7,6 @@ import com.manage.repository.sysman.SysmanRepository;
 import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.specification.SysmanSpecification;
 import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +29,11 @@ public class SysmanServiceImpl implements SysmanService {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Page<Sysman> all = repository.findAll(pagination);
         return all.getContent();
+    }
+
+    @Override
+    public List<Sysman> findAllForMenus(){
+        return repository.findAll();
     }
 
     @Override

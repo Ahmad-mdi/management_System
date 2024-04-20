@@ -2,7 +2,6 @@ package com.manage.service.menu;
 
 import com.manage.model.dto.menu.MenuDto;
 import com.manage.model.mapper.menu.MenuMapper;
-import com.manage.model.mapper.sysman.SysmanMapper;
 import com.manage.model.menu.Menu;
 import com.manage.model.sysman.Sysman;
 import com.manage.repository.menu.MenuRepository;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +33,7 @@ public class MenuServiceImpl implements MenuService{
     public long getAllCount() {
         return repository.count();
     }
+
 
     @Override
     public MenuDto add(MenuDto dto) {
