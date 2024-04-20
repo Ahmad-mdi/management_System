@@ -15,7 +15,7 @@ public class MenuDto {
     private String name;
     private String menu_code;
     private String org_menu;
-    private String Priority;
+    private String priority;
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
 

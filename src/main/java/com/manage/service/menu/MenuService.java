@@ -11,4 +11,6 @@ public interface MenuService {
     List<Menu> getAll(Integer pageSize, Integer pageNumber);
 
     long getAllCount();
+
+    MenuDto add(MenuDto dto);
 }

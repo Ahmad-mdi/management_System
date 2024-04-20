@@ -1,4 +1,4 @@
-app.controller('sysmanAddCtrl', function ($scope, apiHandler) {
+app.controller('menuAddCtrl', function ($scope, apiHandler) {
     $scope.data = {};
 
     $scope.addData = () => {
@@ -30,7 +30,7 @@ app.controller('sysmanAddCtrl', function ($scope, apiHandler) {
             return;
         }
 
-        apiHandler.callPost('sysman/add', $scope.data, (response) => {
+        apiHandler.callPost('menu/add', $scope.data, (response) => {
             $scope.changeMenu('sysman-list');//after set switch in nav list page
             Swal.fire({
                 title: "موفق",

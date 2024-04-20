@@ -1,12 +1,9 @@
 package com.manage.repository.menu;
 
 import com.manage.model.menu.Menu;
-import com.manage.model.sysman.Sysman;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface MenuRepository extends JpaRepository<Menu,Long> {
-    List<Menu> findBySysman(Sysman sysman);
-
 }
