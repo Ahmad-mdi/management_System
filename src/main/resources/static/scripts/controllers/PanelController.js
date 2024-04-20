@@ -37,6 +37,8 @@ app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) 
                 return 'views/users/' + templateName + '.html';
             } else if (templateName === 'sysman-list' || templateName === 'sysman-add' || templateName === 'sysman-edit') {
                 return 'views/sysman/' + templateName + '.html';
+            }else if (templateName === 'menu-list' || templateName === 'menu-add' || templateName === 'menu-edit') {
+                return 'views/menu/' + templateName + '.html';
             } else if (templateName === 'uploader') {
                 return 'views/util/' + templateName + '.html';
             } else {
@@ -52,6 +54,9 @@ app.controller("panelCtlr", function ($scope, apiHandler, $cookies, $rootScope) 
 
             } else if (templateName === 'sysman-list' || templateName === 'sysman-edit' || templateName === 'sysman-add') {
                 return 'sysman';
+
+            }else if (templateName === 'menu-list' || templateName === 'menu-edit' || templateName === 'menu-add') {
+                return 'menu';
 
             } else if (templateName === 'uploader') {
                 return 'uploader';

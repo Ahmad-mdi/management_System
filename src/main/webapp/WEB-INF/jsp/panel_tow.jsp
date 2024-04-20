@@ -28,6 +28,9 @@
     <script src="scripts/controllers/sysman/sysmanEditController.js"></script>
     <script src="scripts/controllers/sysman/sysmanAddController.js"></script>
     <script src="scripts/controllers/sysman/sysmanListController.js"></script>
+    <script src="scripts/controllers/menu/menuEditController.js"></script>
+    <script src="scripts/controllers/menu/menuAddController.js"></script>
+    <script src="scripts/controllers/menu/menuListController.js"></script>
     <link rel="stylesheet" href="styles/css/style.css">
     <link rel="stylesheet" href="styles/css/responsive_991.css" media="(max-width:991px)">
     <link rel="stylesheet" href="styles/css/responsive_768.css" media="(max-width:768px)">
@@ -57,14 +60,17 @@
         </li>
         <li class="item-li i-users" ng-class="{'is-active':templateGroup == 'user'}">
             <a href="#" ng-click="changeMenu('user-list')">
-                <i class="fa fa-users"></i>
                 <span>مدیریت کاربران</span>
             </a>
         </li>
         <li class="item-li i-checkout__request" ng-class="{'is-active':templateGroup == 'sysman'}">
             <a href="#" ng-click="changeMenu('sysman-list')">
-                <i class="fa fa-users"></i>
                 <span>مدیریت سامانه ها</span>
+            </a>
+        </li>
+        <li class="item-li i-courses" ng-class="{'is-active':templateGroup == 'menu'}">
+            <a href="#" ng-click="changeMenu('menu-list')">
+                <span>مدیریت  منو ها</span>
             </a>
         </li>
     </ul>

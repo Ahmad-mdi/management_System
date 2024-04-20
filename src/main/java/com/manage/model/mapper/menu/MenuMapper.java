@@ -4,12 +4,15 @@ import com.manage.model.dto.menu.MenuDto;
 import com.manage.model.dto.sysman.SysmanDto;
 import com.manage.model.menu.Menu;
 import com.manage.model.sysman.Sysman;
-import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class MenuMapper {
     public static MenuDto mapToDTO(Menu menu) {
+        if (menu == null) {
+            return null; // Handle the case where menu is null
+        }
+
         MenuDto menuDto = new MenuDto();
         menuDto.setId(menu.getId());
         menuDto.setName(menu.getName());
@@ -18,60 +21,52 @@ public class MenuMapper {
         menuDto.setOrg_menu(menu.getOrg_menu());
         menuDto.setCreated_date(menu.getCreated_date());
         menuDto.setUpdated_date(menu.getUpdated_date());
-        //get relationShip
+
         SysmanDto sysmanDto = new SysmanDto();
-        sysmanDto.setId(menu.getSysman().getId());
-        sysmanDto.setEn_name(menu.getSysman().getEn_name());
-        sysmanDto.setFa_name(menu.getSysman().getFa_name());
-        sysmanDto.setRoute(menu.getSysman().getRoute());
+        if (menu.getSysman() != null) {
+            sysmanDto.setId(menu.getSysman().getId());
+            sysmanDto.setEn_name(menu.getSysman().getEn_name());
+            sysmanDto.setFa_name(menu.getSysman().getFa_name());
+            sysmanDto.setRoute(menu.getSysman().getRoute());
+        } else {
+            // Handle the case where sysman is null
+            sysmanDto.setId(0); // Set default values or handle as needed
+            sysmanDto.setEn_name("empity");
+            sysmanDto.setFa_name("empity");
+            sysmanDto.setRoute("empity");
+        }
 
         menuDto.setSysman(sysmanDto);
+
         return menuDto;
     }
 
-
-
     public static Menu mapToEntity(MenuDto menuDto) {
         Menu menu = new Menu();
+        menu.setId(menuDto.getId());
         menu.setName(menuDto.getName());
         menu.setPriority(menuDto.getPriority());
-        menu.setOrg_menu(menuDto.getOrg_menu());
         menu.setMenu_code(menuDto.getMenu_code());
+        menu.setOrg_menu(menuDto.getOrg_menu());
         menu.setCreated_date(menuDto.getCreated_date());
         menu.setUpdated_date(menuDto.getUpdated_date());
 
-        // Assuming SysmanDto is a DTO for Sysman entity
-        SysmanDto sysmanDto = menuDto.getSysman();
-        if (sysmanDto != null) {
-            Sysman sysman = new Sysman();
-            sysman.setId(sysmanDto.getId());
-            sysman.setEn_name(sysmanDto.getEn_name());
-            sysman.setFa_name(sysmanDto.getFa_name());
-            sysman.setRoute(sysmanDto.getRoute());
+        Sysman sysman = new Sysman();
+        sysman.setId(menuDto.getSysman().getId());
+        sysman.setEn_name(menuDto.getSysman().getEn_name());
+        sysman.setFa_name(menuDto.getSysman().getFa_name());
+        sysman.setRoute(menuDto.getSysman().getRoute());
 
-            // Set the Sysman entity on the Menu object
-            menu.setSysman(sysman);
-        }
+        menu.setSysman(sysman);
 
         return menu;
     }
 
-
-    public static List<MenuDto> mapToDTOList(List<Menu> list) {
-        List<MenuDto> dtoList = new ArrayList<>();
-        for (Menu menu : list) {
-            MenuDto menuDto = mapToDTO(menu);
-            dtoList.add(menuDto);
-        }
-        return dtoList;
+    public static List<MenuDto> mapToDtoList(List<Menu> menuList) {
+        return menuList.stream().map(MenuMapper::mapToDTO).collect(Collectors.toList());
     }
 
-    public static List<Menu> mapToEntityList(List<MenuDto> list) {
-        List<Menu> menuEntityList = new ArrayList<>();
-        for (MenuDto dto : list) {
-            Menu menu = mapToEntity(dto);
-            menuEntityList.add(menu);
-        }
-        return menuEntityList;
+    public static List<Menu> mapToEntityList(List<MenuDto> menuDtoList) {
+        return menuDtoList.stream().map(MenuMapper::mapToEntity).collect(Collectors.toList());
     }
 }

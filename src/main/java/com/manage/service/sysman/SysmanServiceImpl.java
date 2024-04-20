@@ -7,11 +7,13 @@ import com.manage.repository.sysman.SysmanRepository;
 import com.manage.utils.exception.DataNotFoundException;
 import com.manage.utils.specification.SysmanSpecification;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,10 +65,14 @@ public class SysmanServiceImpl implements SysmanService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         Optional<Sysman> sm = repository.findById(id);
         if (sm.isPresent()) {
+            Sysman sysman = sm.get();
+            sysman.getMenus().clear();
             repository.deleteById(id);
+
             return true;
         }
         throw new DataNotFoundException("data.not.found");
