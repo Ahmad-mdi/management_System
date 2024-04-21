@@ -7,6 +7,7 @@ import com.manage.model.sysman.Sysman;
 import com.manage.repository.menu.MenuRepository;
 import com.manage.repository.sysman.SysmanRepository;
 import com.manage.utils.exception.DataNotFoundException;
+import com.manage.utils.specification.MenuSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -93,9 +94,16 @@ public class MenuServiceImpl implements MenuService{
     }
 
 
+    @Override
+    public List<Menu> filterMenu(String name, String menu_code, String org_menu, String priority, int pageSize, int pageNumber) {
+        Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+        Page<Menu> pageList = repository.findAll(MenuSpecification.filterBy(name, menu_code, org_menu,priority), pagination);
+        return pageList.getContent();
+    }
 
-
-
-
+    @Override
+    public long countAllColumns(String name, String org_menu, String priority, String menu_code) {
+        return repository.countBynameOrOrg_menuOrPriorityOrMenu_code(name,org_menu,priority,menu_code);
+    }
 
 }

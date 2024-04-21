@@ -3,7 +3,9 @@ package com.manage.controller.api.menu;
 import com.manage.model.dto.menu.MenuDto;
 import com.manage.model.dto.sysman.SysmanDto;
 import com.manage.model.mapper.menu.MenuMapper;
+import com.manage.model.mapper.sysman.SysmanMapper;
 import com.manage.model.menu.Menu;
+import com.manage.model.sysman.Sysman;
 import com.manage.response.ApiResponse;
 import com.manage.response.ApiResponseStatus;
 import com.manage.service.menu.MenuServiceImpl;
@@ -30,6 +32,21 @@ public class MenuController {
     public ApiResponse<MenuDto> getById(@PathVariable long id) {
         MenuDto get = service.getById(id);
         return new ApiResponse<>(get, ApiResponseStatus.SUCCESS);
+    }
+
+    @GetMapping("/filter")
+    public ApiResponse<MenuDto> filterMenus(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String org_menu,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String menu_code,
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber) {
+
+        List<Menu> menuFilterd = service.filterMenu(name,org_menu,priority,menu_code, pageSize,pageNumber);
+        List<MenuDto> menuDtoList = MenuMapper.mapToDtoList(menuFilterd);//mapped to dto
+        long totalCont = service.countAllColumns(name,org_menu,priority,menu_code);
+        return new ApiResponse<>(menuDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 
     @PostMapping("/add")
