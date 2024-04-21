@@ -27,9 +27,9 @@ public class SysmanController {
         return new ApiResponse<>(mappedToDTOList, totalCount, ApiResponseStatus.SUCCESS);
     }
 
-    @GetMapping("/list-for-menus")
-    public ApiResponse<SysmanDto> getAllSysmans() {
-        List<Sysman> sysmans = service.findAllForMenus();
+    @GetMapping("/list-for-add-menu")
+    public ApiResponse<SysmanDto> getAllSysmansForMenu() {
+        List<Sysman> sysmans = service.findAllForMenu();
         List<SysmanDto> dtoList = SysmanMapper.mapToDTOList(sysmans);
         return new ApiResponse<>(dtoList,ApiResponseStatus.SUCCESS);
     }

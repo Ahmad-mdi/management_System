@@ -17,6 +17,7 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    @Column(unique = true)
     private String menu_code;
     private String org_menu;
     private String priority;

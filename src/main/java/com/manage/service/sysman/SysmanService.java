@@ -8,7 +8,7 @@ import java.util.List;
 public interface SysmanService {
     List<Sysman> getAll(Integer pageSize, Integer pageNumber);
 
-    List<Sysman> findAllForMenus();
+    List<Sysman> findAllForMenu();
 
     long getAllCount();
 

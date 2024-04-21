@@ -3,7 +3,7 @@ app.controller('menuAddCtrl', function ($scope, apiHandler) {
     $scope.sysmans = [];
 
     $scope.fetchSysmans = () => {
-        apiHandler.callGet('sysman/list-for-menus', (response) => {
+        apiHandler.callGet('sysman/list-for-add-menu', (response) => {
             $scope.sysmans = response.dataList;
         }, (error) => {
             console.error('Error fetching sysmans:', error);

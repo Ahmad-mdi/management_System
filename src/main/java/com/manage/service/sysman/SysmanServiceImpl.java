@@ -32,7 +32,7 @@ public class SysmanServiceImpl implements SysmanService {
     }
 
     @Override
-    public List<Sysman> findAllForMenus(){
+    public List<Sysman> findAllForMenu(){
         return repository.findAll();
     }
 

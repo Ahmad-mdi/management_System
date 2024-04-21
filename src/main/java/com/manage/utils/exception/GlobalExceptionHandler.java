@@ -45,6 +45,8 @@ public class GlobalExceptionHandler {
             return new ApiResponse<>(getMessgeOfResourceBundle("already.nationalCode"), ApiResponseStatus.EXCEPTION);
         else if (message.contains("uk_r43af9ap4edm43mmtq01oddj6"))
             return new ApiResponse<>(getMessgeOfResourceBundle("already.username"), ApiResponseStatus.EXCEPTION);
+        else if (message.contains("uk_nvwr3igtom212xtvjlqd3osfu"))
+            return new ApiResponse<>(getMessgeOfResourceBundle("menu.code.required"), ApiResponseStatus.EXCEPTION);
         else
             return new ApiResponse<>(message, ApiResponseStatus.EXCEPTION);
     }
