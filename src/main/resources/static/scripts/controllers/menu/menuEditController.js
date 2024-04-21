@@ -1,26 +1,23 @@
-app.controller('sysmanEditCtrl', function ($scope, apiHandler,$rootScope) {
+app.controller('menuEditCtrl', function ($scope, apiHandler,$rootScope) {
     $scope.data = {};
     $scope.id = $rootScope.dataId;
+    $scope.sysmans = [];
+
+    $scope.fetchSysmans = () => {
+        apiHandler.callGet('sysman/list-for-add-menu', (response) => {
+            $scope.sysmans = response.dataList;
+        }, (error) => {
+            console.error('Error fetching sysmans:', error);
+        });
+    };
 
     $scope.editData = () =>{
-        if ($scope.data.en_name === undefined || $scope.data.en_name === "" || $scope.data.en_name == null){
-            Swal.fire("فیلد نام نمی تواند خالی باشد");
-            return;
-        }
-        if ($scope.data.fa_name === undefined || $scope.data.fa_name === "" || $scope.data.fa_name == null){
-            Swal.fire("فیلد نام خانوادگی نمی تواند خالی باشد");
-            return;
-        }
-        if ($scope.data.route === undefined || $scope.data.route === "" || $scope.data.route == null){
-            Swal.fire("فیلد نام کاربری نمی تواند خالی باشد");
-            return;
-        }
 
-        apiHandler.callPut('sysman/update',$scope.data,(response) => {
-            $scope.changeMenu('sysman-list');
+        apiHandler.callPut('menu/update',$scope.data,(response) => {
+            $scope.changeMenu('menu-list');
             Swal.fire({
-                title: "بروزرسانی سامانه",
-                text: "با موفقیت بروزرسانی شد",
+                title: "بروزرسانی منو",
+                text: "با موفقیت انجام شد",
                 icon: "success"
             });
         },(error) => {
@@ -30,8 +27,9 @@ app.controller('sysmanEditCtrl', function ($scope, apiHandler,$rootScope) {
 
     //send data for edit and get data:
     $scope.getData = () =>{
-        apiHandler.callGet('sysman/'+$scope.id,(response) => {
+        apiHandler.callGet('menu/'+$scope.id,(response) => {
             $scope.data = response.dataList[0];
+            $scope.fetchSysmans();
         },(error) =>{},true);
     }
 

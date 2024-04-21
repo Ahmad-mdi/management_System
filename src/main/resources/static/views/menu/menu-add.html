@@ -28,13 +28,16 @@
                                     <label for="priority"> اولویت</label>
                                     <input type="text" class="form-control" id="priority" ng-model="data.priority">
                                 </div>
-                                <div class="form-group">
+                                <div ng-if="sysmans.length > 0" class="form-group">
                                     <label for="sysman">سامانه</label>
                                     <select class="form-control" id="sysman" ng-model="data.sysman.id" ng-options="sysman.id as sysman.en_name for sysman in sysmans">
-                                        <option value="">انتخاب کنید</option>
+                                        <option value="">انتخاب کنید:</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-outline-success" ng-click="addData()">ثبت</button>
+                                <div ng-model="data.sysman.id = 0" ng-if="sysmans.length == 0" class="form-group">
+                                    <p class="alert alert-warning m-1">سامانه ای برای انتخاب تعریف نشده است!</p>
+                                </div>
+                                <button type="submit" ng-disabled="!data.name || !data.menu_code || !data.org_menu || !data.priority" class="btn btn-outline-success m-3" ng-click="addData()">ثبت</button>
                             </div>
                         </div>
                     </div>

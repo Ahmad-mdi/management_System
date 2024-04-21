@@ -24,7 +24,7 @@ public class Menu {
     private LocalDateTime created_date;
     private LocalDateTime updated_date;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne/*(cascade = {CascadeType.ALL})*/
     @JoinColumn(name = "sysman_id", referencedColumnName = "id")
     @JsonProperty("sysman")
     private Sysman sysman;

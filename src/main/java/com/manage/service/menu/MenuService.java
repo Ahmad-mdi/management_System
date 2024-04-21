@@ -10,7 +10,13 @@ public interface MenuService {
 
     List<Menu> getAll(Integer pageSize, Integer pageNumber);
 
+    MenuDto getById(long id);
+
     long getAllCount();
 
     MenuDto add(MenuDto dto);
+
+    MenuDto update(MenuDto dto);
+
+    boolean delete(Long id);
 }
