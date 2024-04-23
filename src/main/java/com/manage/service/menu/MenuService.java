@@ -21,7 +21,8 @@ public interface MenuService {
 
     boolean delete(Long id);
 
-    List<Menu> filterMenu(String name, String menu_code, String org_menu, String priority, int pageSize, int pageNumber);
 
-    long countAllColumns(String name, String menu_code, String org_menu, String priority);
+    List<Menu> filterMenu(String name, String menu_code, String org_menu, String priority,String sysman, int pageSize, int pageNumber);
+
+    long countAllColumns(String name, String menu_code, String org_menu, String priority,String sysman);
 }

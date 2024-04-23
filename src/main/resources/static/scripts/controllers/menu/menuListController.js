@@ -4,10 +4,7 @@ app.controller('menuListCtrl', function ($scope, apiHandler, $rootScope) {
         pageSize: 10,
         pageNumber: 0
     };
-    /*$scope.searchQuery = {
-        searchPageSize: 10,
-        searchPageNumber: 0
-    };*/
+
     $scope.filter = {
         filterPageSize: 10,
         filterPageNumber: 0
@@ -74,9 +71,11 @@ app.controller('menuListCtrl', function ($scope, apiHandler, $rootScope) {
     }
 
     $scope.reloadListAfterFilter = () => {
-        $scope.en_name = '';
-        $scope.fa_name = '';
-        $scope.route = '';
+        $scope.name = '';
+        $scope.org_menu = '';
+        $scope.priority = '';
+        $scope.menu_code = '';
+        $scope.sysman = '';
         $scope.filter.filterPageNumber = 0;
         $scope.getFilters = [];
         $scope.totalCount = 0;
@@ -108,14 +107,20 @@ app.controller('menuListCtrl', function ($scope, apiHandler, $rootScope) {
     $scope.filterByColumns = () => {
         let url = 'menu/filter?';
 
-        if ($scope.en_name) {
-            url += `en_name=${encodeURIComponent($scope.en_name)}&`;
+        if ($scope.name) {
+            url += `name=${encodeURIComponent($scope.name)}&`;
         }
-        if ($scope.fa_name) {
-            url += `fa_name=${encodeURIComponent($scope.fa_name)}&`;
+        if ($scope.menu_code) {
+            url += `menu_code=${encodeURIComponent($scope.menu_code)}&`;
         }
-        if ($scope.route) {
-            url += `route=${encodeURIComponent($scope.route)}&`;
+        if ($scope.org_menu) {
+            url += `org_menu=${encodeURIComponent($scope.org_menu)}&`;
+        }
+        if ($scope.priority) {
+            url += `priority=${encodeURIComponent($scope.priority)}&`;
+        }
+        if ($scope.sysman) {
+            url += `sysman=${encodeURIComponent($scope.sysman)}&`;
         }
 
         url += `pageSize=${$scope.filter.filterPageSize}&pageNumber=${$scope.filter.filterPageNumber}`;
@@ -125,11 +130,9 @@ app.controller('menuListCtrl', function ($scope, apiHandler, $rootScope) {
             $scope.totalCount = response.totalCount;
             $scope.pageCount = Math.ceil($scope.totalCount / $scope.filter.filterPageSize);
         }, (error) => {
-            console.error('Error filterd all columns of systme_management:', error);
+            console.error('Error filterd all columns of menus:', error);
         }, true);
     };
-
-
 
 
     $scope.getDataList();

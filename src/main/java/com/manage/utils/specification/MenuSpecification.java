@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MenuSpecification {
 
-    public static Specification<Menu> filterBy(String name,String menu_code, String org_menu, String priority) {
+    public static Specification<Menu> filterBy(String name,String menu_code, String org_menu, String priority,String sysman) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (name != null) {
@@ -23,6 +23,9 @@ public class MenuSpecification {
             }
             if (menu_code != null) {
                 predicates.add(cb.like(root.get("menu_code"), "%" + menu_code + "%"));
+            }
+            if (sysman != null) {
+                predicates.add(cb.like(root.join("sysman").get("en_name"), "%" + sysman + "%"));
             }
 
             query.distinct(true);

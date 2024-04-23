@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MenuRepository extends JpaRepository<Menu,Long> , JpaSpecificationExecutor<Menu> {
-    @Query("SELECT COUNT(m) FROM Menu m WHERE m.name LIKE %:name% OR m.org_menu LIKE %:org_menu% OR m.priority LIKE %:priority% OR m.menu_code LIKE %:menu_code%")
+    @Query("SELECT COUNT(m) FROM Menu m WHERE m.name LIKE %:name% OR m.org_menu LIKE %:org_menu% OR m.priority LIKE %:priority% OR m.menu_code LIKE %:menu_code% OR m.sysman.en_name LIKE %:sysman%")
     long countBynameOrOrg_menuOrPriorityOrMenu_code(
             @Param("name") String name,
+            @Param("menu_code") String menu_code,
             @Param("org_menu") String org_menu,
             @Param("priority") String priority,
-            @Param("menu_code") String menu_code
+            @Param("sysman") String sysman
     );
 }

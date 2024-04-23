@@ -31,9 +31,9 @@ public class MenuMapper {
         } else {
             // Handle the case where sysman is null
             sysmanDto.setId(0); // Set default values or handle as needed
-            sysmanDto.setEn_name("سامانه تعریف نشده");
-            sysmanDto.setFa_name("سامانه تعریف نشده");
-            sysmanDto.setRoute("سامانه تعریف نشده");
+            sysmanDto.setEn_name(" تعریف نشده");
+            sysmanDto.setFa_name(" تعریف نشده");
+            sysmanDto.setRoute(" تعریف نشده");
         }
 
         menuDto.setSysman(sysmanDto);

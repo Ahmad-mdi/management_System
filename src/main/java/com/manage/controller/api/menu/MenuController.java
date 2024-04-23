@@ -37,15 +37,16 @@ public class MenuController {
     @GetMapping("/filter")
     public ApiResponse<MenuDto> filterMenus(
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String menu_code,
             @RequestParam(required = false) String org_menu,
             @RequestParam(required = false) String priority,
-            @RequestParam(required = false) String menu_code,
+            @RequestParam(required = false) String sysman,
             @RequestParam int pageSize,
             @RequestParam int pageNumber) {
 
-        List<Menu> menuFilterd = service.filterMenu(name,org_menu,priority,menu_code, pageSize,pageNumber);
+        List<Menu> menuFilterd = service.filterMenu(name,menu_code,org_menu,priority,sysman, pageSize,pageNumber);
         List<MenuDto> menuDtoList = MenuMapper.mapToDtoList(menuFilterd);//mapped to dto
-        long totalCont = service.countAllColumns(name,org_menu,priority,menu_code);
+        long totalCont = service.countAllColumns(name,menu_code,org_menu,priority,sysman);
         return new ApiResponse<>(menuDtoList, totalCont, ApiResponseStatus.SUCCESS);
     }
 

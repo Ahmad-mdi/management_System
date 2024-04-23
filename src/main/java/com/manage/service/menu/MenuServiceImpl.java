@@ -95,15 +95,15 @@ public class MenuServiceImpl implements MenuService{
 
 
     @Override
-    public List<Menu> filterMenu(String name, String menu_code, String org_menu, String priority, int pageSize, int pageNumber) {
+    public List<Menu> filterMenu(String name, String menu_code, String org_menu, String priority, String sysman, int pageSize, int pageNumber) {
         Pageable pagination = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
-        Page<Menu> pageList = repository.findAll(MenuSpecification.filterBy(name, menu_code, org_menu,priority), pagination);
+        Page<Menu> pageList = repository.findAll(MenuSpecification.filterBy(name, menu_code, org_menu,priority,sysman), pagination);
         return pageList.getContent();
     }
 
     @Override
-    public long countAllColumns(String name, String org_menu, String priority, String menu_code) {
-        return repository.countBynameOrOrg_menuOrPriorityOrMenu_code(name,org_menu,priority,menu_code);
+    public long countAllColumns(String name, String org_menu, String priority, String menu_code, String sysman) {
+        return repository.countBynameOrOrg_menuOrPriorityOrMenu_code(name,org_menu,priority,menu_code,sysman);
     }
 
 }
